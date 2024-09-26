@@ -9,7 +9,7 @@ export const getRecipes = expressAsyncHandler(async (req, res) => {
 		throw new Error("Recipe ID required.");
 	}
 
-	const recipes = await Recipe.find({ createdBy: id }).exec();
+	const recipes = await Recipe.find({ userId: id }).exec();
 
 	if (!recipes.length) {
 		res.status(400);
@@ -22,14 +22,23 @@ export const getRecipes = expressAsyncHandler(async (req, res) => {
 export const createRecipe = expressAsyncHandler(async (req, res) => {
 	const { data } = req.body;
 
-	const recipe = await Recipe.create(data);
+	const duplicate = await Recipe.findOne({
+		name: data.name,
+		"createdBy.id": data.userId,
+	});
 
-	if (recipe) {
-		res.status(201).json({
-			message: `New recipe ${recipe.name} created.`,
-		});
+	if (!duplicate) {
+		const recipe = await Recipe.create(data);
+
+		if (recipe) {
+			res.status(201).json({
+				message: `New recipe ${recipe.name} created.`,
+			});
+		} else {
+			res.status(400).json({ message: "Invalid recipe data received." });
+		}
 	} else {
-		res.status(400).json({ message: "Invalid recipe data received." });
+		res.status(400).json({ message: "Recipe already exists." });
 	}
 });
 
