@@ -14,7 +14,6 @@ const recipeSchema = new Schema({
 	},
 	servings: {
 		type: Number,
-		required: true,
 	},
 	description: {
 		type: String,
@@ -45,11 +44,28 @@ const recipeSchema = new Schema({
 		type: Boolean,
 		required: true,
 	},
-	createdBy: {
+	public: {
+		type: Boolean,
+		required: true,
+	},
+	userId: {
 		type: Schema.Types.ObjectId,
 		ref: "User",
 		required: true,
 	},
+	createdBy: [
+		{
+			id: {
+				type: Schema.Types.ObjectId,
+				ref: "User",
+				required: true,
+			},
+			username: {
+				type: String,
+				required: true,
+			},
+		},
+	],
 });
 
 export default model("Recipe", recipeSchema);
