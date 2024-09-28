@@ -19,7 +19,7 @@ Cook's is a website designed to make it easy for you to organize your recipes an
 
 ## 🎨 Layout
 
-🚧 Under construction 🚧
+The complete design can be accessed in [Figma](https://www.figma.com/design/L9YIj0qY78NMMs8AjgWQUn/Cook's?node-id=0-1).
 
 ## 🛠️ Functionalities
 
