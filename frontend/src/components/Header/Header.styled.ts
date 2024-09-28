@@ -4,7 +4,6 @@ import styled from "styled-components";
 export const StyledHeader = styled.header`
 	display: flex;
 	align-items: center;
-	font-weight: 600;
 	gap: 2.5rem;
 	padding-block: 1.25rem;
 
@@ -13,6 +12,10 @@ export const StyledHeader = styled.header`
 		font-family: Poppins;
 		font-weight: 900;
 		font-size: 3.75rem;
+	}
+
+	& a {
+		font-weight: 600;
 	}
 `;
 
@@ -36,14 +39,12 @@ export const SearchBar = styled.div`
 	& input {
 		background-color: transparent;
 		border: none;
-		font-weight: 300;
 		outline: none;
 		width: 100%;
 
 		&::placeholder {
-			color: #6c6c6c;
+			color: var(--muted-text);
 			font-size: 0.875rem;
-			font-weight: 300;
 		}
 	}
 `;
@@ -52,4 +53,8 @@ export const UserArea = styled(Link)`
 	align-items: center;
 	display: flex;
 	gap: 4px;
+
+	& p {
+		font-weight: 600;
+	}
 `;

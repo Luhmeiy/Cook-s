@@ -24,8 +24,4 @@ export const CallToAction = styled.div`
 			line-height: 3rem;
 		}
 	}
-
-	& p {
-		font-weight: 300;
-	}
 `;

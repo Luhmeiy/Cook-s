@@ -5,6 +5,8 @@ export const StyledButton = styled(Link)`
 	background-color: var(--primary);
 	border: none;
 	border-radius: 0.25rem;
+	display: flex;
+	justify-content: center;
 	font-family: Montserrat;
 	padding: 0.75rem;
 
