@@ -1,12 +1,21 @@
+import { useNavigate } from "react-router-dom";
 import { StyledButton } from "./Button.styled";
-import { LinkProps } from "react-router-dom";
 
-interface ButtonProps extends LinkProps {
+interface ButtonProps {
 	children: React.ReactNode;
+	onClick?: React.MouseEventHandler<HTMLButtonElement>;
+	to?: string;
+	[key: string]: any;
 }
 
-const Button: React.FC<ButtonProps> = ({ to, children }) => {
-	return <StyledButton to={to}>{children}</StyledButton>;
+const Button: React.FC<ButtonProps> = ({ children, onClick, to, ...props }) => {
+	const navigate = useNavigate();
+
+	return (
+		<StyledButton onClick={to ? () => navigate(to) : onClick} {...props}>
+			{children}
+		</StyledButton>
+	);
 };
 
 export default Button;

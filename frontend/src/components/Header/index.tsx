@@ -21,7 +21,7 @@ const Header = () => {
 
 			<Link to="/">Community Recipes</Link>
 
-			<UserArea to="/login">
+			<UserArea to="/auth/login">
 				<UserCircle size={24} weight="bold" />
 				<p>Register</p>
 			</UserArea>

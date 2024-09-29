@@ -15,7 +15,7 @@ const Hero = () => {
 					list.
 				</p>
 
-				<Button to="/login">Get Started</Button>
+				<Button to="/auth/login">Get Started</Button>
 			</CallToAction>
 
 			<HomeHeroImage />
