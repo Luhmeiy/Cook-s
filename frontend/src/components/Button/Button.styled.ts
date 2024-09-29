@@ -1,18 +1,23 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const StyledButton = styled(Link)`
-	background-color: var(--primary);
-	border: none;
+export const StyledButton = styled.button<{ alternate?: Boolean }>`
+	align-items: center;
+	background-color: ${({ alternate }) =>
+		alternate ? "transparent" : "var(--primary)"};
+	border: ${({ alternate }) =>
+		alternate ? "2px solid var(--primary)" : "none"};
 	border-radius: 0.25rem;
+	cursor: pointer;
 	display: flex;
+	font-size: 1rem;
+	gap: 0.5rem;
 	justify-content: center;
-	font-family: Montserrat;
 	padding: 0.75rem;
+	transition: 0.5s;
 
 	&:hover {
-		color: var(--text);
-		filter: brightness(85%);
+		background: ${({ alternate }) => alternate && "var(--primary)"};
+		filter: ${({ alternate }) => !alternate && "brightness(85%)"};
 	}
 
 	&:active {

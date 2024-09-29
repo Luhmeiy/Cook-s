@@ -3,13 +3,14 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
     :root {
         --background: #F9F6F2;
-        --muted-text: #6C6C6C;
-        --primary: #F5A623;
         --second-background: #EAE0D5;
+        --primary: #F5A623;
         --text: #333333;
+        --muted-text: #6C6C6C;
     }
 
     * {
+        box-sizing: border-box;
         font-family: Montserrat;
         font-weight: 300;
         margin: 0;
