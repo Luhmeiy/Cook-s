@@ -21,9 +21,9 @@ export const getUser = expressAsyncHandler(async (req, res) => {
 });
 
 export const createUser = expressAsyncHandler(async (req, res) => {
-	const { username, password } = req.body;
+	const { email, username, password } = req.body;
 
-	if (!username || !password) {
+	if (!email || !username || !password) {
 		res.status(400);
 		throw new Error("All fields are required.");
 	}
@@ -31,6 +31,7 @@ export const createUser = expressAsyncHandler(async (req, res) => {
 	const hashedPassword = await bcrypt.hash(password, 10);
 
 	const userObject = {
+		email,
 		username,
 		password: hashedPassword,
 		ingredientList: [],
