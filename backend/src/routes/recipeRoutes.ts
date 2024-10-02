@@ -5,8 +5,11 @@ import {
 	getRecipes,
 	updateRecipe,
 } from "../controllers/recipeController";
+import { verifyJWT } from "../middleware/verifyJWT";
 
 export const router = Router();
+
+router.use(verifyJWT);
 
 router
 	.route("/")

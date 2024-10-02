@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
@@ -24,6 +25,8 @@ app.use(
 		origin: process.env.CLIENT_URL,
 	})
 );
+
+app.use(cookieParser());
 
 app.use(router);
 
