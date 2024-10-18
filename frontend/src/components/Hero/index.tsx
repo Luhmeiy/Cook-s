@@ -1,6 +1,6 @@
-import HomeHeroImage from "../../assets/HomeHeroImage";
-import Button from "../Button";
 import { CallToAction, StyledHero } from "./Hero.styled";
+import HomeHeroImage from "@/assets/HomeHeroImage";
+import Button from "../Button";
 
 const Hero = () => {
 	return (

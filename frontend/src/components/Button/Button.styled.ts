@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledButton = styled.button<{ alternate?: Boolean }>`
+export const StyledButton = styled.button<{ alternate?: boolean }>`
 	align-items: center;
 	background-color: ${({ alternate }) =>
 		alternate ? "transparent" : "var(--primary)"};

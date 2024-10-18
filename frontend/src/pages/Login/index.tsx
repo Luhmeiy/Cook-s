@@ -4,8 +4,8 @@ import {
 	OrDivider,
 	StyledForm,
 	StyledLink,
-} from "../../styles/Auth.styled";
-import Button from "../../components/Button";
+} from "@/styles/Auth.styled";
+import Button from "@/components/Button";
 
 const Login = () => {
 	return (

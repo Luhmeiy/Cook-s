@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
+import GlobalStyles from "@/GlobalStyles";
 import Header from "./Header";
-import GlobalStyles from "../GlobalStyles";
 
 const Layout = () => {
 	return (

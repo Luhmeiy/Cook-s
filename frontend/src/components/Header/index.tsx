@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
+import { MagnifyingGlass, UserCircle } from "@phosphor-icons/react";
 import {
 	SearchBar,
 	SearchBarContainer,
 	StyledHeader,
 	UserArea,
 } from "./Header.styled";
-import { MagnifyingGlass, UserCircle } from "@phosphor-icons/react";
 
 const Header = () => {
 	return (

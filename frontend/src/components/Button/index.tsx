@@ -5,7 +5,7 @@ interface ButtonProps {
 	children: React.ReactNode;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	to?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 const Button: React.FC<ButtonProps> = ({ children, onClick, to, ...props }) => {
