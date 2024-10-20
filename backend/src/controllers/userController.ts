@@ -1,6 +1,6 @@
-import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
-import User from "../models/User";
+import expressAsyncHandler from "express-async-handler";
+import User from "@/models/User";
 
 export const getUser = expressAsyncHandler(async (req, res) => {
 	const { id } = req.body;

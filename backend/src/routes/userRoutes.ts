@@ -4,8 +4,8 @@ import {
 	deleteUser,
 	getUser,
 	updateUser,
-} from "../controllers/userController";
-import { verifyJWT } from "../middleware/verifyJWT";
+} from "@/controllers/userController";
+import { verifyJWT } from "@/middleware/verifyJWT";
 
 export const router = Router();
 

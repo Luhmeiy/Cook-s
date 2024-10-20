@@ -4,8 +4,8 @@ import {
 	deleteRecipe,
 	getRecipes,
 	updateRecipe,
-} from "../controllers/recipeController";
-import { verifyJWT } from "../middleware/verifyJWT";
+} from "@/controllers/recipeController";
+import { verifyJWT } from "@/middleware/verifyJWT";
 
 export const router = Router();
 

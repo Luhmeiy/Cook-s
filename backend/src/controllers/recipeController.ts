@@ -1,5 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
-import Recipe from "../models/Recipe";
+import Recipe from "@/models/Recipe";
 
 export const getRecipes = expressAsyncHandler(async (req, res) => {
 	const { id } = req.body;

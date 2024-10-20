@@ -1,7 +1,14 @@
 import jwt from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+import { DecodedUser } from "@/types/DecodedUser";
 
-export const verifyJWT = (req, res, next) => {
-	const authHeader = req.headers.authorization || req.headers.Authorization;
+interface CustomRequest extends Request {
+	user: string;
+}
+
+export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
+	const authHeader = (req.headers.authorization ||
+		req.headers.Authorization) as string | undefined;
 
 	if (!authHeader?.startsWith("Bearer ")) {
 		return res.status(401).json({ message: "Unauthorized" });
@@ -15,8 +22,7 @@ export const verifyJWT = (req, res, next) => {
 			throw new Error("Forbidden.");
 		}
 
-		req.user = decoded.UserInfo.username;
-		req.roles = decoded.UserInfo.roles;
+		(req as CustomRequest).user = (decoded as DecodedUser).username;
 
 		next();
 	});

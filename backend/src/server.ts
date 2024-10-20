@@ -1,8 +1,8 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { config } from "dotenv";
-import express from "express";
+import express, { Response } from "express";
 import mongoose from "mongoose";
+import { config } from "dotenv";
 
 import { connectDB } from "./config/db";
 import { router } from "./routes/router";
@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(router);
 
 // 404
-app.all("*", (req, res) => {
+app.all("*", ({ res }: { res: Response }) => {
 	res.status(404);
 	res.send("Path not found.");
 });

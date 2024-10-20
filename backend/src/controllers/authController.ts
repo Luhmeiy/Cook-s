@@ -1,8 +1,10 @@
 import expressAsyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import User from "../models/User";
+
+import User from "@/models/User";
+import { DecodedUser } from "@/types/DecodedUser";
 
 export const login = expressAsyncHandler(async (req, res) => {
 	const { email, password } = req.body;
@@ -27,11 +29,7 @@ export const login = expressAsyncHandler(async (req, res) => {
 	}
 
 	const accessToken = jwt.sign(
-		{
-			UserInfo: {
-				username: foundUser.username,
-			},
-		},
+		{ username: foundUser.username },
 		process.env.ACCESS_TOKEN_SECRET!,
 		{ expiresIn: "15m" }
 	);
@@ -60,7 +58,7 @@ export const refresh = (req: Request, res: Response) => {
 		throw new Error("Unauthorized.");
 	}
 
-	const refreshToken = cookies.jwt;
+	const refreshToken = cookies.jwt as string;
 
 	jwt.verify(
 		refreshToken,
@@ -72,7 +70,7 @@ export const refresh = (req: Request, res: Response) => {
 			}
 
 			const foundUser = await User.findOne({
-				username: decoded.username,
+				username: (decoded as DecodedUser).username,
 			}).exec();
 
 			if (!foundUser) {
