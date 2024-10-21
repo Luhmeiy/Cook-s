@@ -47,7 +47,7 @@ export const login = expressAsyncHandler(async (req, res) => {
 		maxAge: 7 * 24 * 60 * 60 * 1000,
 	});
 
-	res.json({ accessToken });
+	res.json({ user: foundUser, accessToken });
 });
 
 export const refresh = (req: Request, res: Response) => {
@@ -88,7 +88,7 @@ export const refresh = (req: Request, res: Response) => {
 				{ expiresIn: "15m" }
 			);
 
-			res.json({ accessToken });
+			res.json({ user: foundUser, accessToken });
 		}
 	);
 };
