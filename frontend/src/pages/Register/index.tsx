@@ -1,13 +1,47 @@
+// packages
+import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, GoogleLogo } from "@phosphor-icons/react";
+
+// styles
 import {
 	LayoutInfo,
 	OrDivider,
 	StyledForm,
 	StyledLink,
 } from "@/styles/Auth.styled";
+
+// components / Redux
 import Button from "@/components/Button";
+import { useRegisterMutation } from "@/features/auth/authApiSlice";
 
 const Register = () => {
+	const navigate = useNavigate();
+
+	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+
+	const [register, { isLoading }] = useRegisterMutation();
+
+	const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		try {
+			await register({ username, email, password });
+
+			setUsername("");
+			setEmail("");
+			setPassword("");
+
+			navigate("/auth/login");
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	if (isLoading) return <p>Loading...</p>;
+
 	return (
 		<>
 			<LayoutInfo>
@@ -29,12 +63,29 @@ const Register = () => {
 					<hr />
 				</OrDivider>
 
-				<StyledForm>
-					<input type="text" placeholder="Name" />
-					<input type="email" placeholder="Email" />
+				<StyledForm onSubmit={handleRegister}>
+					<input
+						type="text"
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+						placeholder="Name"
+					/>
+
+					<input
+						type="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						placeholder="Email"
+					/>
 
 					<div>
-						<input type="password" placeholder="Password" />
+						<input
+							type="password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							placeholder="Password"
+						/>
+
 						<Eye color="#6C6C6C" size={20} weight="light" />
 					</div>
 
