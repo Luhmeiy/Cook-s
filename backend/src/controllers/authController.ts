@@ -1,6 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
-import { compare } from "bcrypt";
+import bcrypt, { compare } from "bcrypt";
 import { Request, Response } from "express";
 
 import User from "@/models/User";
@@ -48,6 +48,35 @@ export const login = expressAsyncHandler(async (req, res) => {
 	});
 
 	res.json({ user: foundUser, accessToken });
+});
+
+export const register = expressAsyncHandler(async (req, res) => {
+	const { email, username, password } = req.body;
+
+	if (!email || !username || !password) {
+		res.status(400);
+		throw new Error("All fields are required.");
+	}
+
+	const hashedPassword = await bcrypt.hash(password, 10);
+
+	const userObject = {
+		email,
+		username,
+		password: hashedPassword,
+		ingredientList: [],
+		shoppingList: [],
+	};
+
+	const user = await User.create(userObject);
+
+	if (user) {
+		res.status(201).json({
+			message: `New user ${user.username} created.`,
+		});
+	} else {
+		res.status(400).json({ message: "Invalid user data received." });
+	}
 });
 
 export const refresh = (req: Request, res: Response) => {

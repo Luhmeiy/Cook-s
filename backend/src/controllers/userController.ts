@@ -20,35 +20,6 @@ export const getUser = expressAsyncHandler(async (req, res) => {
 	res.json(user);
 });
 
-export const createUser = expressAsyncHandler(async (req, res) => {
-	const { email, username, password } = req.body;
-
-	if (!email || !username || !password) {
-		res.status(400);
-		throw new Error("All fields are required.");
-	}
-
-	const hashedPassword = await bcrypt.hash(password, 10);
-
-	const userObject = {
-		email,
-		username,
-		password: hashedPassword,
-		ingredientList: [],
-		shoppingList: [],
-	};
-
-	const user = await User.create(userObject);
-
-	if (user) {
-		res.status(201).json({
-			message: `New user ${user.username} created.`,
-		});
-	} else {
-		res.status(400).json({ message: "Invalid user data received." });
-	}
-});
-
 export const updateUser = expressAsyncHandler(async (req, res) => {
 	const { id, data } = req.body;
 
