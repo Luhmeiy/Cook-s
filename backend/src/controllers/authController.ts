@@ -58,6 +58,13 @@ export const register = expressAsyncHandler(async (req, res) => {
 		throw new Error("All fields are required.");
 	}
 
+	const existingUser = await User.findOne({ email });
+
+	if (existingUser) {
+		res.status(409);
+		throw new Error("User already exists.");
+	}
+
 	const hashedPassword = await bcrypt.hash(password, 10);
 
 	const userObject = {

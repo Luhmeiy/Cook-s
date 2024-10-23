@@ -28,13 +28,15 @@ const Register = () => {
 		e.preventDefault();
 
 		try {
-			await register({ username, email, password });
+			const response = await register({ username, email, password });
 
-			setUsername("");
-			setEmail("");
-			setPassword("");
+			if (!response.error) {
+				setUsername("");
+				setEmail("");
+				setPassword("");
 
-			navigate("/auth/login");
+				navigate("/auth/login");
+			}
 		} catch (error) {
 			console.log(error);
 		}
