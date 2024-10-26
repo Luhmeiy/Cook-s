@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { Popover } from "@mui/material";
 
 export const StyledHeader = styled.header`
 	display: flex;
@@ -56,5 +57,41 @@ export const UserArea = styled(Link)`
 
 	& p {
 		font-weight: 600;
+	}
+`;
+
+export const UserButton = styled.button`
+	align-items: center;
+	background-color: transparent;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	display: flex;
+	font-size: 1rem;
+	font-weight: 600;
+	gap: 0.25rem;
+	transition: 0.5s;
+
+	&:hover {
+		color: var(--primary);
+	}
+`;
+
+export const UserPopover = styled(Popover)`
+	& div {
+		border-radius: 0;
+		margin-top: 0.25rem;
+		padding: 1rem 0.5rem;
+
+		& button {
+			align-items: center;
+			background-color: transparent;
+			border: none;
+			color: inherit;
+			cursor: pointer;
+			display: flex;
+			font-size: 1rem;
+			gap: 0.5rem;
+		}
 	}
 `;
