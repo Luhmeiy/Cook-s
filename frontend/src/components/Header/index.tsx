@@ -33,50 +33,54 @@ const Header = () => {
 		<StyledHeader>
 			<Link to="/">Cook's</Link>
 
-			<SearchBarContainer>
-				<SearchBar>
-					<input placeholder="Find your next favorite recipe!" />
-					<MagnifyingGlass size={24} weight="bold" />
-				</SearchBar>
-			</SearchBarContainer>
+			<div>
+				<SearchBarContainer>
+					<SearchBar>
+						<input placeholder="Find your next favorite recipe!" />
+						<MagnifyingGlass size={24} weight="bold" />
+					</SearchBar>
+				</SearchBarContainer>
 
-			<Link to="/">Community Recipes</Link>
+				<Link to="/recipes">Community Recipes</Link>
 
-			{user ? (
-				<>
-					<UserButton
-						aria-describedby={id}
-						onClick={(e) => setAnchorEl(e.currentTarget)}
-					>
+				{user ? (
+					<>
+						<Link to="/">My Recipes</Link>
+
+						<UserButton
+							aria-describedby={id}
+							onClick={(e) => setAnchorEl(e.currentTarget)}
+						>
+							<UserCircle size={24} weight="bold" />
+							{user.username}
+						</UserButton>
+
+						<UserPopover
+							id={id}
+							open={open}
+							anchorEl={anchorEl}
+							onClose={() => setAnchorEl(null)}
+							anchorOrigin={{
+								vertical: "bottom",
+								horizontal: "center",
+							}}
+							transformOrigin={{
+								vertical: "top",
+								horizontal: "center",
+							}}
+						>
+							<button onClick={handleLogout}>
+								<SignOut size={20} weight="light" /> Logout
+							</button>
+						</UserPopover>
+					</>
+				) : (
+					<UserArea to="/auth/login">
 						<UserCircle size={24} weight="bold" />
-						{user.username}
-					</UserButton>
-
-					<UserPopover
-						id={id}
-						open={open}
-						anchorEl={anchorEl}
-						onClose={() => setAnchorEl(null)}
-						anchorOrigin={{
-							vertical: "bottom",
-							horizontal: "center",
-						}}
-						transformOrigin={{
-							vertical: "top",
-							horizontal: "center",
-						}}
-					>
-						<button onClick={handleLogout}>
-							<SignOut size={20} weight="light" /> Logout
-						</button>
-					</UserPopover>
-				</>
-			) : (
-				<UserArea to="/auth/login">
-					<UserCircle size={24} weight="bold" />
-					<p>Register</p>
-				</UserArea>
-			)}
+						<p>Register</p>
+					</UserArea>
+				)}
+			</div>
 		</StyledHeader>
 	);
 };

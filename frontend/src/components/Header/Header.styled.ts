@@ -3,20 +3,28 @@ import { Link } from "react-router-dom";
 import { Popover } from "@mui/material";
 
 export const StyledHeader = styled.header`
-	display: flex;
 	align-items: center;
+	display: flex;
 	gap: 2.5rem;
+	justify-content: space-between;
 	padding-block: 1.25rem;
 
-	& > a:first-of-type {
+	& > a {
 		color: var(--primary);
 		font-family: Poppins;
 		font-weight: 900;
 		font-size: 3.75rem;
 	}
 
-	& a {
-		font-weight: 600;
+	& > div {
+		align-items: center;
+		display: flex;
+		flex: 1;
+		gap: 1.5rem;
+
+		& a {
+			font-weight: 600;
+		}
 	}
 `;
 
