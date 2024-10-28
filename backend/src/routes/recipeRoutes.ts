@@ -3,14 +3,15 @@ import {
 	createRecipe,
 	deleteRecipe,
 	getRecipes,
+	getUserRecipes,
 	updateRecipe,
 } from "@/controllers/recipeController";
+import { verifyJWT } from "@/middleware/verifyJWT";
 
 export const router = Router();
 
-router
-	.route("/")
-	.get(getRecipes)
-	.post(createRecipe)
-	.patch(updateRecipe)
-	.delete(deleteRecipe);
+router.route("/").get(getRecipes);
+router.route("/user").get(getUserRecipes);
+
+router.use(verifyJWT);
+router.route("/").post(createRecipe).patch(updateRecipe).delete(deleteRecipe);

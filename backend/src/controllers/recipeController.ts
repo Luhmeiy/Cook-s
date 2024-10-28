@@ -2,6 +2,17 @@ import expressAsyncHandler from "express-async-handler";
 import Recipe from "@/models/Recipe";
 
 export const getRecipes = expressAsyncHandler(async (req, res) => {
+	const recipes = await Recipe.find({ public: true }).exec();
+
+	if (!recipes.length) {
+		res.status(400);
+		throw new Error("Recipes not found.");
+	}
+
+	res.json({ recipes });
+});
+
+export const getUserRecipes = expressAsyncHandler(async (req, res) => {
 	const { id } = req.body;
 
 	if (!id) {
@@ -16,7 +27,7 @@ export const getRecipes = expressAsyncHandler(async (req, res) => {
 		throw new Error("Recipes not found.");
 	}
 
-	res.json(recipes);
+	res.json({ recipes });
 });
 
 export const createRecipe = expressAsyncHandler(async (req, res) => {
