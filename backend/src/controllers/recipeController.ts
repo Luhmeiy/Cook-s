@@ -13,14 +13,16 @@ export const getRecipes = expressAsyncHandler(async (req, res) => {
 });
 
 export const getUserRecipes = expressAsyncHandler(async (req, res) => {
-	const { id } = req.body;
+	const { id } = req.params;
 
 	if (!id) {
 		res.status(400);
-		throw new Error("Recipe ID required.");
+		throw new Error("User ID required.");
 	}
 
-	const recipes = await Recipe.find({ userId: id }).exec();
+	const recipes = await Recipe.find({
+		$or: [{ userId: id }, { "createdBy._id": id }],
+	}).exec();
 
 	if (!recipes.length) {
 		res.status(400);

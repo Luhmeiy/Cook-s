@@ -11,7 +11,7 @@ import { verifyJWT } from "@/middleware/verifyJWT";
 export const router = Router();
 
 router.route("/").get(getRecipes);
-router.route("/user").get(getUserRecipes);
+router.route("/:id").get(getUserRecipes);
 
 router.use(verifyJWT);
 router.route("/").post(createRecipe).patch(updateRecipe).delete(deleteRecipe);

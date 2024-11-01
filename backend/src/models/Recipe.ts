@@ -55,7 +55,7 @@ const recipeSchema = new Schema({
 	},
 	createdBy: [
 		{
-			id: {
+			_id: {
 				type: Schema.Types.ObjectId,
 				ref: "User",
 				required: true,
