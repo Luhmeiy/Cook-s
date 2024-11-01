@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RecipesContainer } from "./Recipes.styled";
+import { RecipesContainer, StyledRecipes } from "@/styles/Recipes.styled";
 import RecipeItem from "@/components/RecipeItem";
 import { useGetPublicRecipesMutation } from "@/features/recipes/recipesApiSlice";
 import {
@@ -31,10 +31,10 @@ const Recipes = () => {
 	if (isLoading) return <p>Loading...</p>;
 
 	return (
-		<RecipesContainer>
+		<StyledRecipes>
 			<h2>Community Recipes</h2>
 
-			<div>
+			<RecipesContainer>
 				{recipes?.length ? (
 					recipes.map((recipe) => (
 						<RecipeItem recipe={recipe} key={recipe._id} />
@@ -42,8 +42,8 @@ const Recipes = () => {
 				) : (
 					<p>No recipes found.</p>
 				)}
-			</div>
-		</RecipesContainer>
+			</RecipesContainer>
+		</StyledRecipes>
 	);
 };
 

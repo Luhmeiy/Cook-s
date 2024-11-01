@@ -3,6 +3,7 @@ import { RootState } from "@/app/store";
 
 interface InitialState {
 	user: {
+		_id: string;
 		email: string;
 		username: string;
 		ingredientList: [
@@ -46,6 +47,7 @@ const authSlice = createSlice({
 });
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectCurrentUserId = (state: RootState) => state.auth.user!._id;
 export const selectCurrentToken = (state: RootState) => state.auth.token;
 
 export const { setCredentials, logout } = authSlice.actions;
