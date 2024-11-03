@@ -3,12 +3,19 @@ import { CaretLeft, Plus } from "@phosphor-icons/react";
 import {
 	GoBackLink,
 	InformationContainer,
-	IngredientContainer,
+	IngredientsContainer,
+	IngredientsForm,
 	InputContainer,
 	NewRecipeForm,
 	PublicContainer,
 } from "./NewRecipe.styled";
 import Button from "@/components/Button";
+
+const defaultIngredient = {
+	ingredient: "",
+	quantity: 1,
+	quantityType: "",
+};
 
 const NewRecipe = () => {
 	const [title, setTitle] = useState("");
@@ -17,6 +24,23 @@ const NewRecipe = () => {
 	const [instructions, setInstructions] = useState("");
 	const [description, setDescription] = useState("");
 	const [selectedOption, setSelectedOption] = useState(false);
+	const [ingredients, setIngredients] = useState([defaultIngredient]);
+
+	const addNewIngredient = () => {
+		setIngredients([...ingredients, defaultIngredient]);
+	};
+
+	const updateIngredients = (
+		field: string,
+		index: number,
+		value: string | number
+	) => {
+		const updatedIngredients = ingredients.map((ingredient, i) =>
+			i === index ? { ...ingredient, [field]: value } : ingredient
+		);
+
+		setIngredients(updatedIngredients);
+	};
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -122,31 +146,69 @@ const NewRecipe = () => {
 				<div>
 					<h2>Ingredients</h2>
 
-					<IngredientContainer>
-						<div>
-							<InputContainer>
-								Ingredient
-								<input type="text" placeholder="Ex.: Apple" />
-							</InputContainer>
+					<IngredientsForm>
+						<IngredientsContainer>
+							{ingredients.map((ingredient, index) => (
+								<div key={index}>
+									<InputContainer>
+										Ingredient
+										<input
+											type="text"
+											value={ingredient.ingredient}
+											onChange={(e) =>
+												updateIngredients(
+													"ingredient",
+													index,
+													e.target.value
+												)
+											}
+											placeholder="Ex.: Apple"
+										/>
+									</InputContainer>
 
-							<InputContainer>
-								Quantity
-								<input type="number" min={1} />
-							</InputContainer>
+									<InputContainer>
+										Quantity
+										<input
+											type="number"
+											value={ingredient.quantity}
+											onChange={(e) =>
+												updateIngredients(
+													"quantity",
+													index,
+													e.target.value
+												)
+											}
+											min={1}
+										/>
+									</InputContainer>
 
-							<InputContainer>
-								Quantity Type
-								<input
-									type="text"
-									placeholder="Ex.: Apple Pie"
-								/>
-							</InputContainer>
-						</div>
+									<InputContainer>
+										Quantity Type
+										<input
+											type="text"
+											value={ingredient.quantityType}
+											onChange={(e) =>
+												updateIngredients(
+													"quantityType",
+													index,
+													e.target.value
+												)
+											}
+											placeholder="Ex.: Apple Pie"
+										/>
+									</InputContainer>
+								</div>
+							))}
+						</IngredientsContainer>
 
-						<Button type="button" variant="gray">
+						<Button
+							type="button"
+							variant="gray"
+							onClick={addNewIngredient}
+						>
 							Add New Ingredient <Plus />
 						</Button>
-					</IngredientContainer>
+					</IngredientsForm>
 				</div>
 
 				<div>

@@ -83,11 +83,18 @@ export const PublicContainer = styled.div`
 	}
 `;
 
-export const IngredientContainer = styled.div`
+export const IngredientsForm = styled.div`
 	align-items: start;
 	display: flex;
 	flex-direction: column;
-	gap: 1.5rem;
+	gap: 1rem;
+`;
+
+export const IngredientsContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+
 	& div {
 		display: flex;
 		gap: 0.75rem;
