@@ -143,7 +143,7 @@ const NewRecipe = () => {
 							</InputContainer>
 						</div>
 
-						<Button type="button">
+						<Button type="button" variant="gray">
 							Add New Ingredient <Plus />
 						</Button>
 					</IngredientContainer>

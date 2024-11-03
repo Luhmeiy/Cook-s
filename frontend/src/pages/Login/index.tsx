@@ -61,7 +61,7 @@ const Login = () => {
 					<p>Your recipes await you.</p>
 				</div>
 
-				<Button alternate="true">
+				<Button variant="alternate">
 					<GoogleLogo size={20} /> Log in with Google
 				</Button>
 

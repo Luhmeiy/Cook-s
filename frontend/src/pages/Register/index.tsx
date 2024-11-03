@@ -55,7 +55,7 @@ const Register = () => {
 					</p>
 				</div>
 
-				<Button alternate="true">
+				<Button variant="alternate">
 					<GoogleLogo size={20} /> Sign up with Google
 				</Button>
 
