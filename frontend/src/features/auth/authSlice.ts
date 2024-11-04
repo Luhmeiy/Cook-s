@@ -10,14 +10,14 @@ interface InitialState {
 			{
 				ingredient: string;
 				quantity: number;
-				quantityType: string;
+				unit: string;
 			}
 		];
 		shoppingList: [
 			{
 				ingredient: string;
 				quantity: number;
-				quantityType: string;
+				unit: string;
 				bought: boolean;
 			}
 		];

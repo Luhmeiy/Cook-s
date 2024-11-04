@@ -9,7 +9,7 @@ export interface Recipe {
 		{
 			ingredient: string;
 			quantity: number;
-			quantityType: string;
+			unit: string;
 		}
 	];
 	instructions: string[];

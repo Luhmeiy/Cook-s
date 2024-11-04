@@ -14,7 +14,7 @@ import Button from "@/components/Button";
 const defaultIngredient = {
 	ingredient: "",
 	quantity: 1,
-	quantityType: "",
+	unit: "",
 };
 
 const NewRecipe = () => {
@@ -186,10 +186,10 @@ const NewRecipe = () => {
 										Quantity Type
 										<input
 											type="text"
-											value={ingredient.quantityType}
+											value={ingredient.unit}
 											onChange={(e) =>
 												updateIngredients(
-													"quantityType",
+													"unit",
 													index,
 													e.target.value
 												)

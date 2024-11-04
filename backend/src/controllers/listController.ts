@@ -8,7 +8,7 @@ interface ListBody {
 	list: Types.DocumentArray<{
 		ingredient: string;
 		quantity: number;
-		quantityType: string;
+		unit: string;
 		bought: boolean;
 	}>;
 	ingredientName: string;
