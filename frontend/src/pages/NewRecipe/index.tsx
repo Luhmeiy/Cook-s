@@ -1,5 +1,10 @@
-import { FormEvent, useState } from "react";
+// packages
+import { FormEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { CaretLeft, Plus } from "@phosphor-icons/react";
+
+// styles
 import {
 	GoBackLink,
 	InformationContainer,
@@ -9,7 +14,13 @@ import {
 	NewRecipeForm,
 	PublicContainer,
 } from "./NewRecipe.styled";
+
+// components / Redux
 import Button from "@/components/Button";
+import {
+	selectAuthLoading,
+	selectCurrentUser,
+} from "@/features/auth/authSlice";
 
 const defaultIngredient = {
 	ingredient: "",
@@ -18,6 +29,10 @@ const defaultIngredient = {
 };
 
 const NewRecipe = () => {
+	const navigate = useNavigate();
+	const user = useSelector(selectCurrentUser);
+	const isLoading = useSelector(selectAuthLoading);
+
 	const [title, setTitle] = useState("");
 	const [prepTime, setPrepTime] = useState("");
 	const [servings, setServings] = useState(1);
@@ -45,6 +60,12 @@ const NewRecipe = () => {
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 	};
+
+	useEffect(() => {
+		if (!isLoading && !user) {
+			navigate("/");
+		}
+	}, [isLoading, user, navigate]);
 
 	return (
 		<div>

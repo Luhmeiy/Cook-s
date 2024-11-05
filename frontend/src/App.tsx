@@ -1,6 +1,9 @@
 import { useSelector } from "react-redux";
-import { Routes, Route } from "react-router-dom";
-import { selectCurrentUser } from "./features/auth/authSlice";
+import { Routes, Route, Navigate } from "react-router-dom";
+import {
+	selectAuthLoading,
+	selectCurrentUser,
+} from "./features/auth/authSlice";
 
 // Layouts
 import Layout from "./components/Layout";
@@ -16,6 +19,7 @@ import Register from "./pages/Register";
 
 function App() {
 	const user = useSelector(selectCurrentUser);
+	const isLoading = useSelector(selectAuthLoading);
 
 	return (
 		<Routes>
@@ -25,7 +29,16 @@ function App() {
 				<Route path="new-recipe" element={<NewRecipe />} />
 			</Route>
 
-			<Route path="auth" element={<AuthLayout />}>
+			<Route
+				path="auth"
+				element={
+					!isLoading && !user ? (
+						<AuthLayout />
+					) : (
+						<Navigate to="/" replace />
+					)
+				}
+			>
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
 			</Route>

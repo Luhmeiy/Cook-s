@@ -1,6 +1,5 @@
 // packages
 import { FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Eye, GoogleLogo } from "@phosphor-icons/react";
 
@@ -15,11 +14,9 @@ import {
 // components / Redux
 import Button from "@/components/Button";
 import { useLoginMutation } from "@/features/auth/authApiSlice";
-import { setCredentials } from "@/features/auth/authSlice";
 
 const Login = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -30,12 +27,10 @@ const Login = () => {
 		e.preventDefault();
 
 		try {
-			const { user, accessToken } = await login({
+			await login({
 				email,
 				password,
-			}).unwrap();
-
-			dispatch(setCredentials({ user, accessToken }));
+			});
 
 			setEmail("");
 			setPassword("");

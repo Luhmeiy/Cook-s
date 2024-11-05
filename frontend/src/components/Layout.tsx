@@ -1,29 +1,25 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import GlobalStyles from "@/GlobalStyles";
 import Header from "./Header";
 import { useRefreshMutation } from "@/features/auth/authApiSlice";
-import { setCredentials } from "@/features/auth/authSlice";
+import { selectAuthLoading } from "@/features/auth/authSlice";
 
 const Layout = () => {
-	const dispatch = useDispatch();
+	const isLoading = useSelector(selectAuthLoading);
 
 	const [refresh] = useRefreshMutation();
 
 	useEffect(() => {
 		const restoreSession = async () => {
-			const { user, accessToken } = await refresh(null).unwrap();
-
-			if (user && accessToken) {
-				dispatch(setCredentials({ user, accessToken }));
-			} else {
-				console.log("User needs to log in.");
-			}
+			await refresh(null);
 		};
 
 		restoreSession();
-	}, [dispatch, refresh]);
+	}, [refresh]);
+
+	if (isLoading) return <p>Loading...</p>;
 
 	return (
 		<>
