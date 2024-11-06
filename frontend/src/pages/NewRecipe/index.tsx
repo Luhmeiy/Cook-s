@@ -21,6 +21,7 @@ import {
 	selectAuthLoading,
 	selectCurrentUser,
 } from "@/features/auth/authSlice";
+import { usePostRecipeMutation } from "@/features/recipes/recipesApiSlice";
 
 const defaultIngredient = {
 	ingredient: "",
@@ -33,12 +34,16 @@ const NewRecipe = () => {
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
 
+	const [postRecipe, { isLoading: isLoadingPostRecipe }] =
+		usePostRecipeMutation();
+
 	const [title, setTitle] = useState("");
 	const [prepTime, setPrepTime] = useState("");
 	const [servings, setServings] = useState(1);
+	const [category, setCategory] = useState("");
 	const [instructions, setInstructions] = useState("");
 	const [description, setDescription] = useState("");
-	const [selectedOption, setSelectedOption] = useState(false);
+	const [isPublic, setIsPublic] = useState(false);
 	const [ingredients, setIngredients] = useState([defaultIngredient]);
 
 	const addNewIngredient = () => {
@@ -57,8 +62,37 @@ const NewRecipe = () => {
 		setIngredients(updatedIngredients);
 	};
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		const newRecipe = {
+			name: title,
+			prepTime,
+			servings,
+			category,
+			description,
+			ingredients,
+			instructions,
+			favorite: false,
+			public: isPublic,
+			userId: user?._id,
+			createdBy: {
+				_id: user?._id,
+				username: user?.username,
+			},
+		};
+
+		try {
+			const result = await postRecipe({ data: newRecipe });
+
+			if (result.data.message) {
+				navigate("/");
+			} else {
+				console.log(result.data.error);
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {
@@ -66,6 +100,8 @@ const NewRecipe = () => {
 			navigate("/");
 		}
 	}, [isLoading, user, navigate]);
+
+	if (isLoadingPostRecipe) return <p>Loading...</p>;
 
 	return (
 		<div>
@@ -85,6 +121,7 @@ const NewRecipe = () => {
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
 								placeholder="Ex.: Apple Pie"
+								required
 							/>
 						</InputContainer>
 
@@ -95,6 +132,7 @@ const NewRecipe = () => {
 								value={prepTime}
 								onChange={(e) => setPrepTime(e.target.value)}
 								placeholder="Ex.: 2 hours"
+								required
 							/>
 						</InputContainer>
 
@@ -109,6 +147,18 @@ const NewRecipe = () => {
 								onChange={(e) => setServings(+e.target.value)}
 							/>
 						</InputContainer>
+
+						<InputContainer>
+							<div>
+								Category <span>(Optional)</span>
+							</div>
+							<input
+								type="text"
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								placeholder="Ex.: Dessert"
+							/>
+						</InputContainer>
 					</InformationContainer>
 
 					<InformationContainer>
@@ -120,6 +170,7 @@ const NewRecipe = () => {
 									setInstructions(e.target.value)
 								}
 								placeholder={`Ex.:\nPrepare the apple pie.\nEat the apple pie.`}
+								required
 							/>
 						</InputContainer>
 
@@ -143,10 +194,10 @@ const NewRecipe = () => {
 						<label>
 							<input
 								type="radio"
-								name="option"
+								name="public"
 								value="true"
-								checked={selectedOption === true}
-								onChange={() => setSelectedOption(true)}
+								checked={isPublic === true}
+								onChange={() => setIsPublic(true)}
 							/>
 							Yes
 						</label>
@@ -154,10 +205,10 @@ const NewRecipe = () => {
 						<label>
 							<input
 								type="radio"
-								name="option"
+								name="public"
 								value="false"
-								checked={selectedOption === false}
-								onChange={() => setSelectedOption(false)}
+								checked={isPublic === false}
+								onChange={() => setIsPublic(false)}
 							/>
 							No
 						</label>
@@ -184,6 +235,7 @@ const NewRecipe = () => {
 												)
 											}
 											placeholder="Ex.: Apple"
+											required
 										/>
 									</InputContainer>
 
@@ -200,11 +252,12 @@ const NewRecipe = () => {
 												)
 											}
 											min={1}
+											required
 										/>
 									</InputContainer>
 
 									<InputContainer>
-										Quantity Type
+										Unit
 										<input
 											type="text"
 											value={ingredient.unit}
@@ -215,7 +268,8 @@ const NewRecipe = () => {
 													e.target.value
 												)
 											}
-											placeholder="Ex.: Apple Pie"
+											placeholder="Ex.: Whole"
+											required
 										/>
 									</InputContainer>
 								</div>

@@ -37,7 +37,7 @@ export const createRecipe = expressAsyncHandler(async (req, res) => {
 
 	const duplicate = await Recipe.findOne({
 		name: data.name,
-		"createdBy.id": data.userId,
+		"createdBy._id": data.userId,
 	});
 
 	if (!duplicate) {
@@ -48,10 +48,10 @@ export const createRecipe = expressAsyncHandler(async (req, res) => {
 				message: `New recipe ${recipe.name} created.`,
 			});
 		} else {
-			res.status(400).json({ message: "Invalid recipe data received." });
+			res.status(400).json({ error: "Invalid recipe data received." });
 		}
 	} else {
-		res.status(400).json({ message: "Recipe already exists." });
+		res.status(400).json({ error: "Recipe already exists." });
 	}
 });
 

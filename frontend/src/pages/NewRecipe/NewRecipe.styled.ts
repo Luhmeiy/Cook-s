@@ -50,6 +50,7 @@ export const InputContainer = styled.label`
 		border: none;
 		border-radius: 4px;
 		padding: 0.75rem;
+		width: 100%;
 
 		&::placeholder {
 			color: var(--muted-text);

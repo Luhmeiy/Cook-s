@@ -8,6 +8,13 @@ export const recipesApiSlice = apiSlice.injectEndpoints({
 				method: "GET",
 			}),
 		}),
+		postRecipe: builder.mutation({
+			query: (credentials) => ({
+				url: "/recipes",
+				method: "POST",
+				body: { ...credentials },
+			}),
+		}),
 		getUserRecipes: builder.mutation({
 			query: (id) => ({
 				url: `/recipes/${id}`,
@@ -17,5 +24,8 @@ export const recipesApiSlice = apiSlice.injectEndpoints({
 	}),
 });
 
-export const { useGetPublicRecipesMutation, useGetUserRecipesMutation } =
-	recipesApiSlice;
+export const {
+	useGetPublicRecipesMutation,
+	usePostRecipeMutation,
+	useGetUserRecipesMutation,
+} = recipesApiSlice;
