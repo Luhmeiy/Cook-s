@@ -2,11 +2,10 @@ import { Star, Timer } from "@phosphor-icons/react";
 import { Recipe } from "@/interfaces/Recipe";
 import {
 	RecipeCategory,
-	RecipeInfo,
 	RecipeTime,
 	RecipeTitle,
-	StyledRecipeItem,
-} from "./RecipeItem.styled";
+} from "@/styles/Recipe.styled";
+import { RecipeInfo, StyledRecipeItem } from "./RecipeItem.styled";
 import { Link } from "react-router-dom";
 
 const RecipeItem = ({ recipe }: { recipe: Recipe }) => {

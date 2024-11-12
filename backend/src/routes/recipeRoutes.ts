@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
 	createRecipe,
 	deleteRecipe,
+	getRecipeById,
 	getRecipes,
 	getUserRecipes,
 	updateRecipe,
@@ -11,7 +12,8 @@ import { verifyJWT } from "@/middleware/verifyJWT";
 export const router = Router();
 
 router.route("/").get(getRecipes);
-router.route("/:id").get(getUserRecipes);
+router.route("/:id").get(getRecipeById);
+router.route("/user/:id").get(getUserRecipes);
 
 router.use(verifyJWT);
 router.route("/").post(createRecipe).patch(updateRecipe).delete(deleteRecipe);

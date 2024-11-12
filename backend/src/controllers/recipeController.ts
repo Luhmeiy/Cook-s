@@ -12,6 +12,19 @@ export const getRecipes = expressAsyncHandler(async (req, res) => {
 	res.json({ recipes });
 });
 
+export const getRecipeById = expressAsyncHandler(async (req, res) => {
+	const { id } = req.params;
+
+	const recipe = await Recipe.findById(id).exec();
+
+	if (!recipe) {
+		res.status(400);
+		throw new Error("Recipe not found.");
+	}
+
+	res.json({ recipe });
+});
+
 export const getUserRecipes = expressAsyncHandler(async (req, res) => {
 	const { id } = req.params;
 

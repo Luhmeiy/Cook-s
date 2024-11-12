@@ -16,10 +16,8 @@ export interface Recipe {
 	favorite: boolean;
 	public: boolean;
 	userId: string;
-	createdBy: [
-		{
-			id: string;
-			username: string;
-		}
-	];
+	createdBy: {
+		_id: string;
+		username: string;
+	};
 }

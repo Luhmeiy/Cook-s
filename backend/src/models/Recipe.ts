@@ -53,19 +53,17 @@ const recipeSchema = new Schema({
 		ref: "User",
 		required: true,
 	},
-	createdBy: [
-		{
-			_id: {
-				type: Schema.Types.ObjectId,
-				ref: "User",
-				required: true,
-			},
-			username: {
-				type: String,
-				required: true,
-			},
+	createdBy: {
+		_id: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
 		},
-	],
+		username: {
+			type: String,
+			required: true,
+		},
+	},
 });
 
 export default model("Recipe", recipeSchema);

@@ -42,10 +42,17 @@ const GlobalStyles = createGlobalStyle`
             min-height: 100dvh;
         }
 
-        h2 {
+        h2, h3 {
             font-family: Poppins;
-            font-size: 2.5rem;
             font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
         }
     }
 `;

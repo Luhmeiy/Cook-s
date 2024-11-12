@@ -14,6 +14,7 @@ import UserRecipes from "./pages/UserRecipes";
 import Home from "./pages/Home";
 import Recipes from "./pages/Recipes";
 import NewRecipe from "./pages/NewRecipe";
+import RecipePage from "./pages/Recipe";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -27,6 +28,7 @@ function App() {
 				<Route index element={user ? <UserRecipes /> : <Home />} />
 				<Route path="recipes" element={<Recipes />} />
 				<Route path="new-recipe" element={<NewRecipe />} />
+				<Route path="recipe/:id" element={<RecipePage />} />
 			</Route>
 
 			<Route
