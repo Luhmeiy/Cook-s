@@ -1,21 +1,14 @@
-import { Star, Timer } from "@phosphor-icons/react";
+import { Timer } from "@phosphor-icons/react";
 import { Recipe } from "@/interfaces/Recipe";
-import {
-	RecipeCategory,
-	RecipeTime,
-	RecipeTitle,
-} from "@/styles/Recipe.styled";
+import { RecipeCategory, RecipeTime } from "@/styles/Recipe.styled";
 import { RecipeInfo, StyledRecipeItem } from "./RecipeItem.styled";
-import { Link } from "react-router-dom";
+import RecipeTitle from "../RecipeTitle";
 
 const RecipeItem = ({ recipe }: { recipe: Recipe }) => {
 	return (
 		<StyledRecipeItem>
 			<RecipeInfo>
-				<RecipeTitle>
-					<Link to={`/recipe/${recipe._id}`}>{recipe.name}</Link>{" "}
-					<Star size={20} />
-				</RecipeTitle>
+				<RecipeTitle recipe={recipe} />
 
 				<RecipeCategory category={recipe.category ? true : false}>
 					{recipe.category || "Sem Categoria"}

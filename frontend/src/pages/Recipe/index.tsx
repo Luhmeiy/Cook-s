@@ -1,14 +1,10 @@
 // packages
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Plus, Star, Timer, UserCircle } from "@phosphor-icons/react";
+import { Plus, Timer, UserCircle } from "@phosphor-icons/react";
 
 // styles
-import {
-	RecipeCategory,
-	RecipeTime,
-	RecipeTitle,
-} from "@/styles/Recipe.styled";
+import { RecipeCategory, RecipeTime } from "@/styles/Recipe.styled";
 import {
 	Description,
 	ListContainer,
@@ -19,6 +15,7 @@ import {
 
 // components / interfaces / Redux
 import Button from "@/components/Button";
+import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
 import { Recipe } from "@/interfaces/Recipe";
 import { useGetRecipeByIdMutation } from "@/features/recipes/recipesApiSlice";
@@ -49,10 +46,7 @@ const RecipePage = () => {
 		<StyledRecipePage>
 			<div>
 				<RecipeInfo>
-					<RecipeTitle alternate="true">
-						<h2>{recipe?.name}</h2>
-						<Star weight="bold" size={32} />
-					</RecipeTitle>
+					{recipe && <RecipeTitle recipe={recipe} alternate="true" />}
 
 					<div>
 						<RecipeCategory
