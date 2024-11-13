@@ -1,7 +1,7 @@
 // packages
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, GoogleLogo } from "@phosphor-icons/react";
+import { GoogleLogo } from "@phosphor-icons/react";
 
 // styles
 import {
@@ -13,6 +13,7 @@ import {
 
 // components / Redux
 import Button from "@/components/Button";
+import PasswordInput from "@/components/PasswordInput";
 import { useRegisterMutation } from "@/features/auth/authApiSlice";
 
 const Register = () => {
@@ -80,16 +81,10 @@ const Register = () => {
 						placeholder="Email"
 					/>
 
-					<div>
-						<input
-							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							placeholder="Password"
-						/>
-
-						<Eye color="#6C6C6C" size={20} weight="light" />
-					</div>
+					<PasswordInput
+						password={password}
+						setPassword={setPassword}
+					/>
 
 					<Button>Sign up</Button>
 				</StyledForm>
