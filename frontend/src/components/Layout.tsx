@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import GlobalStyles from "@/GlobalStyles";
 import Header from "./Header";
+import Footer from "./Footer";
 import { useRefreshMutation } from "@/features/auth/authApiSlice";
 import { selectAuthLoading } from "@/features/auth/authSlice";
 
@@ -26,6 +27,7 @@ const Layout = () => {
 			<GlobalStyles />
 			<Header />
 			<Outlet />
+			<Footer />
 		</>
 	);
 };
