@@ -25,7 +25,6 @@ export const NewRecipeButton = styled(Link)`
 	background-color: var(--primary);
 	border-radius: 0.25rem;
 	display: flex;
-	font-weight: 700;
 	gap: 0.75rem;
 	padding: 0.5rem 0.75rem;
 

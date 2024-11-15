@@ -43,7 +43,6 @@ export const addToList = expressAsyncHandler(
 
 					if (!result) {
 						user.ingredientList.push(ingredient);
-						res.json({ message: `Added item to list.` });
 					}
 				});
 				break;
@@ -56,13 +55,14 @@ export const addToList = expressAsyncHandler(
 
 					if (!result) {
 						user.shoppingList.push(ingredient);
-						res.json({ message: `Added item to list.` });
 					}
 				});
 				break;
 		}
 
 		await user.save();
+
+		res.json({ message: `Ingredients added to list.` });
 	}
 );
 

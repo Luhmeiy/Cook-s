@@ -13,6 +13,7 @@ import AuthLayout from "./components/AuthLayout";
 import UserRecipes from "./pages/UserRecipes";
 import Home from "./pages/Home";
 import Recipes from "./pages/Recipes";
+import IngredientsList from "./pages/IngredientsList";
 import NewRecipe from "./pages/NewRecipe";
 import RecipePage from "./pages/Recipe";
 import Login from "./pages/Login";
@@ -27,6 +28,7 @@ function App() {
 			<Route path="/" element={<Layout />}>
 				<Route index element={user ? <UserRecipes /> : <Home />} />
 				<Route path="recipes" element={<Recipes />} />
+				<Route path="ingredients" element={<IngredientsList />} />
 				<Route path="new-recipe" element={<NewRecipe />} />
 				<Route path="recipe/:id" element={<RecipePage />} />
 			</Route>
