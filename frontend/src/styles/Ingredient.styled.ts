@@ -5,8 +5,9 @@ export const IngredientsContainer = styled.div`
 	flex-direction: column;
 	gap: 0.75rem;
 
-	& div {
-		align-items: center;
+	& div,
+	& form {
+		align-items: end;
 		display: flex;
 		gap: 1rem;
 

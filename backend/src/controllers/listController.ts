@@ -11,7 +11,7 @@ interface ListBody {
 		unit: string;
 		bought: boolean;
 	}>;
-	ingredient: string;
+
 	listType: string;
 }
 
@@ -67,33 +67,51 @@ export const addToList = expressAsyncHandler(
 );
 
 export const updateList = expressAsyncHandler(
-	async (req: Request<{}, {}, ListBody>, res) => {
-		const { id, list, listType } = req.body;
+	async (
+		req: Request<
+			{ userId: string; ingredient: string },
+			{},
+			{
+				updatedIngredient: {
+					ingredient: string;
+					quantity: number;
+					unit: string;
+					bought?: boolean;
+				};
+			}
+		>,
+		res
+	) => {
+		const { userId, ingredient } = req.params;
+		const { updatedIngredient } = req.body;
 
-		if (!id || !Array.isArray(list) || !list.length || !listType) {
+		if (!userId || !ingredient || !updatedIngredient) {
 			res.status(400);
 			throw new Error("All fields are required.");
 		}
 
-		const user = await User.findById(id)
-			.select({ ingredientList: 1, shoppingList: 1 })
-			.exec();
+		const user = await User.findById(userId);
 
 		if (!user) {
 			res.status(400);
 			throw new Error("User not found.");
 		}
 
-		switch (listType) {
-			case "ingredient":
-				user.ingredientList = list;
-				break;
-			case "shopping":
-				user.shoppingList = list;
-				break;
+		if (
+			user.ingredientList.some(({ _id }) => _id.toString() === ingredient)
+		) {
+			await User.updateOne(
+				{ _id: userId, "ingredientList._id": ingredient },
+				{ $set: { "ingredientList.$": updatedIngredient } }
+			);
+		} else if (
+			user.shoppingList.some(({ _id }) => _id.toString() === ingredient)
+		) {
+			await User.updateOne(
+				{ _id: userId, "shoppingList._id": ingredient },
+				{ $set: { "shoppingList.$": updatedIngredient } }
+			);
 		}
-
-		await user.save();
 
 		res.json({ message: "List updated." });
 	}

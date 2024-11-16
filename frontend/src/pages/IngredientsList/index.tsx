@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Asterisk, PencilSimple, Plus, X } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 
 // styles
 import {
@@ -17,22 +17,12 @@ import {
 	selectAuthLoading,
 	selectCurrentUser,
 } from "@/features/auth/authSlice";
-import { useDeleteIngredientMutation } from "@/features/lists/listsApiSlice";
+import Ingredient from "@/components/Ingredient";
 
 const IngredientsList = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
-
-	const [deleteIngredient] = useDeleteIngredientMutation();
-
-	const handleDeleteIngredient = async (id: string) => {
-		try {
-			await deleteIngredient({ userId: user!._id, ingredient: id });
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
 	useEffect(() => {
 		if (!isLoading && !user) {
@@ -52,26 +42,12 @@ const IngredientsList = () => {
 
 			<IngredientsContainer>
 				{user?.ingredientList.length ? (
-					user.ingredientList.map(
-						({ quantity, unit, ingredient, _id }) => (
-							<div key={_id}>
-								<div>
-									<Asterisk weight="bold" />
-									{quantity} {unit} {ingredient}
-								</div>
-
-								<div>
-									<PencilSimple size={20} />
-									<X
-										size={20}
-										onClick={() =>
-											handleDeleteIngredient(_id)
-										}
-									/>
-								</div>
-							</div>
-						)
-					)
+					user.ingredientList.map((ingredient) => (
+						<Ingredient
+							ingredientProps={ingredient}
+							key={ingredient._id}
+						/>
+					))
 				) : (
 					<p>No ingredients available.</p>
 				)}

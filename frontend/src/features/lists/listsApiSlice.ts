@@ -9,7 +9,16 @@ export const listsApiSlice = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["User"],
 		}),
+		updateIngredient: builder.mutation({
+			query: ({ userId, ingredient, updatedIngredient }) => ({
+				url: `/list/${userId}/${ingredient}`,
+				method: "PATCH",
+				body: { updatedIngredient },
+			}),
+			invalidatesTags: ["User"],
+		}),
 	}),
 });
 
-export const { useDeleteIngredientMutation } = listsApiSlice;
+export const { useDeleteIngredientMutation, useUpdateIngredientMutation } =
+	listsApiSlice;
