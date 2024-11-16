@@ -4,6 +4,10 @@ import { clearUserRecipes } from "../recipes/recipesSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
+		refresh: builder.query({
+			query: () => "/auth/refresh",
+			providesTags: ["User"],
+		}),
 		login: builder.mutation({
 			query: (credentials) => ({
 				url: "/auth",
@@ -34,18 +38,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
 				}
 			},
 		}),
-		refresh: builder.mutation({
-			query: () => ({
-				url: "/auth/refresh",
-				method: "GET",
-			}),
-		}),
 	}),
 });
 
 export const {
+	useRefreshQuery,
 	useLoginMutation,
 	useRegisterMutation,
 	useSendLogoutMutation,
-	useRefreshMutation,
 } = authApiSlice;

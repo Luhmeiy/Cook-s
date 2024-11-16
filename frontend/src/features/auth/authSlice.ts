@@ -9,6 +9,7 @@ interface InitialState {
 		username: string;
 		ingredientList: [
 			{
+				_id: string;
 				ingredient: string;
 				quantity: number;
 				unit: string;
@@ -16,6 +17,7 @@ interface InitialState {
 		];
 		shoppingList: [
 			{
+				_id: string;
 				ingredient: string;
 				quantity: number;
 				unit: string;

@@ -17,11 +17,22 @@ import {
 	selectAuthLoading,
 	selectCurrentUser,
 } from "@/features/auth/authSlice";
+import { useDeleteIngredientMutation } from "@/features/lists/listsApiSlice";
 
 const IngredientsList = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
+
+	const [deleteIngredient] = useDeleteIngredientMutation();
+
+	const handleDeleteIngredient = async (id: string) => {
+		try {
+			await deleteIngredient({ userId: user!._id, ingredient: id });
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useEffect(() => {
 		if (!isLoading && !user) {
@@ -42,8 +53,8 @@ const IngredientsList = () => {
 			<IngredientsContainer>
 				{user?.ingredientList.length ? (
 					user.ingredientList.map(
-						({ quantity, unit, ingredient }) => (
-							<div>
+						({ quantity, unit, ingredient, _id }) => (
+							<div key={_id}>
 								<div>
 									<Asterisk weight="bold" />
 									{quantity} {unit} {ingredient}
@@ -51,7 +62,12 @@ const IngredientsList = () => {
 
 								<div>
 									<PencilSimple size={20} />
-									<X size={20} />
+									<X
+										size={20}
+										onClick={() =>
+											handleDeleteIngredient(_id)
+										}
+									/>
 								</div>
 							</div>
 						)

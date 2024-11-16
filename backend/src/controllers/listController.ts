@@ -11,7 +11,7 @@ interface ListBody {
 		unit: string;
 		bought: boolean;
 	}>;
-	ingredientName: string;
+	ingredient: string;
 	listType: string;
 }
 
@@ -99,45 +99,25 @@ export const updateList = expressAsyncHandler(
 	}
 );
 
-export const deleteFromList = expressAsyncHandler(
-	async (req: Request<{}, {}, ListBody>, res) => {
-		const { id, ingredientName, listType } = req.body;
+export const deleteFromList = expressAsyncHandler(async (req, res) => {
+	const { userId, ingredient } = req.params;
 
-		if (!id || !ingredientName || !listType) {
-			res.status(400);
-			throw new Error("All fields are required.");
-		}
-
-		const user = await User.findById(id)
-			.select({ ingredientList: 1, shoppingList: 1 })
-			.exec();
-
-		if (!user) {
-			res.status(400);
-			throw new Error("User not found.");
-		}
-
-		switch (listType) {
-			case "ingredient":
-				user.ingredientList = user.ingredientList
-					.toObject()
-					.filter(
-						({ ingredient }: { ingredient: string }) =>
-							ingredient !== ingredientName
-					);
-				await user.save();
-				break;
-			case "shopping":
-				user.shoppingList = user.shoppingList
-					.toObject()
-					.filter(
-						({ ingredient }: { ingredient: string }) =>
-							ingredient !== ingredientName
-					);
-				await user.save();
-				break;
-		}
-
-		res.json({ message: `Ingredient ${ingredientName} deleted.` });
+	if (!userId || !ingredient) {
+		res.status(400);
+		throw new Error("All fields are required.");
 	}
-);
+
+	const user = await User.findByIdAndUpdate(userId, {
+		$pull: {
+			ingredientList: { _id: ingredient },
+			shoppingList: { _id: ingredient },
+		},
+	});
+
+	if (!user) {
+		res.status(400);
+		throw new Error("User not found.");
+	}
+
+	res.json({ message: `Ingredient ${ingredient} deleted.` });
+});

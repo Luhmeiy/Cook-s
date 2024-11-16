@@ -7,4 +7,5 @@ import {
 
 export const router = Router();
 
-router.route("/").post(addToList).patch(updateList).delete(deleteFromList);
+router.route("/").post(addToList).patch(updateList);
+router.route("/:userId/:ingredient").delete(deleteFromList);
