@@ -1,16 +1,15 @@
 // packages
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "@phosphor-icons/react";
 
 // styles
+import { RecipeContainerTitle, StyledRecipes } from "@/styles/Recipes.styled";
 import {
-	NewRecipeButton,
-	RecipeContainerTitle,
-	StyledRecipes,
-} from "@/styles/Recipes.styled";
-import { IngredientsContainer } from "@/styles/Ingredient.styled";
+	IngredientsContainer,
+	NewIngredientButton,
+} from "@/styles/Ingredient.styled";
 
 // Redux
 import {
@@ -18,11 +17,14 @@ import {
 	selectCurrentUser,
 } from "@/features/auth/authSlice";
 import Ingredient from "@/components/Ingredient";
+import NewIngredientForm from "@/components/NewIngredientForm";
 
 const IngredientsList = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
+
+	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
 		if (!isLoading && !user) {
@@ -35,9 +37,11 @@ const IngredientsList = () => {
 			<RecipeContainerTitle>
 				<h2>Available Ingredients</h2>
 
-				<NewRecipeButton to="/new-recipe">
+				<NewIngredientButton onClick={() => setOpen(true)}>
 					Add New Ingredient <Plus size={20} weight="light" />
-				</NewRecipeButton>
+				</NewIngredientButton>
+
+				<NewIngredientForm open={open} setOpen={setOpen} />
 			</RecipeContainerTitle>
 
 			<IngredientsContainer>

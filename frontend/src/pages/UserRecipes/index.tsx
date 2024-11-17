@@ -49,7 +49,7 @@ const UserRecipes = () => {
 				<h2>Recipes</h2>
 
 				<NewRecipeButton to="/new-recipe">
-					Add New Recipe <Plus size={20} weight="bold" />
+					Add New Recipe <Plus size={20} weight="light" />
 				</NewRecipeButton>
 			</RecipeContainerTitle>
 

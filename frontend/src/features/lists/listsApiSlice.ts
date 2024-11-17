@@ -2,10 +2,11 @@ import { apiSlice } from "@/app/api/apiSlice";
 
 export const listsApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
-		deleteIngredient: builder.mutation({
-			query: ({ userId, ingredient }) => ({
-				url: `/list/${userId}/${ingredient}`,
-				method: "DELETE",
+		postIngredient: builder.mutation({
+			query: (body) => ({
+				url: "list",
+				method: "POST",
+				body,
 			}),
 			invalidatesTags: ["User"],
 		}),
@@ -17,8 +18,18 @@ export const listsApiSlice = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["User"],
 		}),
+		deleteIngredient: builder.mutation({
+			query: ({ userId, ingredient }) => ({
+				url: `/list/${userId}/${ingredient}`,
+				method: "DELETE",
+			}),
+			invalidatesTags: ["User"],
+		}),
 	}),
 });
 
-export const { useDeleteIngredientMutation, useUpdateIngredientMutation } =
-	listsApiSlice;
+export const {
+	usePostIngredientMutation,
+	useUpdateIngredientMutation,
+	useDeleteIngredientMutation,
+} = listsApiSlice;
