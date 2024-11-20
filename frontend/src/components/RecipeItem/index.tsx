@@ -10,7 +10,7 @@ const RecipeItem = ({ recipe }: { recipe: Recipe }) => {
 			<RecipeInfo>
 				<RecipeTitle recipe={recipe} />
 
-				<RecipeCategory category={recipe.category ? true : false}>
+				<RecipeCategory category={recipe.category ? "true" : "false"}>
 					{recipe.category || "Sem Categoria"}
 				</RecipeCategory>
 

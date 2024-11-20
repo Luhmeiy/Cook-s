@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export const RecipeCategory = styled.div<{ category?: boolean }>`
+export const RecipeCategory = styled.div<{ category?: string }>`
 	background-color: ${({ category }) =>
-		category ? "var(--primary)" : "#D3D3D3"};
+		category === "true" ? "var(--primary)" : "#D3D3D3"};
 	border-radius: 2px;
 	display: flex;
 	font-weight: 700;
