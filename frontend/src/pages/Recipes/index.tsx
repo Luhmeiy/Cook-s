@@ -1,34 +1,13 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { RecipesContainer, StyledRecipes } from "@/styles/Recipes.styled";
 import RecipeItem from "@/components/RecipeItem";
-import { useGetPublicRecipesMutation } from "@/features/recipes/recipesApiSlice";
-import {
-	selectCurrentRecipes,
-	setRecipes,
-} from "@/features/recipes/recipesSlice";
+import { useGetPublicRecipesQuery } from "@/features/recipes/recipesApiSlice";
 
 const Recipes = () => {
-	const dispatch = useDispatch();
-	const [getPublicRecipes, { isLoading }] = useGetPublicRecipesMutation();
-
-	const recipes = useSelector(selectCurrentRecipes);
-
-	useEffect(() => {
-		const getRecipes = async () => {
-			const { recipes } = await getPublicRecipes(null).unwrap();
-
-			if (recipes) {
-				dispatch(setRecipes({ recipes }));
-			} else {
-				console.log("No recipes found.");
-			}
-		};
-
-		getRecipes();
-	}, [dispatch, getPublicRecipes]);
+	const { data, isLoading } = useGetPublicRecipesQuery(null);
 
 	if (isLoading) return <p>Loading...</p>;
+
+	const { recipes } = data!;
 
 	return (
 		<StyledRecipes>

@@ -1,6 +1,5 @@
 import { apiSlice } from "@/app/api/apiSlice";
 import { logout } from "./authSlice";
-import { clearUserRecipes } from "../recipes/recipesSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
@@ -31,7 +30,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
 				try {
 					await queryFulfilled;
 					dispatch(logout());
-					dispatch(clearUserRecipes());
 					dispatch(apiSlice.util.resetApiState());
 				} catch (err) {
 					console.log(err);

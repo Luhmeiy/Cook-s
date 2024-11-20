@@ -1,5 +1,4 @@
 // packages
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { PencilSimple, Plus, Timer, UserCircle } from "@phosphor-icons/react";
@@ -18,33 +17,18 @@ import {
 import Button from "@/components/Button";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
-import { Recipe } from "@/interfaces/Recipe";
 import { selectCurrentUser } from "@/features/auth/authSlice";
-import { useGetRecipeByIdMutation } from "@/features/recipes/recipesApiSlice";
+import { useGetRecipeByIdQuery } from "@/features/recipes/recipesApiSlice";
 
 const RecipePage = () => {
 	const { id } = useParams();
-
 	const user = useSelector(selectCurrentUser);
 
-	const [getRecipeById, { isLoading }] = useGetRecipeByIdMutation();
-	const [recipe, setRecipe] = useState<Recipe>();
-
-	useEffect(() => {
-		const getRecipe = async () => {
-			const { recipe } = await getRecipeById(id).unwrap();
-
-			if (recipe) {
-				setRecipe(recipe);
-			} else {
-				console.log("No recipe found.");
-			}
-		};
-
-		getRecipe();
-	}, [getRecipeById, id]);
+	const { data, isLoading } = useGetRecipeByIdQuery(id!);
 
 	if (isLoading) return <p>Loading...</p>;
+
+	const { recipe } = data!;
 
 	return (
 		<StyledRecipePage>
@@ -54,7 +38,7 @@ const RecipePage = () => {
 
 					<div>
 						<RecipeCategory
-							category={recipe?.category ? true : false}
+							category={recipe?.category ? "true" : "false"}
 						>
 							{recipe?.category || "Sem Categoria"}
 						</RecipeCategory>
@@ -112,7 +96,7 @@ const RecipePage = () => {
 					<p>User not found.</p>
 				)}
 
-				{recipe?.createdBy.username === user?.username && (
+				{recipe?.userId === user?._id && (
 					<Button to={`/edit-recipe/${id}`}>
 						Edit Recipe <PencilSimple weight="light" />
 					</Button>

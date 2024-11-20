@@ -90,7 +90,7 @@ export const updateRecipe = expressAsyncHandler(async (req, res) => {
 });
 
 export const deleteRecipe = expressAsyncHandler(async (req, res) => {
-	const { id } = req.body;
+	const { id } = req.params;
 
 	if (!id) {
 		res.status(400);

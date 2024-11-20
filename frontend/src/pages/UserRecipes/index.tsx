@@ -1,6 +1,5 @@
 // packages
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Plus } from "@phosphor-icons/react";
 
 // styles
@@ -13,35 +12,16 @@ import {
 
 // components / Redux
 import RecipeItem from "@/components/RecipeItem";
-import { useGetUserRecipesMutation } from "@/features/recipes/recipesApiSlice";
-import {
-	selectCurrentUserRecipes,
-	setUserRecipes,
-} from "@/features/recipes/recipesSlice";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
+import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
 
 const UserRecipes = () => {
-	const dispatch = useDispatch();
-	const [getUserRecipes, { isLoading }] = useGetUserRecipesMutation();
-
 	const userId = useSelector(selectCurrentUserId);
-	const recipes = useSelector(selectCurrentUserRecipes);
-
-	useEffect(() => {
-		const getRecipes = async () => {
-			const { recipes } = await getUserRecipes(userId).unwrap();
-
-			if (recipes) {
-				dispatch(setUserRecipes({ recipes }));
-			} else {
-				console.log("No recipes found.");
-			}
-		};
-
-		getRecipes();
-	}, [dispatch, getUserRecipes, userId]);
+	const { data, isLoading } = useGetUserRecipesQuery(userId);
 
 	if (isLoading) return <p>Loading...</p>;
+
+	const { recipes } = data!;
 
 	return (
 		<StyledRecipes>

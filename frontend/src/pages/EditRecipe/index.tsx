@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CaretLeft } from "@phosphor-icons/react";
 import { GoBackLink } from "@/components/RecipeForm/RecipeForm.styled";
 import RecipeForm from "@/components/RecipeForm";
-import { Recipe } from "@/interfaces/Recipe";
 import {
-	useGetRecipeByIdMutation,
+	useGetRecipeByIdQuery,
 	usePatchRecipeMutation,
 } from "@/features/recipes/recipesApiSlice";
 
@@ -14,26 +12,13 @@ const EditRecipe = () => {
 
 	const [patchRecipe, { isLoading: isLoadingPostRecipe }] =
 		usePatchRecipeMutation();
-	const [getRecipeById, { isLoading: isLoadingGetRecipeById }] =
-		useGetRecipeByIdMutation();
-
-	const [recipe, setRecipe] = useState<Recipe>();
-
-	useEffect(() => {
-		const getRecipe = async () => {
-			const { recipe } = await getRecipeById(id).unwrap();
-
-			if (recipe) {
-				setRecipe(recipe);
-			} else {
-				console.log("No recipe found.");
-			}
-		};
-
-		getRecipe();
-	}, [getRecipeById, id]);
+	const { data, isLoading: isLoadingGetRecipeById } = useGetRecipeByIdQuery(
+		id!
+	);
 
 	if (isLoadingPostRecipe || isLoadingGetRecipeById) return <p>Loading...</p>;
+
+	const { recipe } = data!;
 
 	return (
 		<div>

@@ -1,18 +1,19 @@
 import { apiSlice } from "@/app/api/apiSlice";
+import { Recipe } from "@/interfaces/Recipe";
 
 export const recipesApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
-		getPublicRecipes: builder.mutation({
-			query: () => ({
-				url: "/recipes",
-				method: "GET",
-			}),
+		getPublicRecipes: builder.query<{ recipes: Recipe[] }, null>({
+			query: () => "/recipes",
+			keepUnusedDataFor: 0,
 		}),
-		getRecipeById: builder.mutation({
-			query: (id) => ({
-				url: `/recipes/${id}`,
-				method: "GET",
-			}),
+		getUserRecipes: builder.query<{ recipes: Recipe[] }, string>({
+			query: (id) => `/recipes/user/${id}`,
+			providesTags: ["Recipes"],
+		}),
+		getRecipeById: builder.query<{ recipe: Recipe }, string>({
+			query: (id) => `/recipes/${id}`,
+			keepUnusedDataFor: 0,
 		}),
 		postRecipe: builder.mutation({
 			query: ({ data }) => ({
@@ -20,6 +21,7 @@ export const recipesApiSlice = apiSlice.injectEndpoints({
 				method: "POST",
 				body: data,
 			}),
+			invalidatesTags: ["Recipes"],
 		}),
 		patchRecipe: builder.mutation({
 			query: ({ id, data }) => ({
@@ -27,20 +29,23 @@ export const recipesApiSlice = apiSlice.injectEndpoints({
 				method: "PATCH",
 				body: data,
 			}),
+			invalidatesTags: ["Recipes"],
 		}),
-		getUserRecipes: builder.mutation({
-			query: (id) => ({
-				url: `/recipes/user/${id}`,
-				method: "GET",
+		deleteRecipe: builder.mutation({
+			query: ({ id }) => ({
+				url: `/recipes/${id}`,
+				method: "DELETE",
 			}),
+			invalidatesTags: ["Recipes"],
 		}),
 	}),
 });
 
 export const {
-	useGetPublicRecipesMutation,
-	useGetRecipeByIdMutation,
+	useGetPublicRecipesQuery,
+	useGetUserRecipesQuery,
+	useGetRecipeByIdQuery,
 	usePostRecipeMutation,
 	usePatchRecipeMutation,
-	useGetUserRecipesMutation,
+	useDeleteRecipeMutation,
 } = recipesApiSlice;
