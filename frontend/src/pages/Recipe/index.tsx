@@ -1,7 +1,8 @@
 // packages
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Plus, Timer, UserCircle } from "@phosphor-icons/react";
+import { PencilSimple, Plus, Timer, UserCircle } from "@phosphor-icons/react";
 
 // styles
 import { RecipeCategory, RecipeTime } from "@/styles/Recipe.styled";
@@ -18,10 +19,13 @@ import Button from "@/components/Button";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
 import { Recipe } from "@/interfaces/Recipe";
+import { selectCurrentUser } from "@/features/auth/authSlice";
 import { useGetRecipeByIdMutation } from "@/features/recipes/recipesApiSlice";
 
 const RecipePage = () => {
 	const { id } = useParams();
+
+	const user = useSelector(selectCurrentUser);
 
 	const [getRecipeById, { isLoading }] = useGetRecipeByIdMutation();
 	const [recipe, setRecipe] = useState<Recipe>();
@@ -97,15 +101,21 @@ const RecipePage = () => {
 
 			<div>
 				{recipe?.createdBy.username ? (
-					<>
+					<div>
 						<p>Created by</p>
 						<UserLink to={`/user/${recipe?.createdBy._id}`}>
 							<UserCircle size={24} weight="bold" />
 							{recipe?.createdBy.username}
 						</UserLink>
-					</>
+					</div>
 				) : (
 					<p>User not found.</p>
+				)}
+
+				{recipe?.createdBy.username === user?.username && (
+					<Button to={`/edit-recipe/${id}`}>
+						Edit Recipe <PencilSimple weight="light" />
+					</Button>
 				)}
 			</div>
 		</StyledRecipePage>

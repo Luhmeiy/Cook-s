@@ -8,7 +8,7 @@ import {
 	CloseButton,
 	StyledNewIngredientForm,
 } from "./NewIngredientForm.styled";
-import { InputContainer } from "@/pages/NewRecipe/NewRecipe.styled";
+import { InputContainer } from "../RecipeForm/RecipeForm.styled";
 
 // components / Redux
 import Button from "../Button";

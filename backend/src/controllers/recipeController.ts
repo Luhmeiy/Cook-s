@@ -69,12 +69,15 @@ export const createRecipe = expressAsyncHandler(async (req, res) => {
 });
 
 export const updateRecipe = expressAsyncHandler(async (req, res) => {
-	const { id, data } = req.body;
+	const { id } = req.params;
+	const { data } = req.body;
 
 	if (!id) {
 		res.status(400);
 		throw new Error("Recipe ID required.");
 	}
+
+	data._id = id;
 
 	const updatedRecipe = await Recipe.findByIdAndUpdate(id, data);
 

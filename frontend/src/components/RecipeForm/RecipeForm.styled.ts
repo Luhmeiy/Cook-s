@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const GoBackLink = styled(Link)`
 	align-items: center;
@@ -9,7 +9,7 @@ export const GoBackLink = styled(Link)`
 	margin-bottom: 1rem;
 `;
 
-export const NewRecipeForm = styled.form`
+export const StyledRecipeForm = styled.form`
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;

@@ -14,6 +14,11 @@ export const StyledRecipePage = styled.div`
 		&:first-of-type {
 			gap: 2rem;
 		}
+
+		&:nth-of-type(2) {
+			align-items: start;
+			gap: 1rem;
+		}
 	}
 `;
 

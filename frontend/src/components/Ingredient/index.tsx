@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { Asterisk, PencilSimple, X } from "@phosphor-icons/react";
-import { InputContainer } from "@/pages/NewRecipe/NewRecipe.styled";
+import { InputContainer } from "../RecipeForm/RecipeForm.styled";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
 	useDeleteIngredientMutation,

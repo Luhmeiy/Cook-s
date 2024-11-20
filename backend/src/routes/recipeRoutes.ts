@@ -16,4 +16,5 @@ router.route("/:id").get(getRecipeById);
 router.route("/user/:id").get(getUserRecipes);
 
 router.use(verifyJWT);
-router.route("/").post(createRecipe).patch(updateRecipe).delete(deleteRecipe);
+router.route("/").post(createRecipe).delete(deleteRecipe);
+router.route("/:id").patch(updateRecipe);

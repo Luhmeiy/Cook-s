@@ -15,17 +15,17 @@ export const recipesApiSlice = apiSlice.injectEndpoints({
 			}),
 		}),
 		postRecipe: builder.mutation({
-			query: (credentials) => ({
+			query: ({ data }) => ({
 				url: "/recipes",
 				method: "POST",
-				body: { ...credentials },
+				body: data,
 			}),
 		}),
 		patchRecipe: builder.mutation({
-			query: (credentials) => ({
-				url: "/recipes",
+			query: ({ id, data }) => ({
+				url: `/recipes/${id}`,
 				method: "PATCH",
-				body: { ...credentials },
+				body: data,
 			}),
 		}),
 		getUserRecipes: builder.mutation({

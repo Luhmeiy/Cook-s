@@ -15,6 +15,7 @@ import Home from "./pages/Home";
 import Recipes from "./pages/Recipes";
 import IngredientsList from "./pages/IngredientsList";
 import NewRecipe from "./pages/NewRecipe";
+import EditRecipe from "./pages/EditRecipe";
 import RecipePage from "./pages/Recipe";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -30,6 +31,7 @@ function App() {
 				<Route path="recipes" element={<Recipes />} />
 				<Route path="ingredients" element={<IngredientsList />} />
 				<Route path="new-recipe" element={<NewRecipe />} />
+				<Route path="edit-recipe/:id" element={<EditRecipe />} />
 				<Route path="recipe/:id" element={<RecipePage />} />
 			</Route>
 
