@@ -7,7 +7,7 @@ const Recipes = () => {
 
 	if (isLoading) return <p>Loading...</p>;
 
-	const { recipes } = data!;
+	const recipes = data?.recipes || [];
 
 	return (
 		<StyledRecipes>

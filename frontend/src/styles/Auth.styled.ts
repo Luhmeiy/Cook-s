@@ -74,10 +74,10 @@ export const StyledForm = styled.form`
 	}
 `;
 
-export const StyledLink = styled(Link)<{ underline?: boolean }>`
+export const StyledLink = styled(Link)<{ underline?: string }>`
 	color: var(--primary);
 	font-weight: 600;
-	text-decoration: ${({ underline }) => underline && "underline"};
+	text-decoration: ${({ underline }) => underline === "true" && "underline"};
 
 	&:hover {
 		filter: brightness(85%);

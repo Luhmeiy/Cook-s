@@ -28,15 +28,17 @@ const Login = () => {
 		e.preventDefault();
 
 		try {
-			await login({
+			const { error } = await login({
 				email,
 				password,
 			});
 
-			setEmail("");
-			setPassword("");
+			if (!error) {
+				setEmail("");
+				setPassword("");
 
-			navigate("/");
+				navigate("/");
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -89,7 +91,7 @@ const Login = () => {
 
 				<p>
 					Don't have an account yet?{" "}
-					<StyledLink to="/auth/register" underline={true}>
+					<StyledLink to="/auth/register" underline="true">
 						Register
 					</StyledLink>
 				</p>

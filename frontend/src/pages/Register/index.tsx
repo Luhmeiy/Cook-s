@@ -29,9 +29,9 @@ const Register = () => {
 		e.preventDefault();
 
 		try {
-			const response = await register({ username, email, password });
+			const { error } = await register({ username, email, password });
 
-			if (!response.error) {
+			if (!error) {
 				setUsername("");
 				setEmail("");
 				setPassword("");
@@ -91,7 +91,7 @@ const Register = () => {
 
 				<p>
 					Already have an account?{" "}
-					<StyledLink to="/auth/login" underline={true}>
+					<StyledLink to="/auth/login" underline="true">
 						Log in
 					</StyledLink>
 				</p>

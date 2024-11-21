@@ -1,9 +1,5 @@
-import { useSelector } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
-import {
-	selectAuthLoading,
-	selectCurrentUser,
-} from "./features/auth/authSlice";
+import { useRefreshQuery } from "./features/auth/authApiSlice";
 
 // Layouts
 import Layout from "./components/Layout";
@@ -21,8 +17,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 function App() {
-	const user = useSelector(selectCurrentUser);
-	const isLoading = useSelector(selectAuthLoading);
+	const { data: user, isLoading } = useRefreshQuery(null);
+
+	if (isLoading) return <p>Loading...</p>;
 
 	return (
 		<Routes>
