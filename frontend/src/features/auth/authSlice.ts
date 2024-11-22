@@ -82,7 +82,7 @@ const authSlice = createSlice({
 });
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;
-export const selectCurrentUserId = (state: RootState) => state.auth.user!._id;
+export const selectCurrentUserId = (state: RootState) => state.auth.user?._id;
 export const selectCurrentToken = (state: RootState) => state.auth.token;
 export const selectAuthLoading = (state: RootState) => state.auth.loading;
 

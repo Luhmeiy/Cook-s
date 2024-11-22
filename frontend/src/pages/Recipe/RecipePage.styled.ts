@@ -66,3 +66,12 @@ export const UserLink = styled(Link)`
 		color: var(--primary);
 	}
 `;
+
+export const ButtonContainer = styled.div`
+	display: flex;
+	gap: 0.5rem;
+
+	& button:nth-of-type(2) {
+		background-color: #ff5733;
+	}
+`;

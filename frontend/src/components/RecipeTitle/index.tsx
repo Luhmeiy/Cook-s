@@ -57,20 +57,23 @@ const RecipeTitle = ({
 				<Link to={`/recipe/${recipe._id}`}>{recipe.name}</Link>
 			)}
 
-			{recipe.userId === id ? (
-				<Star
-					size={20}
-					color={favorite ? "var(--primary)" : "var(--text)"}
-					weight={favorite ? "fill" : alternate ? "bold" : "regular"}
-					onClick={handleFavorite}
-				/>
-			) : (
-				<FilePlus
-					size={20}
-					weight={alternate ? "bold" : "regular"}
-					onClick={handleSaveRecipe}
-				/>
-			)}
+			{id &&
+				(recipe.userId === id ? (
+					<Star
+						size={20}
+						color={favorite ? "var(--primary)" : "var(--text)"}
+						weight={
+							favorite ? "fill" : alternate ? "bold" : "regular"
+						}
+						onClick={handleFavorite}
+					/>
+				) : (
+					<FilePlus
+						size={20}
+						weight={alternate ? "bold" : "regular"}
+						onClick={handleSaveRecipe}
+					/>
+				))}
 		</StyledRecipeTitle>
 	);
 };

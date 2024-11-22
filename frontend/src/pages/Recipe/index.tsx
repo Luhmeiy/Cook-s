@@ -1,11 +1,18 @@
 // packages
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { PencilSimple, Plus, Timer, UserCircle } from "@phosphor-icons/react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+	PencilSimple,
+	Plus,
+	Timer,
+	UserCircle,
+	X,
+} from "@phosphor-icons/react";
 
 // styles
 import { RecipeCategory, RecipeTime } from "@/styles/Recipe.styled";
 import {
+	ButtonContainer,
 	Description,
 	ListContainer,
 	RecipeInfo,
@@ -18,17 +25,35 @@ import Button from "@/components/Button";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
 import { selectCurrentUser } from "@/features/auth/authSlice";
-import { useGetRecipeByIdQuery } from "@/features/recipes/recipesApiSlice";
+import {
+	useDeleteRecipeMutation,
+	useGetRecipeByIdQuery,
+} from "@/features/recipes/recipesApiSlice";
 
 const RecipePage = () => {
 	const { id } = useParams();
 	const user = useSelector(selectCurrentUser);
 
+	const navigate = useNavigate();
+
+	const [deleteRecipe] = useDeleteRecipeMutation();
 	const { data, isLoading } = useGetRecipeByIdQuery(id!);
 
 	if (isLoading) return <p>Loading...</p>;
 
 	const { recipe } = data!;
+
+	const handleDeleteRecipe = async () => {
+		try {
+			const { error } = await deleteRecipe({ id });
+
+			if (!error) {
+				navigate("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<StyledRecipePage>
@@ -70,9 +95,11 @@ const RecipePage = () => {
 						<Step step={ingredient} index={index} key={index} />
 					))}
 
-					<Button variant="gray">
-						Add remaining ingredients to shopping list <Plus />
-					</Button>
+					{user && (
+						<Button variant="gray">
+							Add remaining ingredients to shopping list <Plus />
+						</Button>
+					)}
 				</ListContainer>
 
 				<ListContainer>
@@ -97,9 +124,15 @@ const RecipePage = () => {
 				)}
 
 				{recipe?.userId === user?._id && (
-					<Button to={`/edit-recipe/${id}`}>
-						Edit Recipe <PencilSimple weight="light" />
-					</Button>
+					<ButtonContainer>
+						<Button to={`/edit-recipe/${id}`}>
+							Edit Recipe <PencilSimple weight="light" />
+						</Button>
+
+						<Button onClick={handleDeleteRecipe}>
+							Delete Recipe <X weight="light" />
+						</Button>
+					</ButtonContainer>
 				)}
 			</div>
 		</StyledRecipePage>
