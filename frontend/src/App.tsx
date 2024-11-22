@@ -8,6 +8,7 @@ import AuthLayout from "./components/AuthLayout";
 // Pages
 import UserRecipes from "./pages/UserRecipes";
 import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 import Recipes from "./pages/Recipes";
 import IngredientsList from "./pages/IngredientsList";
 import NewRecipe from "./pages/NewRecipe";
@@ -25,6 +26,7 @@ function App() {
 		<Routes>
 			<Route path="/" element={<Layout />}>
 				<Route index element={user ? <UserRecipes /> : <Home />} />
+				<Route path="*" element={<NotFound />} />
 				<Route path="recipes" element={<Recipes />} />
 				<Route path="ingredients" element={<IngredientsList />} />
 				<Route path="new-recipe" element={<NewRecipe />} />
@@ -42,6 +44,7 @@ function App() {
 					)
 				}
 			>
+				<Route index element={<NotFound />} />
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
 			</Route>
