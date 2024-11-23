@@ -18,9 +18,11 @@ import { selectCurrentUserId } from "@/features/auth/authSlice";
 const NewIngredientForm = ({
 	open,
 	setOpen,
+	listType,
 }: {
 	open: boolean;
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
+	listType: string;
 }) => {
 	const userId = useSelector(selectCurrentUserId);
 	const [postIngredient] = usePostIngredientMutation();
@@ -36,7 +38,7 @@ const NewIngredientForm = ({
 			await postIngredient({
 				id: userId,
 				list: [{ ingredient, quantity, unit }],
-				listType: "ingredient",
+				listType,
 			});
 
 			setIngredient("");

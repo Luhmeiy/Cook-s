@@ -1,13 +1,24 @@
+// packages
 import { FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { Asterisk, PencilSimple, X } from "@phosphor-icons/react";
+
+// styles
 import { InputContainer } from "../RecipeForm/RecipeForm.styled";
+import {
+	IngredientForm,
+	IngredientTitle,
+	StyledIngredient,
+} from "./Ingredient.styled";
+
+// components / Redux
+import Button from "../Button";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
 	useDeleteIngredientMutation,
 	useUpdateIngredientMutation,
 } from "@/features/lists/listsApiSlice";
-import Button from "../Button";
 
 interface IngredientProps {
 	ingredientProps: {
@@ -15,10 +26,12 @@ interface IngredientProps {
 		ingredient: string;
 		quantity: number;
 		unit: string;
+		bought?: boolean;
 	};
 }
 
 const Ingredient = ({ ingredientProps }: IngredientProps) => {
+	const location = useLocation();
 	const userId = useSelector(selectCurrentUserId);
 
 	const [deleteIngredient] = useDeleteIngredientMutation();
@@ -27,9 +40,24 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [ingredient, setIngredient] = useState(ingredientProps);
 
-	const handleDeleteIngredient = async (id: string) => {
+	const handleCheckIngredient = async () => {
+		const updatedBought = !ingredient.bought;
+		setIngredient((prev) => ({ ...prev, bought: updatedBought }));
+
 		try {
-			await deleteIngredient({ userId, ingredient: id });
+			await updateIngredient({
+				userId,
+				ingredient: ingredient._id,
+				updatedIngredient: { ...ingredient, bought: updatedBought },
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleDeleteIngredient = async () => {
+		try {
+			await deleteIngredient({ userId, ingredient: ingredient._id });
 		} catch (error) {
 			console.log(error);
 		}
@@ -52,19 +80,19 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 	};
 
 	return (
-		<div>
+		<>
 			{isEditing ? (
-				<form onSubmit={handleSubmit}>
+				<IngredientForm onSubmit={handleSubmit}>
 					<InputContainer>
 						Ingredient
 						<input
 							type="text"
 							value={ingredient.ingredient}
 							onChange={(e) =>
-								setIngredient({
-									...ingredient,
-									["ingredient"]: e.target.value,
-								})
+								setIngredient((prev) => ({
+									...prev,
+									ingredient: e.target.value,
+								}))
 							}
 							placeholder="Ex.: Apple"
 							required
@@ -77,10 +105,10 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 							type="number"
 							value={ingredient.quantity}
 							onChange={(e) =>
-								setIngredient({
-									...ingredient,
-									["quantity"]: +e.target.value,
-								})
+								setIngredient((prev) => ({
+									...prev,
+									quantity: +e.target.value,
+								}))
 							}
 							min={1}
 							required
@@ -93,10 +121,10 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 							type="text"
 							value={ingredient.unit}
 							onChange={(e) =>
-								setIngredient({
-									...ingredient,
-									["unit"]: e.target.value,
-								})
+								setIngredient((prev) => ({
+									...prev,
+									unit: e.target.value,
+								}))
 							}
 							placeholder="Ex.: Whole"
 							required
@@ -106,13 +134,23 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 					<Button type="submit">Save</Button>
 
 					<Button onClick={() => setIsEditing(false)}>Cancel</Button>
-				</form>
+				</IngredientForm>
 			) : (
-				<>
+				<StyledIngredient>
 					<div>
-						<Asterisk weight="bold" />
-						{ingredient.quantity} {ingredient.unit}{" "}
-						{ingredient.ingredient}
+						{location.pathname === "/shopping" ? (
+							<input
+								type="checkbox"
+								checked={ingredient.bought}
+								onChange={handleCheckIngredient}
+							/>
+						) : (
+							<Asterisk weight="bold" />
+						)}
+						<IngredientTitle bought={ingredient.bought?.toString()}>
+							{ingredient.quantity} {ingredient.unit}{" "}
+							{ingredient.ingredient}
+						</IngredientTitle>
 					</div>
 
 					<div>
@@ -121,16 +159,11 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 							onClick={() => setIsEditing(true)}
 						/>
 
-						<X
-							size={20}
-							onClick={() =>
-								handleDeleteIngredient(ingredient._id)
-							}
-						/>
+						<X size={20} onClick={handleDeleteIngredient} />
 					</div>
-				</>
+				</StyledIngredient>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -9,7 +9,7 @@ interface ListBody {
 		ingredient: string;
 		quantity: number;
 		unit: string;
-		bought: boolean;
+		bought?: boolean;
 	}>;
 
 	listType: string;
@@ -54,6 +54,10 @@ export const addToList = expressAsyncHandler(
 					);
 
 					if (!result) {
+						if (!("bought" in ingredient)) {
+							ingredient.bought = false;
+						}
+
 						user.shoppingList.push(ingredient);
 					}
 				});

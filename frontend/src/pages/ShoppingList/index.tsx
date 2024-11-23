@@ -19,7 +19,7 @@ import {
 import Ingredient from "@/components/Ingredient";
 import NewIngredientForm from "@/components/NewIngredientForm";
 
-const IngredientsList = () => {
+const ShoppingList = () => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
@@ -35,7 +35,7 @@ const IngredientsList = () => {
 	return (
 		<StyledRecipes>
 			<RecipeContainerTitle>
-				<h2>Available Ingredients</h2>
+				<h2>Shopping List</h2>
 
 				<NewIngredientButton onClick={() => setOpen(true)}>
 					Add New Ingredient <Plus size={20} weight="light" />
@@ -44,13 +44,13 @@ const IngredientsList = () => {
 				<NewIngredientForm
 					open={open}
 					setOpen={setOpen}
-					listType="ingredient"
+					listType="shopping"
 				/>
 			</RecipeContainerTitle>
 
 			<IngredientsContainer>
-				{user?.ingredientList.length ? (
-					user.ingredientList.map((ingredient) => (
+				{user?.shoppingList.length ? (
+					user.shoppingList.map((ingredient) => (
 						<Ingredient
 							ingredientProps={ingredient}
 							key={ingredient._id}
@@ -64,4 +64,4 @@ const IngredientsList = () => {
 	);
 };
 
-export default IngredientsList;
+export default ShoppingList;
