@@ -11,8 +11,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import User from "./pages/User";
 import Recipes from "./pages/Recipes";
-import IngredientsList from "./pages/IngredientsList";
-import ShoppingList from "./pages/ShoppingList";
+import List from "./pages/List";
 import NewRecipe from "./pages/NewRecipe";
 import EditRecipe from "./pages/EditRecipe";
 import RecipePage from "./pages/Recipe";
@@ -31,8 +30,11 @@ function App() {
 				<Route path="*" element={<NotFound />} />
 				<Route path="user/:id" element={<User />} />
 				<Route path="recipes" element={<Recipes />} />
-				<Route path="ingredients" element={<IngredientsList />} />
-				<Route path="shopping" element={<ShoppingList />} />
+				<Route
+					path="ingredients"
+					element={<List listType="ingredient" />}
+				/>
+				<Route path="shopping" element={<List listType="shopping" />} />
 				<Route path="new-recipe" element={<NewRecipe />} />
 				<Route path="edit-recipe/:id" element={<EditRecipe />} />
 				<Route path="recipe/:id" element={<RecipePage />} />

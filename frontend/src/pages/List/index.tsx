@@ -6,20 +6,17 @@ import { Plus } from "@phosphor-icons/react";
 
 // styles
 import { RecipeContainerTitle, StyledRecipes } from "@/styles/Recipes.styled";
-import {
-	IngredientsContainer,
-	NewIngredientButton,
-} from "@/styles/Ingredient.styled";
+import { IngredientsContainer, NewIngredientButton } from "./List.styled";
 
-// Redux
+// components / Redux
+import Ingredient from "@/components/Ingredient";
+import NewIngredientForm from "@/components/NewIngredientForm";
 import {
 	selectAuthLoading,
 	selectCurrentUser,
 } from "@/features/auth/authSlice";
-import Ingredient from "@/components/Ingredient";
-import NewIngredientForm from "@/components/NewIngredientForm";
 
-const IngredientsList = () => {
+const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
@@ -35,7 +32,11 @@ const IngredientsList = () => {
 	return (
 		<StyledRecipes>
 			<RecipeContainerTitle>
-				<h2>Available Ingredients</h2>
+				<h2>
+					{listType === "ingredient"
+						? "Available Ingredients"
+						: "Shopping List"}
+				</h2>
 
 				<NewIngredientButton onClick={() => setOpen(true)}>
 					Add New Ingredient <Plus size={20} weight="light" />
@@ -44,13 +45,13 @@ const IngredientsList = () => {
 				<NewIngredientForm
 					open={open}
 					setOpen={setOpen}
-					listType="ingredient"
+					listType={listType}
 				/>
 			</RecipeContainerTitle>
 
 			<IngredientsContainer>
-				{user?.ingredientList.length ? (
-					user.ingredientList.map((ingredient) => (
+				{user && user[`${listType}List`].length ? (
+					user[`${listType}List`].map((ingredient) => (
 						<Ingredient
 							ingredientProps={ingredient}
 							key={ingredient._id}
@@ -64,4 +65,4 @@ const IngredientsList = () => {
 	);
 };
 
-export default IngredientsList;
+export default List;
