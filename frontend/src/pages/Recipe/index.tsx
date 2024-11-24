@@ -20,7 +20,7 @@ import {
 	UserLink,
 } from "./RecipePage.styled";
 
-// components / interfaces / Redux
+// components / Redux
 import Button from "@/components/Button";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
@@ -29,6 +29,7 @@ import {
 	useDeleteRecipeMutation,
 	useGetRecipeByIdQuery,
 } from "@/features/recipes/recipesApiSlice";
+import { StyledNotFound } from "../NotFound/NotFound.styled";
 
 const RecipePage = () => {
 	const { id } = useParams();
@@ -37,9 +38,17 @@ const RecipePage = () => {
 	const navigate = useNavigate();
 
 	const [deleteRecipe] = useDeleteRecipeMutation();
-	const { data, isLoading } = useGetRecipeByIdQuery(id!);
+	const { data, isLoading, error } = useGetRecipeByIdQuery(id!);
 
 	if (isLoading) return <p>Loading...</p>;
+	if (error) {
+		return (
+			<StyledNotFound>
+				<h2>Recipe Not Found</h2>
+				<Button to="/">Go Back</Button>
+			</StyledNotFound>
+		);
+	}
 
 	const { recipe } = data!;
 

@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import User from "@/models/User";
 
 export const getUser = expressAsyncHandler(async (req, res) => {
-	const { id } = req.body;
+	const { id } = req.params;
 
 	if (!id) {
 		res.status(400);
@@ -21,7 +21,8 @@ export const getUser = expressAsyncHandler(async (req, res) => {
 });
 
 export const updateUser = expressAsyncHandler(async (req, res) => {
-	const { id, data } = req.body;
+	const { id } = req.params;
+	const { data } = req.body;
 
 	if (!id || !data) {
 		res.status(400);
@@ -45,7 +46,7 @@ export const updateUser = expressAsyncHandler(async (req, res) => {
 });
 
 export const deleteUser = expressAsyncHandler(async (req, res) => {
-	const { id } = req.body;
+	const { id } = req.params;
 
 	if (!id) {
 		res.status(400);

@@ -9,6 +9,7 @@ import AuthLayout from "./components/AuthLayout";
 import UserRecipes from "./pages/UserRecipes";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
+import User from "./pages/User";
 import Recipes from "./pages/Recipes";
 import IngredientsList from "./pages/IngredientsList";
 import ShoppingList from "./pages/ShoppingList";
@@ -28,6 +29,7 @@ function App() {
 			<Route path="/" element={<Layout />}>
 				<Route index element={user ? <UserRecipes /> : <Home />} />
 				<Route path="*" element={<NotFound />} />
+				<Route path="user/:id" element={<User />} />
 				<Route path="recipes" element={<Recipes />} />
 				<Route path="ingredients" element={<IngredientsList />} />
 				<Route path="shopping" element={<ShoppingList />} />

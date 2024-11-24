@@ -88,18 +88,26 @@ export const UserButton = styled.button`
 export const UserPopover = styled(Popover)`
 	& div {
 		border-radius: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 		margin-top: 0.25rem;
-		padding: 1rem 0.5rem;
+		padding: 1rem;
 
 		& button {
 			align-items: center;
 			background-color: transparent;
 			border: none;
-			color: inherit;
 			cursor: pointer;
 			display: flex;
 			font-size: 1rem;
 			gap: 0.5rem;
+			padding: 0;
+			transition: 0.5s;
+
+			&:hover {
+				color: var(--primary);
+			}
 		}
 	}
 `;

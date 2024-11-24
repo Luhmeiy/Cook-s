@@ -69,6 +69,8 @@ const Header = () => {
 								horizontal: "center",
 							}}
 						>
+							<Link to={`/user/${user._id}`}>Your profile</Link>
+
 							<button onClick={handleLogout}>
 								<SignOut size={20} weight="light" /> Logout
 							</button>
