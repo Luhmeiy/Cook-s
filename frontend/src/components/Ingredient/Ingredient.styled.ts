@@ -27,6 +27,10 @@ export const StyledIngredient = styled.div`
 				&:nth-of-type(2) {
 					background-color: #ff5733;
 				}
+
+				&:nth-of-type(3) {
+					background-color: #8bc34a;
+				}
 			}
 		}
 	}

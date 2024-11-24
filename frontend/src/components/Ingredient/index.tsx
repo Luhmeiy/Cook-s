@@ -2,7 +2,7 @@
 import { FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { Asterisk, PencilSimple, X } from "@phosphor-icons/react";
+import { Asterisk, PencilSimple, Plus, X } from "@phosphor-icons/react";
 
 // styles
 import { InputContainer } from "../RecipeForm/RecipeForm.styled";
@@ -12,8 +12,9 @@ import {
 	StyledIngredient,
 } from "./Ingredient.styled";
 
-// components / Redux
+// components / types / Redux
 import Button from "../Button";
+import { ListType } from "@/interfaces/ListType";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
 	useDeleteIngredientMutation,
@@ -28,10 +29,15 @@ interface IngredientProps {
 		unit: string;
 		bought?: boolean;
 	};
+	handleAddIngredients: (ingredient?: ListType) => Promise<void>;
 }
 
-const Ingredient = ({ ingredientProps }: IngredientProps) => {
+const Ingredient = ({
+	ingredientProps,
+	handleAddIngredients,
+}: IngredientProps) => {
 	const location = useLocation();
+
 	const userId = useSelector(selectCurrentUserId);
 
 	const [deleteIngredient] = useDeleteIngredientMutation();
@@ -160,6 +166,13 @@ const Ingredient = ({ ingredientProps }: IngredientProps) => {
 						/>
 
 						<X size={20} onClick={handleDeleteIngredient} />
+
+						{location.pathname === "/ingredients" && (
+							<Plus
+								size={20}
+								onClick={() => handleAddIngredients(ingredient)}
+							/>
+						)}
 					</div>
 				</StyledIngredient>
 			)}

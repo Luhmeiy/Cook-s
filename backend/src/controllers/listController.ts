@@ -11,7 +11,6 @@ interface ListBody {
 		unit: string;
 		bought?: boolean;
 	}>;
-
 	listType: string;
 }
 
