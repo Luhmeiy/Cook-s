@@ -1,14 +1,15 @@
 import styled from "styled-components";
 
-export const StyledIngredient = styled.div`
+export const StyledStep = styled.div`
 	align-items: center;
 	display: flex;
 	gap: 0.5rem;
 `;
 
-export const Circle = styled.div`
+export const Circle = styled.div<{ isAvailable?: string }>`
 	align-items: center;
-	background-color: var(--primary);
+	background-color: ${({ isAvailable }) =>
+		isAvailable === "true" ? "var(--green)" : "var(--primary)"};
 	border-radius: 50%;
 	display: flex;
 	height: 2rem;

@@ -14,7 +14,7 @@ import {
 
 // components / types / Redux
 import Button from "../Button";
-import { ListType } from "@/interfaces/ListType";
+import { IngredientType } from "@/interfaces/IngredientType";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
 	useDeleteIngredientMutation,
@@ -29,7 +29,7 @@ interface IngredientProps {
 		unit: string;
 		bought?: boolean;
 	};
-	handleAddIngredients: (ingredient?: ListType) => Promise<void>;
+	handleAddIngredients: (ingredient?: IngredientType) => Promise<void>;
 }
 
 const Ingredient = ({

@@ -11,6 +11,7 @@ import {
 
 // styles
 import { RecipeCategory, RecipeTime } from "@/styles/Recipe.styled";
+import { StyledNotFound } from "../NotFound/NotFound.styled";
 import {
 	ButtonContainer,
 	Description,
@@ -20,16 +21,17 @@ import {
 	UserLink,
 } from "./RecipePage.styled";
 
-// components / Redux
+// components / types / Redux
 import Button from "@/components/Button";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
+import { IngredientType } from "@/interfaces/IngredientType";
 import { selectCurrentUser } from "@/features/auth/authSlice";
 import {
 	useDeleteRecipeMutation,
 	useGetRecipeByIdQuery,
 } from "@/features/recipes/recipesApiSlice";
-import { StyledNotFound } from "../NotFound/NotFound.styled";
+import { usePostIngredientMutation } from "@/features/lists/listsApiSlice";
 
 const RecipePage = () => {
 	const { id } = useParams();
@@ -37,6 +39,7 @@ const RecipePage = () => {
 
 	const navigate = useNavigate();
 
+	const [postIngredient] = usePostIngredientMutation();
 	const [deleteRecipe] = useDeleteRecipeMutation();
 	const { data, isLoading, error } = useGetRecipeByIdQuery(id!);
 
@@ -51,6 +54,34 @@ const RecipePage = () => {
 	}
 
 	const { recipe } = data!;
+
+	const verifyIngredientAvailability = (
+		ingredient: Omit<IngredientType, "_id">
+	) => {
+		return user!.ingredientList.some(
+			(e) =>
+				e.ingredient.toLowerCase() ===
+					ingredient.ingredient.toLowerCase() &&
+				e.unit.toLowerCase() === ingredient.unit.toLowerCase() &&
+				e.quantity >= ingredient.quantity
+		);
+	};
+
+	const handleAddIngredients = async () => {
+		const list = recipe.ingredients.filter(
+			(ingredient) => !verifyIngredientAvailability(ingredient)
+		);
+
+		try {
+			await postIngredient({
+				id: user?._id,
+				list: list.map(({ _id, ...rest }) => rest),
+				listType: "shopping",
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	const handleDeleteRecipe = async () => {
 		try {
@@ -100,12 +131,22 @@ const RecipePage = () => {
 
 				<ListContainer>
 					<h3>Ingredients</h3>
-					{recipe?.ingredients.map((ingredient, index) => (
-						<Step step={ingredient} index={index} key={index} />
-					))}
+					{recipe?.ingredients.map((ingredient, index) => {
+						const isAvailable =
+							verifyIngredientAvailability(ingredient);
+
+						return (
+							<Step
+								step={ingredient}
+								index={index}
+								isAvailable={isAvailable}
+								key={index}
+							/>
+						);
+					})}
 
 					{user && (
-						<Button variant="gray">
+						<Button variant="gray" onClick={handleAddIngredients}>
 							Add remaining ingredients to shopping list <Plus />
 						</Button>
 					)}

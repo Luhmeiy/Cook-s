@@ -1,4 +1,4 @@
-export type ListType = {
+export type IngredientType = {
 	_id: string;
 	ingredient: string;
 	quantity: number;

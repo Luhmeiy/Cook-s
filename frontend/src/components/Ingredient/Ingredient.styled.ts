@@ -25,11 +25,11 @@ export const StyledIngredient = styled.div`
 				}
 
 				&:nth-of-type(2) {
-					background-color: #ff5733;
+					background-color: var(--red);
 				}
 
 				&:nth-of-type(3) {
-					background-color: #8bc34a;
+					background-color: var(--green);
 				}
 			}
 		}

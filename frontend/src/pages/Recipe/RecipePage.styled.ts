@@ -72,6 +72,6 @@ export const ButtonContainer = styled.div`
 	gap: 0.5rem;
 
 	& button:nth-of-type(2) {
-		background-color: #ff5733;
+		background-color: var(--red);
 	}
 `;

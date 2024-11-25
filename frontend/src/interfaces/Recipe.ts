@@ -7,6 +7,7 @@ export interface Recipe {
 	description?: string;
 	ingredients: [
 		{
+			_id: string;
 			ingredient: string;
 			quantity: number;
 			unit: string;

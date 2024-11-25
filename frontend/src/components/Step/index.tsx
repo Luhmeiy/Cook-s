@@ -1,4 +1,4 @@
-import { Circle, StyledIngredient } from "./Step.styled";
+import { Circle, StyledStep } from "./Step.styled";
 
 interface Step {
 	step:
@@ -9,9 +9,10 @@ interface Step {
 		  }
 		| string;
 	index: number;
+	isAvailable?: boolean;
 }
 
-const Step = ({ step, index }: Step) => {
+const Step = ({ step, index, isAvailable }: Step) => {
 	let stepParagraph = "";
 
 	if (typeof step !== "string") {
@@ -23,10 +24,14 @@ const Step = ({ step, index }: Step) => {
 	}
 
 	return (
-		<StyledIngredient>
-			<Circle>{index}</Circle>
+		<StyledStep>
+			<Circle
+				isAvailable={isAvailable ? isAvailable.toString() : "false"}
+			>
+				{index}
+			</Circle>
 			<p>{stepParagraph}</p>
-		</StyledIngredient>
+		</StyledStep>
 	);
 };
 

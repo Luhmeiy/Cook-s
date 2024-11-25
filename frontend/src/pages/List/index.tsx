@@ -12,7 +12,7 @@ import { IngredientsContainer, NewIngredientButton } from "./List.styled";
 import Button from "@/components/Button";
 import Ingredient from "@/components/Ingredient";
 import NewIngredientForm from "@/components/NewIngredientForm";
-import { ListType } from "@/interfaces/ListType";
+import { IngredientType } from "@/interfaces/IngredientType";
 import {
 	selectAuthLoading,
 	selectCurrentUser,
@@ -32,7 +32,7 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 
 	const [open, setOpen] = useState(false);
 
-	const handleAddIngredients = async (ingredient?: ListType) => {
+	const handleAddIngredients = async (ingredient?: IngredientType) => {
 		let list;
 
 		if (ingredient) {

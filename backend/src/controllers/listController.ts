@@ -9,9 +9,9 @@ interface ListBody {
 		ingredient: string;
 		quantity: number;
 		unit: string;
-		bought?: boolean;
+		bought?: boolean | null;
 	}>;
-	listType: string;
+	listType: "ingredient" | "shopping";
 }
 
 export const addToList = expressAsyncHandler(
@@ -32,36 +32,46 @@ export const addToList = expressAsyncHandler(
 			throw new Error("User not found.");
 		}
 
-		switch (listType) {
-			case "ingredient":
-				list.forEach((ingredient) => {
-					const result = user.ingredientList.some(
-						({ ingredient: ingredientName }) =>
-							ingredientName === ingredient.ingredient
-					);
+		list.forEach(async (ingredient) => {
+			const result = await Promise.all(
+				user[`${listType}List`].map(async (userIngredient) => {
+					const result =
+						userIngredient.ingredient.toLowerCase() ===
+							ingredient.ingredient.toLowerCase() &&
+						userIngredient.unit.toLowerCase() ===
+							ingredient.unit.toLowerCase();
 
-					if (!result) {
-						user.ingredientList.push(ingredient);
+					if (result) {
+						await User.updateOne(
+							{
+								_id: id,
+								[`${listType}List._id`]: userIngredient._id,
+							},
+							{
+								$set: {
+									[`${listType}List.$`]: {
+										...userIngredient.toObject(),
+										quantity:
+											userIngredient.quantity +
+											ingredient.quantity,
+									},
+								},
+							}
+						);
 					}
-				});
-				break;
-			case "shopping":
-				list.forEach((ingredient) => {
-					const result = user.shoppingList.some(
-						({ ingredient: ingredientName }) =>
-							ingredientName === ingredient.ingredient
-					);
 
-					if (!result) {
-						if (!("bought" in ingredient)) {
-							ingredient.bought = false;
-						}
+					return result;
+				})
+			);
 
-						user.shoppingList.push(ingredient);
-					}
-				});
-				break;
-		}
+			if (!result.includes(true)) {
+				if (!("bought" in ingredient) && listType === "shopping") {
+					ingredient.bought = false;
+				}
+
+				user[`${listType}List`].push(ingredient);
+			}
+		});
 
 		await user.save();
 

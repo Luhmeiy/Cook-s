@@ -5,6 +5,8 @@ const GlobalStyles = createGlobalStyle`
         --background: #F9F6F2;
         --second-background: #EAE0D5;
         --primary: #F5A623;
+        --green: #8bc34a;
+        --red: #ff5733;
         --text: #333333;
         --muted-text: #6C6C6C;
     }
