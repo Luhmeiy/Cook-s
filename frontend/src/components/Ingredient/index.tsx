@@ -20,6 +20,7 @@ import {
 	useDeleteIngredientMutation,
 	useUpdateIngredientMutation,
 } from "@/features/lists/listsApiSlice";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
 
 interface IngredientProps {
 	ingredientProps: {
@@ -43,6 +44,7 @@ const Ingredient = ({
 	const [deleteIngredient] = useDeleteIngredientMutation();
 	const [updateIngredient] = useUpdateIngredientMutation();
 
+	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [ingredient, setIngredient] = useState(ingredientProps);
 
@@ -61,7 +63,9 @@ const Ingredient = ({
 		}
 	};
 
-	const handleDeleteIngredient = async () => {
+	const handleDeleteIngredient = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
 		try {
 			await deleteIngredient({ userId, ingredient: ingredient._id });
 		} catch (error) {
@@ -165,7 +169,14 @@ const Ingredient = ({
 							onClick={() => setIsEditing(true)}
 						/>
 
-						<X size={20} onClick={handleDeleteIngredient} />
+						<X size={20} onClick={() => setOpen(true)} />
+
+						<ConfirmDeleteModal
+							title={ingredient.ingredient}
+							open={open}
+							setOpen={setOpen}
+							deleteFunction={handleDeleteIngredient}
+						/>
 
 						{location.pathname === "/ingredients" && (
 							<Plus

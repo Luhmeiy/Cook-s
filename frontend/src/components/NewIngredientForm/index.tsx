@@ -4,10 +4,7 @@ import { useSelector } from "react-redux";
 import { Modal } from "@mui/material";
 
 // styles
-import {
-	CloseButton,
-	StyledNewIngredientForm,
-} from "./NewIngredientForm.styled";
+import { CloseButton, StyledModalForm } from "@/styles/Modal.styled";
 import { InputContainer } from "../RecipeForm/RecipeForm.styled";
 
 // components / Redux
@@ -53,12 +50,8 @@ const NewIngredientForm = ({
 
 	return (
 		<Modal open={open} onClose={() => setOpen(false)}>
-			<StyledNewIngredientForm onSubmit={handleSubmit}>
-				<CloseButton
-					size={20}
-					weight="bold"
-					onClick={() => setOpen(false)}
-				/>
+			<StyledModalForm onSubmit={handleSubmit}>
+				<CloseButton weight="bold" onClick={() => setOpen(false)} />
 
 				<h3>Add New Ingredient</h3>
 
@@ -97,8 +90,8 @@ const NewIngredientForm = ({
 					</InputContainer>
 				</div>
 
-				<Button type="submit">Save</Button>
-			</StyledNewIngredientForm>
+				<Button>Save</Button>
+			</StyledModalForm>
 		</Modal>
 	);
 };

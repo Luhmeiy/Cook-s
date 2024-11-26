@@ -1,4 +1,5 @@
 // packages
+import { FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -23,6 +24,7 @@ import {
 
 // components / types / Redux
 import Button from "@/components/Button";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
 import { IngredientType } from "@/interfaces/IngredientType";
@@ -42,6 +44,8 @@ const RecipePage = () => {
 	const [postIngredient] = usePostIngredientMutation();
 	const [deleteRecipe] = useDeleteRecipeMutation();
 	const { data, isLoading, error } = useGetRecipeByIdQuery(id!);
+
+	const [open, setOpen] = useState(false);
 
 	if (isLoading) return <p>Loading...</p>;
 	if (error) {
@@ -83,7 +87,9 @@ const RecipePage = () => {
 		}
 	};
 
-	const handleDeleteRecipe = async () => {
+	const handleDeleteRecipe = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
 		try {
 			const { error } = await deleteRecipe({ id });
 
@@ -179,9 +185,16 @@ const RecipePage = () => {
 							Edit Recipe <PencilSimple weight="light" />
 						</Button>
 
-						<Button onClick={handleDeleteRecipe}>
+						<Button onClick={() => setOpen(true)}>
 							Delete Recipe <X weight="light" />
 						</Button>
+
+						<ConfirmDeleteModal
+							title={recipe.name}
+							open={open}
+							setOpen={setOpen}
+							deleteFunction={handleDeleteRecipe}
+						/>
 					</ButtonContainer>
 				)}
 			</div>
