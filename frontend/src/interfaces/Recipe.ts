@@ -3,17 +3,15 @@ export interface Recipe {
 	name: string;
 	category: string;
 	prepTime: string;
-	servings?: string;
+	servings?: number;
 	description?: string;
-	ingredients: [
-		{
-			_id: string;
-			ingredient: string;
-			quantity: number;
-			unit: string;
-		}
-	];
-	instructions: string[];
+	ingredients: {
+		_id?: string;
+		ingredient: string;
+		quantity: number;
+		unit: string;
+	}[];
+	instructions: string;
 	favorite: boolean;
 	public: boolean;
 	userId: string;

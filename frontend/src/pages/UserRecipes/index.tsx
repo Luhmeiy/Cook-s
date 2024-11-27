@@ -17,7 +17,7 @@ import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
 
 const UserRecipes = () => {
 	const userId = useSelector(selectCurrentUserId);
-	const { data, isLoading } = useGetUserRecipesQuery(userId);
+	const { data, isLoading } = useGetUserRecipesQuery(userId!);
 
 	if (isLoading) return <p>Loading...</p>;
 

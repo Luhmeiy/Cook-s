@@ -44,7 +44,7 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 		try {
 			await postIngredient({
 				id: user?._id,
-				list: list?.map(({ _id, ...rest }) => rest),
+				list: list?.map((ingredient) => delete ingredient._id),
 				listType: listType === "ingredient" ? "shopping" : "ingredient",
 			});
 

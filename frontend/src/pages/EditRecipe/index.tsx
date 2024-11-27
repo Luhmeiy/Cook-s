@@ -22,7 +22,7 @@ const EditRecipe = () => {
 
 	return (
 		<div>
-			<GoBackLink to="/">
+			<GoBackLink to={`/recipe/${id}`}>
 				<CaretLeft /> Go back
 			</GoBackLink>
 

@@ -34,12 +34,10 @@ const recipeSchema = new Schema({
 			},
 		},
 	],
-	instructions: [
-		{
-			type: String,
-			required: true,
-		},
-	],
+	instructions: {
+		type: String,
+		required: true,
+	},
 	favorite: {
 		type: Boolean,
 		required: true,

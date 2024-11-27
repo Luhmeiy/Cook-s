@@ -49,3 +49,5 @@ export const {
 	usePatchRecipeMutation,
 	useDeleteRecipeMutation,
 } = recipesApiSlice;
+
+export type PostRecipeType = ReturnType<typeof usePostRecipeMutation>[0];

@@ -43,7 +43,9 @@ const RecipePage = () => {
 
 	const [postIngredient] = usePostIngredientMutation();
 	const [deleteRecipe] = useDeleteRecipeMutation();
-	const { data, isLoading, error } = useGetRecipeByIdQuery(id!);
+	const { data, isLoading, error } = useGetRecipeByIdQuery(id!, {
+		refetchOnMountOrArgChange: true,
+	});
 
 	const [open, setOpen] = useState(false);
 
@@ -79,7 +81,7 @@ const RecipePage = () => {
 		try {
 			await postIngredient({
 				id: user?._id,
-				list: list.map(({ _id, ...rest }) => rest),
+				list: list.map((ingredient) => delete ingredient._id),
 				listType: "shopping",
 			});
 		} catch (error) {
@@ -160,9 +162,15 @@ const RecipePage = () => {
 
 				<ListContainer>
 					<h3>Instructions</h3>
-					{recipe?.instructions.map((instruction, index) => (
-						<Step step={instruction} index={index} key={index} />
-					))}
+					{recipe?.instructions
+						.split("\n")
+						.map((instruction, index) => (
+							<Step
+								step={instruction}
+								index={index}
+								key={index}
+							/>
+						))}
 				</ListContainer>
 			</div>
 

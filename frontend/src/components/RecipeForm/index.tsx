@@ -21,6 +21,7 @@ import {
 	selectAuthLoading,
 	selectCurrentUser,
 } from "@/features/auth/authSlice";
+import { PostRecipeType } from "@/features/recipes/recipesApiSlice";
 
 const defaultIngredient = {
 	ingredient: "",
@@ -32,7 +33,7 @@ const RecipeForm = ({
 	submitRecipe,
 	recipe,
 }: {
-	submitRecipe: any;
+	submitRecipe: PostRecipeType;
 	recipe?: Recipe;
 }) => {
 	const navigate = useNavigate();
@@ -71,6 +72,8 @@ const RecipeForm = ({
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
+		if (!user) return;
+
 		const newRecipe = {
 			name: title,
 			prepTime,
@@ -81,7 +84,7 @@ const RecipeForm = ({
 			instructions,
 			favorite: false,
 			public: isPublic,
-			userId: user?._id,
+			userId: user._id,
 			createdBy: {
 				_id: recipe?.createdBy._id || user?._id,
 				username: recipe?.createdBy.username || user?.username,
@@ -95,7 +98,9 @@ const RecipeForm = ({
 			});
 
 			if (result.data.message) {
-				navigate("/");
+				const redirectLink = recipe ? `/recipe/${recipe?._id}` : "/";
+
+				navigate(redirectLink);
 			} else {
 				console.log(result.data.error);
 			}
@@ -105,10 +110,10 @@ const RecipeForm = ({
 	};
 
 	useEffect(() => {
-		if (!isLoading && !user) {
+		if ((!isLoading && !user) || (recipe && recipe?.userId !== user?._id)) {
 			navigate("/");
 		}
-	}, [isLoading, user, navigate]);
+	}, [isLoading, user, navigate, recipe]);
 
 	return (
 		<StyledRecipeForm onSubmit={handleSubmit}>
