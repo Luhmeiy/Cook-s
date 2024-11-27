@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-export const StyledRecipeTitle = styled.div<{ alternate?: string }>`
+export const StyledRecipeTitle = styled.div<{ $alternate?: string }>`
 	align-items: center;
 	display: flex;
-	gap: ${({ alternate }) => (alternate ? "2rem" : "1rem")};
-	justify-content: ${({ alternate }) => !alternate && "space-between"};
+	gap: ${({ $alternate }) => ($alternate ? "2rem" : "1rem")};
+	justify-content: ${({ $alternate }) => !$alternate && "space-between"};
 	width: 100%;
 
 	& a {

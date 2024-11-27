@@ -157,7 +157,9 @@ const Ingredient = ({
 						) : (
 							<Asterisk weight="bold" />
 						)}
-						<IngredientTitle bought={ingredient.bought?.toString()}>
+						<IngredientTitle
+							$bought={ingredient.bought?.toString()}
+						>
 							{ingredient.quantity} {ingredient.unit}{" "}
 							{ingredient.ingredient}
 						</IngredientTitle>

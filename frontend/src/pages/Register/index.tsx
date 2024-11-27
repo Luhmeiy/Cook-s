@@ -56,7 +56,7 @@ const Register = () => {
 					</p>
 				</div>
 
-				<Button variant="alternate">
+				<Button $variant="alternate">
 					<GoogleLogo size={20} /> Sign up with Google
 				</Button>
 
@@ -91,7 +91,7 @@ const Register = () => {
 
 				<p>
 					Already have an account?{" "}
-					<StyledLink to="/auth/login" underline="true">
+					<StyledLink to="/auth/login" $underline="true">
 						Log in
 					</StyledLink>
 				</p>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { X } from "@phosphor-icons/react";
 
-export const StyledModalForm = styled.form<{ variant?: string }>`
+export const StyledModalForm = styled.form<{ $variant?: string }>`
 	background-color: var(--background);
 	border-radius: 0.25rem;
 	display: flex;
@@ -25,8 +25,8 @@ export const StyledModalForm = styled.form<{ variant?: string }>`
 	}
 
 	& button {
-		background-color: ${({ variant }) =>
-			variant === "true" && "var(--red)"};
+		background-color: ${({ $variant }) =>
+			$variant === "true" && "var(--red)"};
 	}
 `;
 

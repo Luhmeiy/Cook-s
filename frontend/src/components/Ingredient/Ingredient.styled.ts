@@ -36,8 +36,8 @@ export const StyledIngredient = styled.div`
 	}
 `;
 
-export const IngredientTitle = styled.p<{ bought?: string }>`
-	text-decoration: ${({ bought }) => bought === "true" && "line-through"};
+export const IngredientTitle = styled.p<{ $bought?: string }>`
+	text-decoration: ${({ $bought }) => $bought === "true" && "line-through"};
 `;
 
 export const IngredientForm = styled.form`

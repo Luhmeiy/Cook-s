@@ -16,7 +16,7 @@ const ConfirmDeleteModal = ({
 }) => {
 	return (
 		<Modal open={open} onClose={() => setOpen(false)}>
-			<StyledModalForm variant="true" onSubmit={deleteFunction}>
+			<StyledModalForm $variant="true" onSubmit={deleteFunction}>
 				<CloseButton weight="bold" onClick={() => setOpen(false)} />
 
 				<h3>Are you sure you want to delete {title}?</h3>

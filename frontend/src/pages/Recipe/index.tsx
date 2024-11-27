@@ -111,7 +111,7 @@ const RecipePage = () => {
 
 					<div>
 						<RecipeCategory
-							category={recipe?.category ? "true" : "false"}
+							$category={recipe?.category ? "true" : "false"}
 						>
 							{recipe?.category || "Sem Categoria"}
 						</RecipeCategory>
@@ -154,7 +154,7 @@ const RecipePage = () => {
 					})}
 
 					{user && (
-						<Button variant="gray" onClick={handleAddIngredients}>
+						<Button $variant="gray" onClick={handleAddIngredients}>
 							Add remaining ingredients to shopping list <Plus />
 						</Button>
 					)}

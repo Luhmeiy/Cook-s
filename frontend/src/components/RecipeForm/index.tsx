@@ -283,7 +283,7 @@ const RecipeForm = ({
 
 					<Button
 						type="button"
-						variant="gray"
+						$variant="gray"
 						onClick={addNewIngredient}
 					>
 						Add New Ingredient <Plus />

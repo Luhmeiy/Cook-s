@@ -50,7 +50,7 @@ const RecipeTitle = ({
 	};
 
 	return (
-		<StyledRecipeTitle alternate={alternate}>
+		<StyledRecipeTitle $alternate={alternate}>
 			{alternate ? (
 				<h2>{recipe.name}</h2>
 			) : (

@@ -6,10 +6,10 @@ export const StyledStep = styled.div`
 	gap: 0.5rem;
 `;
 
-export const Circle = styled.div<{ isAvailable?: string }>`
+export const Circle = styled.div<{ $isAvailable?: string }>`
 	align-items: center;
-	background-color: ${({ isAvailable }) =>
-		isAvailable === "true" ? "var(--green)" : "var(--primary)"};
+	background-color: ${({ $isAvailable }) =>
+		$isAvailable === "true" ? "var(--green)" : "var(--primary)"};
 	border-radius: 50%;
 	display: flex;
 	height: 2rem;

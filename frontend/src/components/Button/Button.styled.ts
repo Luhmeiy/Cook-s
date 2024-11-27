@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
-export const StyledButton = styled.button<{ variant?: string }>`
+export const StyledButton = styled.button<{ $variant?: "alternate" | "gray" }>`
 	align-items: center;
-	background-color: ${({ variant }) => {
-		if (variant === "alternate") return "transparent";
-		else if (variant === "gray") return "#C3C3C3";
+	background-color: ${({ $variant }) => {
+		if ($variant === "alternate") return "transparent";
+		else if ($variant === "gray") return "#C3C3C3";
 		else return "var(--primary)";
 	}};
-	border: ${({ variant }) =>
-		variant === "alternate" ? "2px solid var(--primary)" : "none"};
+	border: ${({ $variant }) =>
+		$variant === "alternate" ? "2px solid var(--primary)" : "none"};
 	border-radius: 0.25rem;
 	cursor: pointer;
 	display: flex;
@@ -19,10 +19,10 @@ export const StyledButton = styled.button<{ variant?: string }>`
 	transition: 0.5s;
 
 	&:hover {
-		background: ${({ variant }) =>
-			variant === "alternate" && "var(--primary)"};
-		filter: ${({ variant }) =>
-			!(variant === "alternate") && "brightness(85%)"};
+		background: ${({ $variant }) =>
+			$variant === "alternate" && "var(--primary)"};
+		filter: ${({ $variant }) =>
+			!($variant === "alternate") && "brightness(85%)"};
 	}
 
 	&:active {

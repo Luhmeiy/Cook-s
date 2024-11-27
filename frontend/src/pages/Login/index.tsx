@@ -59,7 +59,7 @@ const Login = () => {
 					<p>Your recipes await you.</p>
 				</div>
 
-				<Button variant="alternate">
+				<Button $variant="alternate">
 					<GoogleLogo size={20} /> Log in with Google
 				</Button>
 
@@ -91,7 +91,7 @@ const Login = () => {
 
 				<p>
 					Don't have an account yet?{" "}
-					<StyledLink to="/auth/register" underline="true">
+					<StyledLink to="/auth/register" $underline="true">
 						Register
 					</StyledLink>
 				</p>
