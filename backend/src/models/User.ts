@@ -14,6 +14,13 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	description: {
+		type: String,
+	},
+	public: {
+		type: Boolean,
+		required: true,
+	},
 	ingredientList: [
 		{
 			ingredient: {

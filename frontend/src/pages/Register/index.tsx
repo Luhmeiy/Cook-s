@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { GoogleLogo } from "@phosphor-icons/react";
 
 // styles
+import { InputContainer } from "@/components/RecipeForm/RecipeForm.styled";
 import {
 	LayoutInfo,
 	OrDivider,
+	PublicContainer,
 	StyledForm,
 	StyledLink,
 } from "@/styles/Auth.styled";
@@ -22,19 +24,36 @@ const Register = () => {
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [description, setDescription] = useState("");
+	const [isPublic, setIsPublic] = useState(false);
+	const [step, setStep] = useState(0);
 
 	const [register, { isLoading }] = useRegisterMutation();
+
+	const handleNextStep = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		setStep(1);
+	};
 
 	const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		try {
-			const { error } = await register({ username, email, password });
+			const { error } = await register({
+				username,
+				email,
+				password,
+				description,
+				isPublic,
+			});
 
 			if (!error) {
 				setUsername("");
 				setEmail("");
 				setPassword("");
+				setDescription("");
+				setIsPublic(false);
 
 				navigate("/auth/login");
 			}
@@ -56,38 +75,104 @@ const Register = () => {
 					</p>
 				</div>
 
-				<Button $variant="alternate">
-					<GoogleLogo size={20} /> Sign up with Google
-				</Button>
+				{step === 0 ? (
+					<>
+						<Button $variant="alternate">
+							<GoogleLogo size={20} /> Sign up with Google
+						</Button>
 
-				<OrDivider>
-					<hr />
-					or
-					<hr />
-				</OrDivider>
+						<OrDivider>
+							<hr />
+							or
+							<hr />
+						</OrDivider>
 
-				<StyledForm onSubmit={handleRegister}>
-					<input
-						type="text"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						placeholder="Name"
-					/>
+						<StyledForm onSubmit={handleNextStep}>
+							<InputContainer>
+								Name
+								<input
+									type="text"
+									value={username}
+									onChange={(e) =>
+										setUsername(e.target.value)
+									}
+									placeholder="Name"
+									required
+								/>
+							</InputContainer>
 
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder="Email"
-					/>
+							<InputContainer>
+								Email
+								<input
+									type="email"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+									placeholder="Email"
+									required
+								/>
+							</InputContainer>
 
-					<PasswordInput
-						password={password}
-						setPassword={setPassword}
-					/>
+							<InputContainer>
+								Password
+								<PasswordInput
+									password={password}
+									setPassword={setPassword}
+								/>
+							</InputContainer>
 
-					<Button>Sign up</Button>
-				</StyledForm>
+							<Button>Continue</Button>
+						</StyledForm>
+					</>
+				) : (
+					<>
+						<OrDivider>
+							<hr />
+						</OrDivider>
+
+						<StyledForm onSubmit={handleRegister}>
+							<InputContainer>
+								Description (Optional)
+								<input
+									type="text"
+									value={description}
+									onChange={(e) =>
+										setDescription(e.target.value)
+									}
+									placeholder="Description"
+								/>
+							</InputContainer>
+
+							<PublicContainer>
+								<b>Do you want this recipe to be public?</b>
+								<div>
+									<label>
+										<input
+											type="radio"
+											name="public"
+											value="true"
+											checked={isPublic === true}
+											onChange={() => setIsPublic(true)}
+										/>
+										Yes
+									</label>
+
+									<label>
+										<input
+											type="radio"
+											name="public"
+											value="false"
+											checked={isPublic === false}
+											onChange={() => setIsPublic(false)}
+										/>
+										No
+									</label>
+								</div>
+							</PublicContainer>
+
+							<Button>Sign up</Button>
+						</StyledForm>
+					</>
+				)}
 
 				<p>
 					Already have an account?{" "}

@@ -6,7 +6,7 @@ export const LayoutInfo = styled.div`
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	gap: 2.625rem;
+	gap: 2rem;
 	text-align: center;
 	max-width: 25rem;
 
@@ -29,11 +29,10 @@ export const OrDivider = styled.div`
 `;
 
 export const StyledForm = styled.form`
-	align-items: end;
 	display: flex;
 	flex-direction: column;
-	justify-content: end;
 	gap: 0.75rem;
+	text-align: start;
 	width: 100%;
 
 	& div {
@@ -74,9 +73,32 @@ export const StyledForm = styled.form`
 	}
 `;
 
+export const PublicContainer = styled.div`
+	align-items: start !important;
+	background-color: transparent !important;
+	flex-direction: column;
+
+	& div {
+		align-items: start;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 0.75rem;
+
+		& label {
+			display: flex;
+			gap: 0.5rem;
+		}
+	}
+
+	& b {
+		font-weight: 700;
+	}
+`;
+
 export const StyledLink = styled(Link)<{ $underline?: string }>`
 	color: var(--primary);
 	font-weight: 600;
+	text-align: end;
 	text-decoration: ${({ $underline }) =>
 		$underline === "true" && "underline"};
 

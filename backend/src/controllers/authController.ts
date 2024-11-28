@@ -51,9 +51,9 @@ export const login = expressAsyncHandler(async (req, res) => {
 });
 
 export const register = expressAsyncHandler(async (req, res) => {
-	const { email, username, password } = req.body;
+	const { email, username, password, description, isPublic } = req.body;
 
-	if (!email || !username || !password) {
+	if (!email || !username || !password || !isPublic.toString()) {
 		res.status(400);
 		throw new Error("All fields are required.");
 	}
@@ -71,6 +71,8 @@ export const register = expressAsyncHandler(async (req, res) => {
 		email,
 		username,
 		password: hashedPassword,
+		description,
+		public: isPublic,
 		ingredientList: [],
 		shoppingList: [],
 	};
