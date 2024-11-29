@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt, { compare } from "bcrypt";
 import expressAsyncHandler from "express-async-handler";
 import User from "@/models/User";
 
@@ -46,11 +46,25 @@ export const updateUser = expressAsyncHandler(async (req, res) => {
 });
 
 export const deleteUser = expressAsyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { id, password } = req.params;
 
-	if (!id) {
+	if (!id || !password) {
 		res.status(400);
-		throw new Error("User ID required.");
+		throw new Error("User ID and password required.");
+	}
+
+	const user = await User.findById(id).exec();
+
+	if (!user) {
+		res.status(401);
+		throw new Error("User not found.");
+	}
+
+	const match = await compare(password, user.password);
+
+	if (!match) {
+		res.status(401);
+		throw new Error("Wrong password.");
 	}
 
 	const deletedUser = await User.findByIdAndDelete(id).select("username");
@@ -59,6 +73,15 @@ export const deleteUser = expressAsyncHandler(async (req, res) => {
 		res.status(400);
 		throw new Error("User not found.");
 	}
+
+	const cookies = req.cookies;
+
+	if (!cookies?.jwt) {
+		res.status(204);
+		throw new Error("No cookie found.");
+	}
+
+	res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
 
 	res.json({
 		message: `User ${deletedUser.username} deleted.`,

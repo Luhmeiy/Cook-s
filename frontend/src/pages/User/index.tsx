@@ -1,14 +1,26 @@
-import { useParams } from "react-router-dom";
+// packages
+import { FormEvent, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { PencilSimple, X } from "@phosphor-icons/react";
+
+// styles
+import { ConfirmPassword, StyledUser, UserInfo } from "./User.styled";
 import { StyledNotFound } from "../NotFound/NotFound.styled";
 import { RecipesContainer } from "@/styles/Recipes.styled";
-import { StyledUser } from "./User.styled";
+
+// components / Redux
 import Button from "@/components/Button";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import RecipeItem from "@/components/RecipeItem";
 import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
-import { useGetUserByIdQuery } from "@/features/users/usersApiSlice";
+import {
+	useDeleteUserMutation,
+	useGetUserByIdQuery,
+} from "@/features/users/usersApiSlice";
 
 const User = () => {
 	const { id } = useParams();
+	const navigate = useNavigate();
 
 	const {
 		data: user,
@@ -16,6 +28,11 @@ const User = () => {
 		error,
 	} = useGetUserByIdQuery(id);
 	const { data, isLoading: isLoadingRecipes } = useGetUserRecipesQuery(id!);
+
+	const [deleteUser] = useDeleteUserMutation();
+
+	const [password, setPassword] = useState("");
+	const [open, setOpen] = useState(false);
 
 	if (isLoadingUser || isLoadingRecipes) return <p>Loading...</p>;
 	if (error) {
@@ -29,12 +46,53 @@ const User = () => {
 
 	const recipes = data?.recipes || [];
 
+	const handleDeleteUser = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		try {
+			const { error } = await deleteUser({ id, password });
+
+			if (!error) {
+				navigate("/");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<StyledUser>
-			<div>
-				<h2>{user?.username}</h2>
-				<p>{user?.description || "No description provided."}</p>
-			</div>
+			<UserInfo>
+				<div>
+					<h2>{user?.username}</h2>
+					<p>{user?.description || "No description provided."}</p>
+				</div>
+
+				<div>
+					<Button>
+						Edit User <PencilSimple weight="light" />
+					</Button>
+
+					<Button onClick={() => setOpen(true)}>
+						Delete User <X weight="light" />
+					</Button>
+
+					<ConfirmDeleteModal
+						title="your account"
+						open={open}
+						setOpen={setOpen}
+						deleteFunction={handleDeleteUser}
+					>
+						<ConfirmPassword
+							type="text"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							placeholder="Password"
+							required
+						/>
+					</ConfirmDeleteModal>
+				</div>
+			</UserInfo>
 
 			<div>
 				<h3>Recipes</h3>
