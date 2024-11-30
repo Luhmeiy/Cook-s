@@ -6,7 +6,9 @@ const AuthLayout = () => {
 	return (
 		<>
 			<GlobalStyles />
-			<StyledHeading to="/">Cook's</StyledHeading>
+			<StyledHeading to="/">
+				<h1>Cook's</h1>
+			</StyledHeading>
 			<StyledAuthLayout>
 				<Outlet />
 			</StyledAuthLayout>

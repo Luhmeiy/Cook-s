@@ -1,26 +1,14 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Popover } from "@mui/material";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledHeader = styled.header`
-	align-items: center;
-	display: flex;
-	gap: 2.5rem;
-	justify-content: space-between;
+	${flexContainer({ $align: "center", $gap: 2.5, $justify: "space-between" })}
 	padding-block: 1.25rem;
 
-	& > a {
-		color: var(--primary);
-		font-family: Poppins;
-		font-weight: 900;
-		font-size: 3.75rem;
-	}
-
 	& > div {
-		align-items: center;
-		display: flex;
-		flex: 1;
-		gap: 1.5rem;
+		${flexContainer({ $align: "center", $flex: 1, $gap: 1.5 })}
 
 		& a {
 			font-weight: 600;
@@ -29,81 +17,46 @@ export const StyledHeader = styled.header`
 `;
 
 export const SearchBarContainer = styled.div`
-	display: flex;
-	justify-content: center;
-	flex: 1;
+	${flexContainer({ $flex: 1, $justify: "center" })}
 `;
 
 export const SearchBar = styled.div`
-	align-items: center;
+	${flexContainer({ $align: "center", $justify: "space-between" })}
 	border-color: var(--text);
 	border-style: solid;
 	border-width: 2px;
-	display: flex;
-	justify-content: space-between;
 	max-width: 37.5rem;
 	padding: 0.5rem 0.75rem;
 	width: 100%;
 
-	& input {
+	& input[type="text"] {
 		background-color: transparent;
-		border: none;
-		outline: none;
-		width: 100%;
+		padding: 0;
 
-		&::placeholder {
-			color: var(--muted-text);
-			font-size: 0.875rem;
+		&:focus {
+			outline: none;
 		}
 	}
 `;
 
 export const UserArea = styled(Link)`
-	align-items: center;
-	display: flex;
-	gap: 4px;
+	${flexContainer({ $align: "center", $gap: 0.25 })}
 
 	& p {
 		font-weight: 600;
 	}
 `;
 
-export const UserButton = styled.button`
-	align-items: center;
-	background-color: transparent;
-	border: none;
-	color: inherit;
-	cursor: pointer;
-	display: flex;
-	font-size: 1rem;
-	font-weight: 600;
-	gap: 0.25rem;
-	transition: 0.5s;
-
-	&:hover {
-		color: var(--primary);
-	}
-`;
-
 export const UserPopover = styled(Popover)`
 	& div {
+		${flexContainer({ $column: true, $gap: 0.5 })}
 		border-radius: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
 		margin-top: 0.25rem;
 		padding: 1rem;
 
 		& button {
-			align-items: center;
-			background-color: transparent;
-			border: none;
-			cursor: pointer;
-			display: flex;
-			font-size: 1rem;
-			gap: 0.5rem;
+			${flexContainer({ $align: "center", $gap: 0.5 })}
 			padding: 0;
-			transition: 0.5s;
 
 			&:hover {
 				color: var(--primary);

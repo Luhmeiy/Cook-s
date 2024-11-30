@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { CaretLeft } from "@phosphor-icons/react";
-import { GoBackLink } from "@/components/RecipeForm/RecipeForm.styled";
+import { GoBackLink } from "@/styles/Form.styled";
 import RecipeForm from "@/components/RecipeForm";
 import {
 	useGetRecipeByIdQuery,

@@ -4,9 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PencilSimple, X } from "@phosphor-icons/react";
 
 // styles
-import { ConfirmPassword, StyledUser, UserInfo } from "./User.styled";
-import { StyledNotFound } from "../NotFound/NotFound.styled";
 import { RecipesContainer } from "@/styles/Recipes.styled";
+import { StyledNotFound } from "../NotFound/NotFound.styled";
+import { StyledUser, UserInfo } from "./User.styled";
 
 // components / Redux
 import Button from "@/components/Button";
@@ -73,7 +73,7 @@ const User = () => {
 						Edit User <PencilSimple weight="light" />
 					</Button>
 
-					<Button onClick={() => setOpen(true)}>
+					<Button $variant="red" onClick={() => setOpen(true)}>
 						Delete User <X weight="light" />
 					</Button>
 
@@ -83,7 +83,7 @@ const User = () => {
 						setOpen={setOpen}
 						deleteFunction={handleDeleteUser}
 					>
-						<ConfirmPassword
+						<input
 							type="text"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { GoogleLogo } from "@phosphor-icons/react";
 
 // styles
-import { InputContainer } from "@/components/RecipeForm/RecipeForm.styled";
 import {
 	LayoutInfo,
 	OrDivider,
@@ -12,6 +11,7 @@ import {
 	StyledForm,
 	StyledLink,
 } from "@/styles/Auth.styled";
+import { InputContainer } from "@/styles/Form.styled";
 
 // components / Redux
 import Button from "@/components/Button";
@@ -143,7 +143,7 @@ const Register = () => {
 							</InputContainer>
 
 							<PublicContainer>
-								<b>Do you want this recipe to be public?</b>
+								<b>Do you want your profile to be public?</b>
 								<div>
 									<label>
 										<input
@@ -176,7 +176,7 @@ const Register = () => {
 
 				<p>
 					Already have an account?{" "}
-					<StyledLink to="/auth/login" $underline="true">
+					<StyledLink to="/auth/login" $underline>
 						Log in
 					</StyledLink>
 				</p>

@@ -18,14 +18,14 @@ const ConfirmDeleteModal = ({
 }) => {
 	return (
 		<Modal open={open} onClose={() => setOpen(false)}>
-			<StyledModalForm $variant="true" onSubmit={deleteFunction}>
+			<StyledModalForm onSubmit={deleteFunction}>
 				<CloseButton weight="bold" onClick={() => setOpen(false)} />
 
 				<h3>Are you sure you want to delete {title}?</h3>
 
 				{children}
 
-				<Button>Delete {title}</Button>
+				<Button $variant="red">Delete {title}</Button>
 			</StyledModalForm>
 		</Modal>
 	);

@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { Modal } from "@mui/material";
 
 // styles
+import { InputContainer } from "@/styles/Form.styled";
 import { CloseButton, StyledModalForm } from "@/styles/Modal.styled";
-import { InputContainer } from "../RecipeForm/RecipeForm.styled";
 
 // components / Redux
 import Button from "../Button";

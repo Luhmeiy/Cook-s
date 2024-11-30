@@ -1,11 +1,13 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledNotFound = styled.div`
-	align-items: center;
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	justify-content: center;
+	${flexContainer({
+		$align: "center",
+		$column: true,
+		$flex: 1,
+		$justify: "center",
+	})}
 	padding-bottom: 10%;
 	text-align: center;
 `;

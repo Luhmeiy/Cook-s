@@ -5,17 +5,11 @@ interface ButtonProps {
 	children: React.ReactNode;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	to?: string;
-	$variant?: "alternate" | "gray";
+	$variant?: "alternate" | "gray" | "red";
 	[key: string]: unknown;
 }
 
-const Button: React.FC<ButtonProps> = ({
-	children,
-	onClick,
-	to,
-	$variant,
-	...props
-}) => {
+const Button = ({ children, onClick, to, $variant, ...props }: ButtonProps) => {
 	const navigate = useNavigate();
 
 	return (

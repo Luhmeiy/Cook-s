@@ -1,4 +1,27 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
+
+interface FlexContainerProps {
+	$align?: "center" | "start" | "end";
+	$column?: boolean;
+	$flex?: number;
+	$gap?: number;
+	$justify?: "space-between" | "center";
+}
+
+export const flexContainer = ({
+	$align,
+	$column,
+	$gap,
+	$flex,
+	$justify,
+}: FlexContainerProps) => css`
+	align-items: ${$align};
+	display: flex;
+	flex: ${$flex};
+	flex-direction: ${$column && "column"};
+	gap: ${$gap}rem;
+	justify-content: ${$justify};
+`;
 
 const GlobalStyles = createGlobalStyle`
     :root {
@@ -38,23 +61,59 @@ const GlobalStyles = createGlobalStyle`
             }
         }
 
+        & b {
+		    font-weight: 600;
+        }
+
         & > div {
-            display: flex;
-            flex-direction: column;
+            ${flexContainer({ $column: true })}
             min-height: 100dvh;
         }
 
-        h2, h3 {
+        & h1 {
+            color: var(--primary);
+            font-family: Poppins;
+            font-weight: 900;
+            font-size: 3.75rem;
+        }
+
+        & h2, & h3 {
             font-family: Poppins;
             font-weight: 700;
         }
 
-        h2 {
+        & h2 {
             font-size: 2.5rem;
         }
 
-        h3 {
+        & h3 {
             font-size: 1.5rem;
+        }
+
+        & input:not([type="radio"], [type="checkbox"]),
+        & textarea {
+            background-color: var(--second-background);
+            border: none;
+            border-radius: 4px;
+            padding: 0.75rem;
+            width: 100%;
+
+            &::placeholder {
+                color: var(--muted-text);
+                font-size: 0.75rem;
+            }
+
+            &:focus {
+                outline: 2px solid var(--primary);
+            }
+        }
+
+        & button {
+			background-color: transparent;
+	        border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.5s;
         }
     }
 `;

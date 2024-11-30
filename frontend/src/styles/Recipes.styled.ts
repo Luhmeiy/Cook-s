@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledRecipes = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
+	${flexContainer({ $column: true, $gap: 1 })}
 	margin-top: 1.25rem;
+`;
+
+export const RecipeContainerTitle = styled.div`
+	${flexContainer({ $align: "center", $justify: "space-between" })}
 `;
 
 export const RecipesContainer = styled.div`
@@ -13,22 +15,4 @@ export const RecipesContainer = styled.div`
 	grid-template-columns: repeat(auto-fit, minmax(23.25rem, 1fr));
 	gap: 1.5rem;
 	justify-content: space-between;
-`;
-
-export const RecipeContainerTitle = styled.div`
-	align-items: center;
-	display: flex;
-	justify-content: space-between;
-`;
-
-export const NewRecipeButton = styled(Link)`
-	background-color: var(--primary);
-	border-radius: 0.25rem;
-	display: flex;
-	gap: 0.75rem;
-	padding: 0.5rem 0.75rem;
-
-	&:hover {
-		color: inherit;
-	}
 `;

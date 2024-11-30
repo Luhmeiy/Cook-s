@@ -1,8 +1,8 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledHomeHeroImage = styled.div`
-	align-items: center;
-	display: flex;
+	${flexContainer({ $align: "center" })}
 	width: 50%;
 
 	& svg {

@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { Plus } from "@phosphor-icons/react";
 
 // styles
+import { InputContainer } from "@/styles/Form.styled";
 import {
 	InformationContainer,
 	IngredientsContainer,
 	IngredientsForm,
-	InputContainer,
 	PublicContainer,
 	StyledRecipeForm,
 } from "./RecipeForm.styled";

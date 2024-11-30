@@ -1,19 +1,19 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledHero = styled.div`
-	display: flex;
-	flex: 1;
-	gap: 2rem;
+	${flexContainer({ $flex: 1, $gap: 2 })}
 	height: 100%;
 `;
 
 export const CallToAction = styled.div`
-	align-items: start;
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	gap: 1.5rem;
-	justify-content: center;
+	${flexContainer({
+		$align: "start",
+		$column: true,
+		$flex: 1,
+		$gap: 1.5,
+		$justify: "center",
+	})}
 
 	& > div {
 		& p {

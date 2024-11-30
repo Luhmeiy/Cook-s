@@ -1,14 +1,12 @@
 import styled from "styled-components";
 import { X } from "@phosphor-icons/react";
+import { flexContainer } from "@/GlobalStyles";
 
-export const StyledModalForm = styled.form<{ $variant?: string }>`
+export const StyledModalForm = styled.form`
+	${flexContainer({ $column: true, $gap: 0.5 })}
 	background-color: var(--background);
 	border-radius: 0.25rem;
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
 	left: 50%;
-	outline: none;
 	padding: 2rem;
 	position: absolute;
 	text-align: center;
@@ -20,13 +18,7 @@ export const StyledModalForm = styled.form<{ $variant?: string }>`
 	}
 
 	& div {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	& button {
-		background-color: ${({ $variant }) =>
-			$variant === "true" && "var(--red)"};
+		${flexContainer({ $gap: 0.5 })}
 	}
 `;
 

@@ -1,11 +1,8 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledHeading = styled(Link)`
-	color: var(--primary);
-	font-family: Poppins;
-	font-weight: 900;
-	font-size: 3.75rem;
 	margin-block: 1.25rem;
 
 	@media (max-width: 1100px) {
@@ -14,9 +11,7 @@ export const StyledHeading = styled(Link)`
 `;
 
 export const StyledAuthLayout = styled.div`
-	align-items: center;
-	display: flex;
-	gap: 4rem;
+	${flexContainer({ $align: "center", $gap: 4 })}
 	height: calc(100vh - 15.125rem);
 	margin-bottom: 7rem;
 

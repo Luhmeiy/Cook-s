@@ -10,6 +10,7 @@ import {
 	StyledForm,
 	StyledLink,
 } from "@/styles/Auth.styled";
+import { InputContainer } from "@/styles/Form.styled";
 
 // components / Redux
 import Button from "@/components/Button";
@@ -70,19 +71,25 @@ const Login = () => {
 				</OrDivider>
 
 				<StyledForm onSubmit={handleSignIn}>
-					<input
-						type="email"
-						placeholder="Email"
-						autoComplete="off"
-						onChange={(e) => setEmail(e.target.value)}
-						value={email}
-						required
-					/>
+					<InputContainer>
+						Email
+						<input
+							type="email"
+							placeholder="Email"
+							autoComplete="off"
+							onChange={(e) => setEmail(e.target.value)}
+							value={email}
+							required
+						/>
+					</InputContainer>
 
-					<PasswordInput
-						password={password}
-						setPassword={setPassword}
-					/>
+					<InputContainer>
+						Password
+						<PasswordInput
+							password={password}
+							setPassword={setPassword}
+						/>
+					</InputContainer>
 
 					<StyledLink to="/">Forgot Password?</StyledLink>
 
@@ -91,7 +98,7 @@ const Login = () => {
 
 				<p>
 					Don't have an account yet?{" "}
-					<StyledLink to="/auth/register" $underline="true">
+					<StyledLink to="/auth/register" $underline>
 						Register
 					</StyledLink>
 				</p>

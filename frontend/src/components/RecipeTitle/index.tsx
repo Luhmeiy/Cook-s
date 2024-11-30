@@ -15,7 +15,7 @@ const RecipeTitle = ({
 	alternate,
 }: {
 	recipe: Recipe;
-	alternate?: string;
+	alternate?: boolean;
 }) => {
 	const id = useSelector(selectCurrentUserId);
 

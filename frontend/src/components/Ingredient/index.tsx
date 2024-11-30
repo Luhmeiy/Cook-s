@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Asterisk, PencilSimple, Plus, X } from "@phosphor-icons/react";
 
 // styles
-import { InputContainer } from "../RecipeForm/RecipeForm.styled";
+import { InputContainer } from "@/styles/Form.styled";
 import {
 	IngredientForm,
 	IngredientTitle,
@@ -157,9 +157,7 @@ const Ingredient = ({
 						) : (
 							<Asterisk weight="bold" />
 						)}
-						<IngredientTitle
-							$bought={ingredient.bought?.toString()}
-						>
+						<IngredientTitle $bought={ingredient.bought}>
 							{ingredient.quantity} {ingredient.unit}{" "}
 							{ingredient.ingredient}
 						</IngredientTitle>

@@ -1,22 +1,22 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
-export const StyledButton = styled.button<{ $variant?: "alternate" | "gray" }>`
-	align-items: center;
+export const StyledButton = styled.button<{
+	$variant?: "alternate" | "gray" | "red";
+}>`
+	${flexContainer({ $align: "center", $gap: 0.5, $justify: "center" })}
+
 	background-color: ${({ $variant }) => {
 		if ($variant === "alternate") return "transparent";
 		else if ($variant === "gray") return "#C3C3C3";
+		else if ($variant === "red") return "var(--red)";
 		else return "var(--primary)";
 	}};
+
 	border: ${({ $variant }) =>
-		$variant === "alternate" ? "2px solid var(--primary)" : "none"};
+		$variant === "alternate" && "2px solid var(--primary)"};
 	border-radius: 0.25rem;
-	cursor: pointer;
-	display: flex;
-	font-size: 1rem;
-	gap: 0.5rem;
-	justify-content: center;
 	padding: 0.75rem;
-	transition: 0.5s;
 
 	&:hover {
 		background: ${({ $variant }) =>

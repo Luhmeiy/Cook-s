@@ -1,16 +1,11 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledIngredient = styled.div`
-	align-items: end;
-	display: flex;
-	gap: 0.75rem;
+	${flexContainer({ $align: "end", $gap: 0.75 })}
 
 	& div {
-		display: flex;
-
-		&:first-of-type {
-			gap: 0.5rem;
-		}
+		${flexContainer({ $gap: 0.5 })}
 
 		&:nth-of-type(2) {
 			gap: 0.25rem;
@@ -36,12 +31,10 @@ export const StyledIngredient = styled.div`
 	}
 `;
 
-export const IngredientTitle = styled.p<{ $bought?: string }>`
-	text-decoration: ${({ $bought }) => $bought === "true" && "line-through"};
+export const IngredientTitle = styled.p<{ $bought?: boolean }>`
+	text-decoration: ${({ $bought }) => $bought && "line-through"};
 `;
 
 export const IngredientForm = styled.form`
-	align-items: end;
-	display: flex;
-	gap: 1rem;
+	${flexContainer({ $align: "end", $gap: 1 })}
 `;

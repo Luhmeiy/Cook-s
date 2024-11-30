@@ -1,18 +1,15 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledStep = styled.div`
-	align-items: center;
-	display: flex;
-	gap: 0.5rem;
+	${flexContainer({ $align: "center", $gap: 0.5 })}
 `;
 
-export const Circle = styled.div<{ $isAvailable?: string }>`
-	align-items: center;
+export const Circle = styled.div<{ $isAvailable?: boolean }>`
+	${flexContainer({ $align: "center", $justify: "center" })}
 	background-color: ${({ $isAvailable }) =>
-		$isAvailable === "true" ? "var(--green)" : "var(--primary)"};
+		$isAvailable ? "var(--green)" : "var(--primary)"};
 	border-radius: 50%;
-	display: flex;
 	height: 2rem;
-	justify-content: center;
 	width: 2rem;
 `;

@@ -8,9 +8,9 @@ import {
 	SearchBarContainer,
 	StyledHeader,
 	UserArea,
-	UserButton,
 	UserPopover,
 } from "./Header.styled";
+import UserButton from "../UserButton";
 import { selectCurrentUser } from "@/features/auth/authSlice";
 import { useSendLogoutMutation } from "@/features/auth/authApiSlice";
 
@@ -31,12 +31,17 @@ const Header = () => {
 
 	return (
 		<StyledHeader>
-			<Link to="/">Cook's</Link>
+			<Link to="/">
+				<h1>Cook's</h1>
+			</Link>
 
 			<div>
 				<SearchBarContainer>
 					<SearchBar>
-						<input placeholder="Find your next favorite recipe!" />
+						<input
+							type="text"
+							placeholder="Find your next favorite recipe!"
+						/>
 						<MagnifyingGlass size={24} weight="bold" />
 					</SearchBar>
 				</SearchBarContainer>

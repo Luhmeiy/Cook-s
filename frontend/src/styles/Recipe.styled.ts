@@ -1,16 +1,14 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
-export const RecipeCategory = styled.div<{ $category?: string }>`
+export const RecipeCategory = styled.div<{ $category?: boolean }>`
 	background-color: ${({ $category }) =>
-		$category === "true" ? "var(--primary)" : "#D3D3D3"};
+		$category ? "var(--primary)" : "#D3D3D3"};
 	border-radius: 2px;
-	display: flex;
-	font-weight: 700;
+	font-weight: 600;
 	padding: 0.25rem;
 `;
 
 export const RecipeTime = styled.div`
-	align-items: center;
-	display: flex;
-	gap: 0.5rem;
+	${flexContainer({ $align: "center", $gap: 0.5 })}
 `;

@@ -6,7 +6,7 @@ import { Plus } from "@phosphor-icons/react";
 
 // styles
 import { RecipeContainerTitle, StyledRecipes } from "@/styles/Recipes.styled";
-import { IngredientsContainer, NewIngredientButton } from "./List.styled";
+import { IngredientsContainer } from "./List.styled";
 
 // components / types / Redux
 import Button from "@/components/Button";
@@ -75,9 +75,9 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 						: "Shopping List"}
 				</h2>
 
-				<NewIngredientButton onClick={() => setOpen(true)}>
+				<Button onClick={() => setOpen(true)}>
 					Add New Ingredient <Plus size={20} weight="light" />
-				</NewIngredientButton>
+				</Button>
 
 				<NewIngredientForm
 					open={open}

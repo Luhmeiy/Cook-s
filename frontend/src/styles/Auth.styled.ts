@@ -1,12 +1,10 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { flexContainer } from "@/GlobalStyles";
 
 export const LayoutInfo = styled.div`
-	align-items: center;
-	display: flex;
+	${flexContainer({ $align: "center", $column: true, $gap: 2 })}
 	flex-grow: 1;
-	flex-direction: column;
-	gap: 2rem;
 	text-align: center;
 	max-width: 25rem;
 
@@ -16,11 +14,9 @@ export const LayoutInfo = styled.div`
 `;
 
 export const OrDivider = styled.div`
-	align-items: center;
+	${flexContainer({ $align: "center", $gap: 0.75 })}
 	color: var(--muted-text);
-	display: flex;
 	font-weight: 600;
-	gap: 0.75rem;
 
 	& hr {
 		border: 1px solid var(--muted-text);
@@ -29,44 +25,9 @@ export const OrDivider = styled.div`
 `;
 
 export const StyledForm = styled.form`
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
+	${flexContainer({ $column: true, $gap: 0.75 })}
 	text-align: start;
 	width: 100%;
-
-	& div {
-		align-items: center;
-		background-color: var(--second-background);
-		border-radius: 4px;
-		display: flex;
-		width: 100%;
-
-		& svg {
-			margin-inline: 0.75rem;
-		}
-	}
-
-	& input {
-		background-color: var(--second-background);
-		border: none;
-		border-radius: 4px;
-		padding: 0.75rem;
-		width: 100%;
-
-		&::placeholder {
-			color: var(--muted-text);
-			font-size: 0.75rem;
-		}
-
-		&:focus {
-			outline: 2px solid var(--primary);
-		}
-	}
-
-	& input[type="password"] {
-		flex: 1;
-	}
 
 	& button {
 		margin-top: 1.875rem;
@@ -74,33 +35,21 @@ export const StyledForm = styled.form`
 `;
 
 export const PublicContainer = styled.div`
-	align-items: start !important;
-	background-color: transparent !important;
-	flex-direction: column;
-
 	& div {
-		align-items: start;
-		flex-direction: column;
-		gap: 0.25rem;
+		${flexContainer({ $align: "start", $column: true, $gap: 0.25 })}
 		padding: 0.75rem;
 
 		& label {
-			display: flex;
-			gap: 0.5rem;
+			${flexContainer({ $gap: 0.5 })}
 		}
-	}
-
-	& b {
-		font-weight: 700;
 	}
 `;
 
-export const StyledLink = styled(Link)<{ $underline?: string }>`
+export const StyledLink = styled(Link)<{ $underline?: boolean }>`
 	color: var(--primary);
 	font-weight: 600;
 	text-align: end;
-	text-decoration: ${({ $underline }) =>
-		$underline === "true" && "underline"};
+	text-decoration: ${({ $underline }) => $underline && "underline"};
 
 	&:hover {
 		filter: brightness(85%);

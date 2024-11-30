@@ -19,7 +19,6 @@ import {
 	ListContainer,
 	RecipeInfo,
 	StyledRecipePage,
-	UserLink,
 } from "./RecipePage.styled";
 
 // components / types / Redux
@@ -27,6 +26,7 @@ import Button from "@/components/Button";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
+import UserButton from "@/components/UserButton";
 import { IngredientType } from "@/interfaces/IngredientType";
 import { selectCurrentUser } from "@/features/auth/authSlice";
 import {
@@ -64,7 +64,7 @@ const RecipePage = () => {
 	const verifyIngredientAvailability = (
 		ingredient: Omit<IngredientType, "_id">
 	) => {
-		return user!.ingredientList.some(
+		return user?.ingredientList.some(
 			(e) =>
 				e.ingredient.toLowerCase() ===
 					ingredient.ingredient.toLowerCase() &&
@@ -107,11 +107,11 @@ const RecipePage = () => {
 		<StyledRecipePage>
 			<div>
 				<RecipeInfo>
-					{recipe && <RecipeTitle recipe={recipe} alternate="true" />}
+					{recipe && <RecipeTitle recipe={recipe} alternate={true} />}
 
 					<div>
 						<RecipeCategory
-							$category={recipe?.category ? "true" : "false"}
+							$category={recipe?.category ? true : false}
 						>
 							{recipe?.category || "Sem Categoria"}
 						</RecipeCategory>
@@ -178,10 +178,10 @@ const RecipePage = () => {
 				{recipe?.createdBy.username ? (
 					<div>
 						<p>Created by</p>
-						<UserLink to={`/user/${recipe?.createdBy._id}`}>
+						<UserButton to={`/user/${recipe?.createdBy._id}`}>
 							<UserCircle size={24} weight="bold" />
 							{recipe?.createdBy.username}
-						</UserLink>
+						</UserButton>
 					</div>
 				) : (
 					<p>User not found.</p>
@@ -193,7 +193,7 @@ const RecipePage = () => {
 							Edit Recipe <PencilSimple weight="light" />
 						</Button>
 
-						<Button onClick={() => setOpen(true)}>
+						<Button $variant="red" onClick={() => setOpen(true)}>
 							Delete Recipe <X weight="light" />
 						</Button>
 

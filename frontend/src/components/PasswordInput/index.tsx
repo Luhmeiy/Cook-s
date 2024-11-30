@@ -1,5 +1,6 @@
 import { Dispatch, useState } from "react";
 import { Eye, EyeClosed } from "@phosphor-icons/react";
+import { StyledPasswordInput } from "./PasswordInput.styled";
 
 const PasswordInput = ({
 	password,
@@ -15,7 +16,7 @@ const PasswordInput = ({
 	};
 
 	return (
-		<div>
+		<StyledPasswordInput>
 			<input
 				type={showPassword ? "text" : "password"}
 				placeholder="Password"
@@ -39,7 +40,7 @@ const PasswordInput = ({
 					onClick={togglePassword}
 				/>
 			)}
-		</div>
+		</StyledPasswordInput>
 	);
 };
 

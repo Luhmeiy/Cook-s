@@ -1,23 +1,11 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-
-export const GoBackLink = styled(Link)`
-	align-items: center;
-	display: flex;
-	gap: 0.5rem;
-	margin-top: 1.25rem;
-	margin-bottom: 1rem;
-`;
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledRecipeForm = styled.form`
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
+	${flexContainer({ $column: true, $gap: 1.5 })}
 
 	& > div {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+		${flexContainer({ $column: true, $gap: 1 })}
 
 		&:nth-of-type(2) {
 			gap: 0.25rem;
@@ -27,78 +15,29 @@ export const StyledRecipeForm = styled.form`
 	& h2 {
 		margin-bottom: -0.5rem;
 	}
-
-	& b {
-		font-weight: 600;
-	}
-`;
-
-export const InputContainer = styled.label`
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	font-weight: 600;
-	gap: 0.25rem;
-
-	& div {
-		font-weight: inherit;
-	}
-
-	& input,
-	& textarea {
-		background-color: var(--second-background);
-		border: none;
-		border-radius: 4px;
-		padding: 0.75rem;
-		width: 100%;
-
-		&::placeholder {
-			color: var(--muted-text);
-			font-size: 0.75rem;
-		}
-
-		&:focus {
-			outline: 2px solid var(--primary);
-		}
-	}
-
-	& textarea {
-		height: 6rem;
-		resize: none;
-	}
 `;
 
 export const InformationContainer = styled.div`
-	display: flex;
-	gap: 0.75rem;
+	${flexContainer({ $gap: 0.75 })}
 `;
 
 export const PublicContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
+	${flexContainer({ $column: true, $gap: 0.25 })}
 
 	& label {
-		display: flex;
-		gap: 0.25rem !important;
+		${flexContainer({ $gap: 0.25 })}
 	}
 `;
 
 export const IngredientsForm = styled.div`
-	align-items: start;
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
+	${flexContainer({ $align: "start", $column: true, $gap: 1 })}
 `;
 
 export const IngredientsContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
+	${flexContainer({ $column: true, $gap: 0.75 })}
 
 	& div {
-		display: flex;
-		gap: 0.75rem;
+		${flexContainer({ $gap: 0.75 })}
 
 		& label {
 			max-width: 10rem;

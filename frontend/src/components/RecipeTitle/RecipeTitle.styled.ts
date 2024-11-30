@@ -1,8 +1,8 @@
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
-export const StyledRecipeTitle = styled.div<{ $alternate?: string }>`
-	align-items: center;
-	display: flex;
+export const StyledRecipeTitle = styled.div<{ $alternate?: boolean }>`
+	${flexContainer({ $align: "center" })}
 	gap: ${({ $alternate }) => ($alternate ? "2rem" : "1rem")};
 	justify-content: ${({ $alternate }) => !$alternate && "space-between"};
 	width: 100%;

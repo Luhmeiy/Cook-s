@@ -6,9 +6,7 @@ const Footer = () => {
 	const is404 = location.key === "default";
 
 	return (
-		<StyledFooter $is404={is404.toString()}>
-			Made with 🧡 for home cooks.
-		</StyledFooter>
+		<StyledFooter $is404={is404}>Made with 🧡 for home cooks.</StyledFooter>
 	);
 };
 

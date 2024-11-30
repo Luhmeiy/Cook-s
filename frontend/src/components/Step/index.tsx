@@ -25,11 +25,7 @@ const Step = ({ step, index, isAvailable }: Step) => {
 
 	return (
 		<StyledStep>
-			<Circle
-				$isAvailable={isAvailable ? isAvailable.toString() : "false"}
-			>
-				{index}
-			</Circle>
+			<Circle $isAvailable={isAvailable}>{index}</Circle>
 			<p>{stepParagraph}</p>
 		</StyledStep>
 	);

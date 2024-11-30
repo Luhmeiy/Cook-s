@@ -1,19 +1,12 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { flexContainer } from "@/GlobalStyles";
 
 export const StyledRecipePage = styled.div`
-	display: flex;
-	gap: 2rem;
+	${flexContainer({ $gap: 2 })}
 	margin-top: 1.25rem;
 
 	& > div {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-
-		&:first-of-type {
-			gap: 2rem;
-		}
+		${flexContainer({ $column: true, $flex: 1, $gap: 2 })}
 
 		&:nth-of-type(2) {
 			align-items: start;
@@ -23,55 +16,29 @@ export const StyledRecipePage = styled.div`
 `;
 
 export const RecipeInfo = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+	${flexContainer({ $column: true, $gap: 0.5 })}
 
 	& > div:nth-of-type(2) {
-		align-items: center;
-		display: flex;
-		gap: 1rem;
+		${flexContainer({ $align: "center", $gap: 1 })}
 
 		& span {
-			font-weight: 700;
+			font-weight: 600;
 		}
 	}
 `;
 
 export const Description = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
+	${flexContainer({ $column: true, $gap: 0.25 })}
 `;
 
 export const ListContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-`;
+	${flexContainer({ $align: "start", $column: true, $gap: 0.5 })}
 
-export const UserLink = styled(Link)`
-	align-items: center;
-	background-color: transparent;
-	border: none;
-	color: inherit;
-	cursor: pointer;
-	display: flex;
-	font-size: 1rem;
-	font-weight: 600;
-	gap: 0.25rem;
-	transition: 0.5s;
-
-	&:hover {
-		color: var(--primary);
+	& button {
+		margin-top: 0.25rem;
 	}
 `;
 
 export const ButtonContainer = styled.div`
-	display: flex;
-	gap: 0.5rem;
-
-	& button:nth-of-type(2) {
-		background-color: var(--red);
-	}
+	${flexContainer({ $gap: 0.5 })}
 `;

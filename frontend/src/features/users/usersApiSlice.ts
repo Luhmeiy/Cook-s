@@ -7,6 +7,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 			query: (id) => `/user/${id}`,
 			keepUnusedDataFor: 0,
 		}),
+		patchUser: builder.mutation({
+			query: ({ id, data }) => ({
+				url: `/user/${id}`,
+				method: "PATCH",
+				body: data,
+			}),
+			invalidatesTags: ["User"],
+		}),
 		deleteUser: builder.mutation({
 			query: ({ id, password }) => ({
 				url: `/user/${id}/${password}`,
@@ -25,4 +33,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 	}),
 });
 
-export const { useGetUserByIdQuery, useDeleteUserMutation } = usersApiSlice;
+export const {
+	useGetUserByIdQuery,
+	usePatchUserMutation,
+	useDeleteUserMutation,
+} = usersApiSlice;
