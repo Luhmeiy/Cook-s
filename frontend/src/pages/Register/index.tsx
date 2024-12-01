@@ -7,11 +7,10 @@ import { GoogleLogo } from "@phosphor-icons/react";
 import {
 	LayoutInfo,
 	OrDivider,
-	PublicContainer,
 	StyledForm,
 	StyledLink,
 } from "@/styles/Auth.styled";
-import { InputContainer } from "@/styles/Form.styled";
+import { InputContainer, PublicContainer } from "@/styles/Form.styled";
 
 // components / Redux
 import Button from "@/components/Button";

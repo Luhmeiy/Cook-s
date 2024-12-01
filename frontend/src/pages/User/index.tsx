@@ -1,5 +1,6 @@
 // packages
 import { FormEvent, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { PencilSimple, X } from "@phosphor-icons/react";
 
@@ -11,7 +12,10 @@ import { StyledUser, UserInfo } from "./User.styled";
 // components / Redux
 import Button from "@/components/Button";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import EditUserForm from "@/components/EditUserForm";
+import PasswordInput from "@/components/PasswordInput";
 import RecipeItem from "@/components/RecipeItem";
+import { selectCurrentUserId } from "@/features/auth/authSlice";
 import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
 import {
 	useDeleteUserMutation,
@@ -22,17 +26,20 @@ const User = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 
+	const userId = useSelector(selectCurrentUserId);
+
 	const {
 		data: user,
 		isLoading: isLoadingUser,
 		error,
-	} = useGetUserByIdQuery(id);
+	} = useGetUserByIdQuery({ id, userId });
 	const { data, isLoading: isLoadingRecipes } = useGetUserRecipesQuery(id!);
 
 	const [deleteUser] = useDeleteUserMutation();
 
 	const [password, setPassword] = useState("");
-	const [open, setOpen] = useState(false);
+	const [openEdit, setOpenEdit] = useState(false);
+	const [openDelete, setOpenDelete] = useState(false);
 
 	if (isLoadingUser || isLoadingRecipes) return <p>Loading...</p>;
 	if (error) {
@@ -68,30 +75,34 @@ const User = () => {
 					<p>{user?.description || "No description provided."}</p>
 				</div>
 
-				<div>
-					<Button>
-						Edit User <PencilSimple weight="light" />
-					</Button>
+				{id === userId && (
+					<div>
+						<Button onClick={() => setOpenEdit(true)}>
+							Edit User <PencilSimple weight="light" />
+						</Button>
 
-					<Button $variant="red" onClick={() => setOpen(true)}>
-						Delete User <X weight="light" />
-					</Button>
+						<EditUserForm open={openEdit} setOpen={setOpenEdit} />
 
-					<ConfirmDeleteModal
-						title="your account"
-						open={open}
-						setOpen={setOpen}
-						deleteFunction={handleDeleteUser}
-					>
-						<input
-							type="text"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							placeholder="Password"
-							required
-						/>
-					</ConfirmDeleteModal>
-				</div>
+						<Button
+							$variant="red"
+							onClick={() => setOpenDelete(true)}
+						>
+							Delete User <X weight="light" />
+						</Button>
+
+						<ConfirmDeleteModal
+							title="your account"
+							open={openDelete}
+							setOpen={setOpenDelete}
+							deleteFunction={handleDeleteUser}
+						>
+							<PasswordInput
+								password={password}
+								setPassword={setPassword}
+							/>
+						</ConfirmDeleteModal>
+					</div>
+				)}
 			</UserInfo>
 
 			<div>

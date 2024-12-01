@@ -21,3 +21,15 @@ export const InputContainer = styled.label`
 		resize: none;
 	}
 `;
+
+export const PublicContainer = styled.div`
+	flex-direction: column;
+
+	& div {
+		${flexContainer({ $align: "start", $column: true })}
+
+		& label {
+			${flexContainer({ $gap: 0.5 })}
+		}
+	}
+`;

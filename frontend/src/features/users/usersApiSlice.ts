@@ -4,8 +4,9 @@ import { logout } from "../auth/authSlice";
 export const usersApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getUserById: builder.query({
-			query: (id) => `/user/${id}`,
+			query: ({ id, userId }) => `/user/${id}/${userId}`,
 			keepUnusedDataFor: 0,
+			providesTags: ["UserById"],
 		}),
 		patchUser: builder.mutation({
 			query: ({ id, data }) => ({
@@ -13,7 +14,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 				method: "PATCH",
 				body: data,
 			}),
-			invalidatesTags: ["User"],
+			invalidatesTags: ["User", "UserById"],
 		}),
 		deleteUser: builder.mutation({
 			query: ({ id, password }) => ({

@@ -7,6 +7,8 @@ interface InitialState {
 		_id: string;
 		email: string;
 		username: string;
+		description?: string;
+		public: boolean;
 		ingredientList: [
 			{
 				_id: string;

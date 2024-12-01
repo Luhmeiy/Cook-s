@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import User from "@/models/User";
 
 export const getUser = expressAsyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { id, userId } = req.params;
 
 	if (!id) {
 		res.status(400);
@@ -12,12 +12,12 @@ export const getUser = expressAsyncHandler(async (req, res) => {
 
 	const user = await User.findById(id).exec();
 
-	if (!user) {
+	if (user && (user.public || user._id.toString() === userId)) {
+		res.json(user);
+	} else {
 		res.status(400);
 		throw new Error("User not found.");
 	}
-
-	res.json(user);
 });
 
 export const updateUser = expressAsyncHandler(async (req, res) => {

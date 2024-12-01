@@ -34,17 +34,6 @@ export const StyledForm = styled.form`
 	}
 `;
 
-export const PublicContainer = styled.div`
-	& div {
-		${flexContainer({ $align: "start", $column: true, $gap: 0.25 })}
-		padding: 0.75rem;
-
-		& label {
-			${flexContainer({ $gap: 0.5 })}
-		}
-	}
-`;
-
 export const StyledLink = styled(Link)<{ $underline?: boolean }>`
 	color: var(--primary);
 	font-weight: 600;

@@ -10,7 +10,7 @@ import { router as userRoutes } from "./userRoutes";
 
 router.use("/auth", authRoutes);
 router.use("/recipes", recipeRoutes);
+router.use("/user", userRoutes);
 
 router.use(verifyJWT);
 router.use("/list", listRoutes);
-router.use("/user", userRoutes);
