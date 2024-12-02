@@ -2,6 +2,7 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogo } from "@phosphor-icons/react";
+import { useGoogleLogin } from "@react-oauth/google";
 
 // styles
 import {
@@ -24,6 +25,40 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 
 	const [login, { isLoading }] = useLoginMutation();
+
+	const handleGoogleSignIn = useGoogleLogin({
+		onSuccess: async (tokenResponse) => {
+			try {
+				const response = await fetch(
+					"https://www.googleapis.com/oauth2/v3/userinfo",
+					{
+						headers: {
+							Authorization: `Bearer ${tokenResponse.access_token}`,
+						},
+					}
+				);
+
+				const userInfo = await response.json();
+
+				const { error } = await login({
+					email: userInfo.email,
+					isGoogle: true,
+				});
+
+				if (!error) {
+					setEmail("");
+					setPassword("");
+
+					navigate("/");
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		onError: () => {
+			console.error("Login Failed");
+		},
+	});
 
 	const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -60,8 +95,11 @@ const Login = () => {
 					<p>Your recipes await you.</p>
 				</div>
 
-				<Button $variant="alternate">
-					<GoogleLogo size={20} /> Log in with Google
+				<Button
+					$variant="alternate"
+					onClick={() => handleGoogleSignIn()}
+				>
+					<GoogleLogo size={20} /> Sign in with Google
 				</Button>
 
 				<OrDivider>

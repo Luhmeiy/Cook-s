@@ -7,47 +7,51 @@ import User from "@/models/User";
 import { DecodedUser } from "@/types/DecodedUser";
 
 export const login = expressAsyncHandler(async (req, res) => {
-	const { email, password } = req.body;
+	const { email, password, isGoogle } = req.body;
 
-	if (!email || !password) {
+	if (email && (password || isGoogle)) {
+		const lowerCaseEmail = email.toLowerCase();
+
+		const foundUser = await User.findOne({ email: lowerCaseEmail }).exec();
+
+		if (!foundUser) {
+			res.status(401);
+			throw new Error("User not found.");
+		}
+
+		if (password) {
+			const match = await compare(password, foundUser.password);
+
+			if (!match) {
+				res.status(401);
+				throw new Error("Wrong password.");
+			}
+		}
+
+		const accessToken = jwt.sign(
+			{ username: foundUser.username },
+			process.env.ACCESS_TOKEN_SECRET!,
+			{ expiresIn: "15m" }
+		);
+
+		const refreshToken = jwt.sign(
+			{ username: foundUser.username },
+			process.env.REFRESH_TOKEN_SECRET!,
+			{ expiresIn: "7d" }
+		);
+
+		res.cookie("jwt", refreshToken, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+		});
+
+		res.json({ user: foundUser, accessToken });
+	} else {
 		res.status(400);
 		throw new Error("All fields are required.");
 	}
-
-	const foundUser = await User.findOne({ email }).exec();
-
-	if (!foundUser) {
-		res.status(401);
-		throw new Error("User not found.");
-	}
-
-	const match = await compare(password, foundUser.password);
-
-	if (!match) {
-		res.status(401);
-		throw new Error("Wrong password.");
-	}
-
-	const accessToken = jwt.sign(
-		{ username: foundUser.username },
-		process.env.ACCESS_TOKEN_SECRET!,
-		{ expiresIn: "15m" }
-	);
-
-	const refreshToken = jwt.sign(
-		{ username: foundUser.username },
-		process.env.REFRESH_TOKEN_SECRET!,
-		{ expiresIn: "7d" }
-	);
-
-	res.cookie("jwt", refreshToken, {
-		httpOnly: true,
-		secure: true,
-		sameSite: "none",
-		maxAge: 7 * 24 * 60 * 60 * 1000,
-	});
-
-	res.json({ user: foundUser, accessToken });
 });
 
 export const register = expressAsyncHandler(async (req, res) => {
@@ -58,7 +62,9 @@ export const register = expressAsyncHandler(async (req, res) => {
 		throw new Error("All fields are required.");
 	}
 
-	const existingUser = await User.findOne({ email });
+	const lowerCaseEmail = email.toLowerCase();
+
+	const existingUser = await User.findOne({ email: lowerCaseEmail });
 
 	if (existingUser) {
 		res.status(409);
@@ -68,7 +74,7 @@ export const register = expressAsyncHandler(async (req, res) => {
 	const hashedPassword = await bcrypt.hash(password, 10);
 
 	const userObject = {
-		email,
+		email: lowerCaseEmail,
 		username,
 		password: hashedPassword,
 		description,
