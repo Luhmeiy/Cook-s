@@ -2,6 +2,7 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogo } from "@phosphor-icons/react";
+import { useGoogleLogin } from "@react-oauth/google";
 
 // styles
 import {
@@ -20,6 +21,7 @@ import { useRegisterMutation } from "@/features/auth/authApiSlice";
 const Register = () => {
 	const navigate = useNavigate();
 
+	const [isGoogle, setIsGoogle] = useState(false);
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -35,6 +37,35 @@ const Register = () => {
 		setStep(1);
 	};
 
+	const handleGoogleSignUp = useGoogleLogin({
+		onSuccess: async (tokenResponse) => {
+			try {
+				const response = await fetch(
+					"https://www.googleapis.com/oauth2/v3/userinfo",
+					{
+						headers: {
+							Authorization: `Bearer ${tokenResponse.access_token}`,
+						},
+					}
+				);
+
+				const userInfo = await response.json();
+
+				setIsGoogle(true);
+
+				setUsername(userInfo.name);
+				setEmail(userInfo.email);
+
+				setStep(1);
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		onError: () => {
+			console.error("Login Failed");
+		},
+	});
+
 	const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -48,6 +79,7 @@ const Register = () => {
 			});
 
 			if (!error) {
+				setIsGoogle(false);
 				setUsername("");
 				setEmail("");
 				setPassword("");
@@ -76,7 +108,10 @@ const Register = () => {
 
 				{step === 0 ? (
 					<>
-						<Button $variant="alternate">
+						<Button
+							$variant="alternate"
+							onClick={() => handleGoogleSignUp()}
+						>
 							<GoogleLogo size={20} /> Sign up with Google
 						</Button>
 
@@ -129,6 +164,16 @@ const Register = () => {
 						</OrDivider>
 
 						<StyledForm onSubmit={handleRegister}>
+							{isGoogle && (
+								<InputContainer>
+									Password
+									<PasswordInput
+										password={password}
+										setPassword={setPassword}
+									/>
+								</InputContainer>
+							)}
+
 							<InputContainer>
 								Description (Optional)
 								<input
