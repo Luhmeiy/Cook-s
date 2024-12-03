@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { MagnifyingGlass, SignOut, UserCircle } from "@phosphor-icons/react";
 
 import {
+	HeaderPopover,
 	SearchBar,
 	SearchBarContainer,
 	StyledHeader,
 	UserArea,
-	UserPopover,
 } from "./Header.styled";
 import UserButton from "../UserButton";
 import { selectCurrentUser } from "@/features/auth/authSlice";
@@ -18,10 +18,14 @@ const Header = () => {
 	const user = useSelector(selectCurrentUser);
 	const [logout, { isLoading }] = useSendLogoutMutation();
 
-	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+	const [userEl, setUserEl] = useState<HTMLButtonElement | null>(null);
+	const [listEl, setListEl] = useState<HTMLButtonElement | null>(null);
 
-	const open = Boolean(anchorEl);
-	const id = open ? "simple-popover" : undefined;
+	const openUser = Boolean(userEl);
+	const openList = Boolean(listEl);
+
+	const userId = openUser ? "simple-popover" : undefined;
+	const listId = openList ? "simple-popover" : undefined;
 
 	const handleLogout = async () => {
 		await logout(null);
@@ -50,21 +54,55 @@ const Header = () => {
 
 				{user ? (
 					<>
-						<Link to="/">My Recipes</Link>
+						<UserButton
+							aria-describedby={listId}
+							onClick={(e) => setListEl(e.currentTarget)}
+						>
+							My Lists
+						</UserButton>
+
+						<HeaderPopover
+							id={listId}
+							open={openList}
+							anchorEl={listEl}
+							onClose={() => setListEl(null)}
+							anchorOrigin={{
+								vertical: "bottom",
+								horizontal: "left",
+							}}
+							transformOrigin={{
+								vertical: "top",
+								horizontal: "left",
+							}}
+						>
+							<Link
+								to="/ingredients"
+								onClick={() => setListEl(null)}
+							>
+								Available Ingredients
+							</Link>
+
+							<Link
+								to="/shopping"
+								onClick={() => setListEl(null)}
+							>
+								Shopping List
+							</Link>
+						</HeaderPopover>
 
 						<UserButton
-							aria-describedby={id}
-							onClick={(e) => setAnchorEl(e.currentTarget)}
+							aria-describedby={userId}
+							onClick={(e) => setUserEl(e.currentTarget)}
 						>
 							<UserCircle size={24} weight="bold" />
 							{user.username}
 						</UserButton>
 
-						<UserPopover
-							id={id}
-							open={open}
-							anchorEl={anchorEl}
-							onClose={() => setAnchorEl(null)}
+						<HeaderPopover
+							id={userId}
+							open={openUser}
+							anchorEl={userEl}
+							onClose={() => setUserEl(null)}
 							anchorOrigin={{
 								vertical: "bottom",
 								horizontal: "center",
@@ -74,12 +112,17 @@ const Header = () => {
 								horizontal: "center",
 							}}
 						>
-							<Link to={`/user/${user._id}`}>Your profile</Link>
+							<Link
+								to={`/user/${user._id}`}
+								onClick={() => setUserEl(null)}
+							>
+								Your profile
+							</Link>
 
 							<button onClick={handleLogout}>
 								<SignOut size={20} weight="light" /> Logout
 							</button>
-						</UserPopover>
+						</HeaderPopover>
 					</>
 				) : (
 					<UserArea to="/auth/login">

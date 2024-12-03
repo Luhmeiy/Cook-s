@@ -47,7 +47,7 @@ export const UserArea = styled(Link)`
 	}
 `;
 
-export const UserPopover = styled(Popover)`
+export const HeaderPopover = styled(Popover)`
 	& div {
 		${flexContainer({ $column: true, $gap: 0.5 })}
 		border-radius: 0;
