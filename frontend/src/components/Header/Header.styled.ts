@@ -20,7 +20,7 @@ export const SearchBarContainer = styled.div`
 	${flexContainer({ $flex: 1, $justify: "center" })}
 `;
 
-export const SearchBar = styled.div`
+export const SearchBar = styled.form`
 	${flexContainer({ $align: "center", $justify: "space-between" })}
 	border-color: var(--text);
 	border-style: solid;
@@ -36,6 +36,10 @@ export const SearchBar = styled.div`
 		&:focus {
 			outline: none;
 		}
+	}
+
+	& svg {
+		cursor: pointer;
 	}
 `;
 

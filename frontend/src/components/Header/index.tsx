@@ -1,8 +1,10 @@
+// packages
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MagnifyingGlass, SignOut, UserCircle } from "@phosphor-icons/react";
 
+// styles
 import {
 	HeaderPopover,
 	SearchBar,
@@ -10,13 +12,19 @@ import {
 	StyledHeader,
 	UserArea,
 } from "./Header.styled";
+
+// components / Redux
 import UserButton from "../UserButton";
 import { selectCurrentUser } from "@/features/auth/authSlice";
 import { useSendLogoutMutation } from "@/features/auth/authApiSlice";
 
 const Header = () => {
+	const navigate = useNavigate();
+
 	const user = useSelector(selectCurrentUser);
 	const [logout, { isLoading }] = useSendLogoutMutation();
+
+	const [search, setSearch] = useState("");
 
 	const [userEl, setUserEl] = useState<HTMLButtonElement | null>(null);
 	const [listEl, setListEl] = useState<HTMLButtonElement | null>(null);
@@ -26,6 +34,13 @@ const Header = () => {
 
 	const userId = openUser ? "simple-popover" : undefined;
 	const listId = openList ? "simple-popover" : undefined;
+
+	const handleSearch = () => {
+		if (search) {
+			navigate(`search/${search}`);
+			setSearch("");
+		}
+	};
 
 	const handleLogout = async () => {
 		await logout(null);
@@ -41,12 +56,19 @@ const Header = () => {
 
 			<div>
 				<SearchBarContainer>
-					<SearchBar>
+					<SearchBar onSubmit={handleSearch}>
 						<input
 							type="text"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
 							placeholder="Find your next favorite recipe!"
 						/>
-						<MagnifyingGlass size={24} weight="bold" />
+
+						<MagnifyingGlass
+							size={20}
+							weight="bold"
+							onClick={handleSearch}
+						/>
 					</SearchBar>
 				</SearchBarContainer>
 

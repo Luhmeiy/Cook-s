@@ -3,15 +3,11 @@ import { useSelector } from "react-redux";
 import { Plus } from "@phosphor-icons/react";
 
 // styles
-import {
-	RecipeContainerTitle,
-	RecipesContainer,
-	StyledRecipes,
-} from "@/styles/Recipes.styled";
+import { RecipeContainerTitle } from "@/styles/Recipes.styled";
 
 // components / Redux
 import Button from "@/components/Button";
-import RecipeItem from "@/components/RecipeItem";
+import RecipesContainer from "@/components/RecipesContainer";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
 
@@ -24,7 +20,7 @@ const UserRecipes = () => {
 	const recipes = data?.recipes || [];
 
 	return (
-		<StyledRecipes>
+		<RecipesContainer recipes={recipes}>
 			<RecipeContainerTitle>
 				<h2>Recipes</h2>
 
@@ -32,17 +28,7 @@ const UserRecipes = () => {
 					Add New Recipe <Plus size={20} weight="light" />
 				</Button>
 			</RecipeContainerTitle>
-
-			<RecipesContainer>
-				{recipes?.length ? (
-					recipes.map((recipe) => (
-						<RecipeItem recipe={recipe} key={recipe._id} />
-					))
-				) : (
-					<p>No recipes found.</p>
-				)}
-			</RecipesContainer>
-		</StyledRecipes>
+		</RecipesContainer>
 	);
 };
 

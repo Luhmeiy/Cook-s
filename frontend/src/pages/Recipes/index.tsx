@@ -1,5 +1,4 @@
-import { RecipesContainer, StyledRecipes } from "@/styles/Recipes.styled";
-import RecipeItem from "@/components/RecipeItem";
+import RecipesContainer from "@/components/RecipesContainer";
 import { useGetPublicRecipesQuery } from "@/features/recipes/recipesApiSlice";
 
 const Recipes = () => {
@@ -10,19 +9,9 @@ const Recipes = () => {
 	const recipes = data?.recipes || [];
 
 	return (
-		<StyledRecipes>
+		<RecipesContainer recipes={recipes}>
 			<h2>Community Recipes</h2>
-
-			<RecipesContainer>
-				{recipes?.length ? (
-					recipes.map((recipe) => (
-						<RecipeItem recipe={recipe} key={recipe._id} />
-					))
-				) : (
-					<p>No recipes found.</p>
-				)}
-			</RecipesContainer>
-		</StyledRecipes>
+		</RecipesContainer>
 	);
 };
 

@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PencilSimple, X } from "@phosphor-icons/react";
 
 // styles
-import { RecipesContainer } from "@/styles/Recipes.styled";
 import { StyledNotFound } from "../NotFound/NotFound.styled";
 import { StyledUser, UserInfo } from "./User.styled";
 
@@ -14,7 +13,7 @@ import Button from "@/components/Button";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import EditUserForm from "@/components/EditUserForm";
 import PasswordInput from "@/components/PasswordInput";
-import RecipeItem from "@/components/RecipeItem";
+import RecipesContainer from "@/components/RecipesContainer";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
 import {
@@ -105,18 +104,9 @@ const User = () => {
 				)}
 			</UserInfo>
 
-			<div>
+			<RecipesContainer recipes={recipes}>
 				<h3>Recipes</h3>
-				<RecipesContainer>
-					{recipes?.length ? (
-						recipes.map((recipe) => (
-							<RecipeItem recipe={recipe} key={recipe._id} />
-						))
-					) : (
-						<p>No recipes found.</p>
-					)}
-				</RecipesContainer>
-			</div>
+			</RecipesContainer>
 		</StyledUser>
 	);
 };

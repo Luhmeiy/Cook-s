@@ -6,7 +6,7 @@ export const StyledUser = styled.div`
 	margin-top: 1.25rem;
 
 	& > div:nth-of-type(2) {
-		${flexContainer({ $column: true, $gap: 0.5 })}
+		${flexContainer({ $gap: 0.5 })}
 	}
 `;
 
