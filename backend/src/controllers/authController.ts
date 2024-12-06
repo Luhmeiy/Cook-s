@@ -1,10 +1,16 @@
 import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 import bcrypt, { compare } from "bcrypt";
 import { Request, Response } from "express";
 
 import User from "@/models/User";
 import { DecodedUser } from "@/types/DecodedUser";
+
+type DecodedPasswordJwt = {
+	_id: string;
+	purpose: string;
+};
 
 export const login = expressAsyncHandler(async (req, res) => {
 	const { email, password, isGoogle } = req.body;
@@ -91,6 +97,92 @@ export const register = expressAsyncHandler(async (req, res) => {
 		});
 	} else {
 		res.status(400).json({ message: "Invalid user data received." });
+	}
+});
+
+export const forgotPassword = expressAsyncHandler(async (req, res) => {
+	const { email } = req.body;
+
+	if (!email) {
+		res.status(400);
+		throw new Error("Email is required.");
+	}
+
+	const user = await User.findOne({ email });
+
+	if (!user) {
+		res.status(404);
+		throw new Error("User not found.");
+	}
+
+	try {
+		const transporter = nodemailer.createTransport({
+			service: "gmail",
+			host: "smtp.gmail.com",
+			port: 465,
+			secure: true,
+			auth: {
+				user: process.env.EMAIL,
+				pass: process.env.EMAIL_PASSWORD,
+			},
+		});
+
+		jwt.sign(
+			{ _id: user._id, purpose: "password-reset" },
+			process.env.ACCESS_TOKEN_SECRET!,
+			{ expiresIn: "1h" },
+			(err, resetToken) => {
+				const resetLink = `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`;
+
+				transporter.sendMail({
+					from: process.env.EMAIL,
+					to: email,
+					subject: "Password Reset",
+					text: `Click the link to reset your password: ${resetLink}`,
+				});
+			}
+		);
+
+		res.json({ message: "Password reset link sent" });
+	} catch (error) {
+		res.status(500);
+		throw new Error("Server error");
+	}
+});
+
+export const resetPassword = expressAsyncHandler(async (req, res) => {
+	const { token, password } = req.body;
+
+	try {
+		const decoded = jwt.verify(
+			token,
+			process.env.ACCESS_TOKEN_SECRET!
+		) as DecodedPasswordJwt;
+
+		if (decoded.purpose !== "password-reset") {
+			res.status(400);
+			throw new Error("Invalid token purpose");
+		}
+
+		const user = await User.findById(decoded._id);
+
+		if (!user) {
+			res.status(404);
+			throw new Error("User not found");
+		}
+
+		user.password = await bcrypt.hash(password, 10);
+		await user.save();
+
+		res.json({ message: "Password successfully reset" });
+	} catch (error) {
+		if (error.name === "TokenExpiredError") {
+			res.status(400);
+			throw new Error("Token expired");
+		}
+
+		res.status(500);
+		throw new Error("Server error");
 	}
 });
 
