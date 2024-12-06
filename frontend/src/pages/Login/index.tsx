@@ -129,7 +129,9 @@ const Login = () => {
 						/>
 					</InputContainer>
 
-					<StyledLink to="/">Forgot Password?</StyledLink>
+					<StyledLink to="/auth/forgot-password">
+						Forgot Password?
+					</StyledLink>
 
 					<Button>Log in</Button>
 				</StyledForm>
