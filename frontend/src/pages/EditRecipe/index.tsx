@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { CaretLeft } from "@phosphor-icons/react";
 import { GoBackLink } from "@/styles/Form.styled";
+import FloatingMessage from "@/components/FloatingMessage";
 import RecipeForm from "@/components/RecipeForm";
 import {
 	useGetRecipeByIdQuery,
@@ -10,26 +11,32 @@ import {
 const EditRecipe = () => {
 	const { id } = useParams();
 
-	const [patchRecipe, { isLoading: isLoadingPostRecipe }] =
-		usePatchRecipeMutation();
-	const { data, isLoading: isLoadingGetRecipeById } = useGetRecipeByIdQuery(
-		id!
-	);
+	const [patchRecipe, { isError }] = usePatchRecipeMutation();
+	const { data, isLoading } = useGetRecipeByIdQuery(id!);
 
-	if (isLoadingPostRecipe || isLoadingGetRecipeById) return <p>Loading...</p>;
+	if (isLoading) return <p>Loading...</p>;
 
 	const { recipe } = data!;
 
 	return (
-		<div>
-			<GoBackLink to={`/recipe/${id}`}>
-				<CaretLeft /> Go back
-			</GoBackLink>
-
-			{recipe && (
-				<RecipeForm submitRecipe={patchRecipe} recipe={recipe} />
+		<>
+			{isError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to edit recipe."
+				/>
 			)}
-		</div>
+
+			<div>
+				<GoBackLink to={`/recipe/${id}`}>
+					<CaretLeft /> Go back
+				</GoBackLink>
+
+				{recipe && (
+					<RecipeForm submitRecipe={patchRecipe} recipe={recipe} />
+				)}
+			</div>
+		</>
 	);
 };
 

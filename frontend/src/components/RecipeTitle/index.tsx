@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FilePlus, Star } from "@phosphor-icons/react";
-import { Recipe } from "@/interfaces/Recipe";
 import { StyledRecipeTitle } from "./RecipeTitle.styled";
+import FloatingMessage from "../FloatingMessage";
+import { Recipe } from "@/interfaces/Recipe";
 import {
 	usePatchRecipeMutation,
 	usePostRecipeMutation,
@@ -21,60 +22,71 @@ const RecipeTitle = ({
 
 	const [favorite, setFavorite] = useState(recipe.favorite || false);
 
-	const [updateRecipe] = usePatchRecipeMutation();
-	const [postRecipe] = usePostRecipeMutation();
+	const [updateRecipe, { isError: isUpdateError }] = usePatchRecipeMutation();
+	const [postRecipe, { isError: isPostError }] = usePostRecipeMutation();
 
 	const handleFavorite = async () => {
 		setFavorite(!favorite);
 
-		try {
-			await updateRecipe({
-				id: recipe._id,
-				data: { data: { ...recipe, favorite: !favorite } },
-			});
-		} catch (error) {
-			console.log(error);
-		}
+		await updateRecipe({
+			id: recipe._id,
+			data: { data: { ...recipe, favorite: !favorite } },
+		});
 	};
 
 	const handleSaveRecipe = async () => {
-		try {
-			await postRecipe({
-				data: {
-					data: { ...recipe, _id: null, public: false, userId: id },
-				},
-			});
-		} catch (error) {
-			console.log(error);
-		}
+		await postRecipe({
+			data: {
+				data: { ...recipe, _id: null, public: false, userId: id },
+			},
+		});
 	};
 
 	return (
-		<StyledRecipeTitle $alternate={alternate}>
-			{alternate ? (
-				<h2>{recipe.name}</h2>
-			) : (
-				<Link to={`/recipe/${recipe._id}`}>{recipe.name}</Link>
+		<>
+			{isUpdateError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to add recipe to favorites."
+				/>
+			)}
+			{isPostError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to save recipe."
+				/>
 			)}
 
-			{id &&
-				(recipe.userId === id ? (
-					<Star
-						size={20}
-						color={favorite ? "var(--primary)" : "var(--text)"}
-						weight={
-							favorite ? "fill" : alternate ? "bold" : "regular"
-						}
-						onClick={handleFavorite}
-					/>
+			<StyledRecipeTitle $alternate={alternate}>
+				{alternate ? (
+					<h2>{recipe.name}</h2>
 				) : (
-					<FilePlus
-						size={20}
-						weight={alternate ? "bold" : "regular"}
-						onClick={handleSaveRecipe}
-					/>
-				))}
-		</StyledRecipeTitle>
+					<Link to={`/recipe/${recipe._id}`}>{recipe.name}</Link>
+				)}
+
+				{id &&
+					(recipe.userId === id ? (
+						<Star
+							size={20}
+							color={favorite ? "var(--primary)" : "var(--text)"}
+							weight={
+								favorite
+									? "fill"
+									: alternate
+									? "bold"
+									: "regular"
+							}
+							onClick={handleFavorite}
+						/>
+					) : (
+						<FilePlus
+							size={20}
+							weight={alternate ? "bold" : "regular"}
+							onClick={handleSaveRecipe}
+						/>
+					))}
+			</StyledRecipeTitle>
+		</>
 	);
 };
 

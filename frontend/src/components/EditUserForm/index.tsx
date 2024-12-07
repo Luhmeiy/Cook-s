@@ -9,6 +9,7 @@ import { CloseButton, StyledModalForm } from "@/styles/Modal.styled";
 
 // components / Redux
 import Button from "../Button";
+import FloatingMessage from "../FloatingMessage";
 import { selectCurrentUser } from "@/features/auth/authSlice";
 import { usePatchUserMutation } from "@/features/users/usersApiSlice";
 
@@ -20,7 +21,7 @@ const EditUserForm = ({
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
 }) => {
 	const user = useSelector(selectCurrentUser);
-	const [patchUser] = usePatchUserMutation();
+	const [patchUser, { isError, isSuccess }] = usePatchUserMutation();
 
 	const [username, setUsername] = useState(user?.username);
 	const [description, setDescription] = useState(user?.description);
@@ -29,18 +30,14 @@ const EditUserForm = ({
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			await patchUser({
-				id: user?._id,
-				data: {
-					data: { username, description, public: isPublic },
-				},
-			});
+		const { error } = await patchUser({
+			id: user?._id,
+			data: {
+				data: { username, description, public: isPublic },
+			},
+		});
 
-			setOpen(false);
-		} catch (error) {
-			console.log(error);
-		}
+		if (!error) setOpen(false);
 	};
 
 	useEffect(() => {
@@ -50,62 +47,71 @@ const EditUserForm = ({
 	}, [open, user]);
 
 	return (
-		<Modal open={open} onClose={() => setOpen(false)}>
-			<StyledModalForm $gap={1} onSubmit={handleSubmit}>
-				<CloseButton weight="bold" onClick={() => setOpen(false)} />
+		<>
+			{isError && (
+				<FloatingMessage type="error" message="Failed to edit user." />
+			)}
+			{isSuccess && (
+				<FloatingMessage type="success" message="User edited." />
+			)}
 
-				<h3>Edit User</h3>
+			<Modal open={open} onClose={() => setOpen(false)}>
+				<StyledModalForm $gap={1} onSubmit={handleSubmit}>
+					<CloseButton weight="bold" onClick={() => setOpen(false)} />
 
-				<InputContainer>
-					Username
-					<input
-						type="text"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						required
-					/>
-				</InputContainer>
+					<h3>Edit User</h3>
 
-				<InputContainer>
-					Description
-					<textarea
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-						required
-					/>
-				</InputContainer>
+					<InputContainer>
+						Username
+						<input
+							type="text"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
+							required
+						/>
+					</InputContainer>
 
-				<PublicContainer>
-					<b>Do you want your profile to be public?</b>
+					<InputContainer>
+						Description
+						<textarea
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
+							required
+						/>
+					</InputContainer>
 
-					<div>
-						<label>
-							<input
-								type="radio"
-								name="public"
-								value="true"
-								checked={isPublic === true}
-								onChange={() => setIsPublic(true)}
-							/>
-							Yes
-						</label>
+					<PublicContainer>
+						<b>Do you want your profile to be public?</b>
 
-						<label>
-							<input
-								type="radio"
-								name="public"
-								value="false"
-								checked={isPublic === false}
-								onChange={() => setIsPublic(false)}
-							/>
-							No
-						</label>
-					</div>
-				</PublicContainer>
+						<div>
+							<label>
+								<input
+									type="radio"
+									name="public"
+									value="true"
+									checked={isPublic === true}
+									onChange={() => setIsPublic(true)}
+								/>
+								Yes
+							</label>
 
-				<Button>Save</Button>
-			</StyledModalForm>
-		</Modal>
+							<label>
+								<input
+									type="radio"
+									name="public"
+									value="false"
+									checked={isPublic === false}
+									onChange={() => setIsPublic(false)}
+								/>
+								No
+							</label>
+						</div>
+					</PublicContainer>
+
+					<Button>Save</Button>
+				</StyledModalForm>
+			</Modal>
+		</>
 	);
 };
 

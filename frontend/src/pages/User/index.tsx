@@ -12,6 +12,7 @@ import { StyledUser, UserInfo } from "./User.styled";
 import Button from "@/components/Button";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import EditUserForm from "@/components/EditUserForm";
+import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
 import RecipesContainer from "@/components/RecipesContainer";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
@@ -34,7 +35,7 @@ const User = () => {
 	} = useGetUserByIdQuery({ id, userId });
 	const { data, isLoading: isLoadingRecipes } = useGetUserRecipesQuery(id!);
 
-	const [deleteUser] = useDeleteUserMutation();
+	const [deleteUser, { isError }] = useDeleteUserMutation();
 
 	const [password, setPassword] = useState("");
 	const [openEdit, setOpenEdit] = useState(false);
@@ -55,59 +56,65 @@ const User = () => {
 	const handleDeleteUser = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			const { error } = await deleteUser({ id, password });
+		const { error } = await deleteUser({ id, password });
 
-			if (!error) {
-				navigate("/");
-			}
-		} catch (error) {
-			console.log(error);
-		}
+		if (!error) navigate("/");
 	};
 
 	return (
-		<StyledUser>
-			<UserInfo>
-				<div>
-					<h2>{user?.username}</h2>
-					<p>{user?.description || "No description provided."}</p>
-				</div>
+		<>
+			{isError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to delete user."
+				/>
+			)}
 
-				{id === userId && (
+			<StyledUser>
+				<UserInfo>
 					<div>
-						<Button onClick={() => setOpenEdit(true)}>
-							Edit User <PencilSimple weight="light" />
-						</Button>
-
-						<EditUserForm open={openEdit} setOpen={setOpenEdit} />
-
-						<Button
-							$variant="red"
-							onClick={() => setOpenDelete(true)}
-						>
-							Delete User <X weight="light" />
-						</Button>
-
-						<ConfirmDeleteModal
-							title="your account"
-							open={openDelete}
-							setOpen={setOpenDelete}
-							deleteFunction={handleDeleteUser}
-						>
-							<PasswordInput
-								password={password}
-								setPassword={setPassword}
-							/>
-						</ConfirmDeleteModal>
+						<h2>{user?.username}</h2>
+						<p>{user?.description || "No description provided."}</p>
 					</div>
-				)}
-			</UserInfo>
 
-			<RecipesContainer recipes={recipes}>
-				<h3>Recipes</h3>
-			</RecipesContainer>
-		</StyledUser>
+					{id === userId && (
+						<div>
+							<Button onClick={() => setOpenEdit(true)}>
+								Edit User <PencilSimple weight="light" />
+							</Button>
+
+							<EditUserForm
+								open={openEdit}
+								setOpen={setOpenEdit}
+							/>
+
+							<Button
+								$variant="red"
+								onClick={() => setOpenDelete(true)}
+							>
+								Delete User <X weight="light" />
+							</Button>
+
+							<ConfirmDeleteModal
+								title="your account"
+								open={openDelete}
+								setOpen={setOpenDelete}
+								deleteFunction={handleDeleteUser}
+							>
+								<PasswordInput
+									password={password}
+									setPassword={setPassword}
+								/>
+							</ConfirmDeleteModal>
+						</div>
+					)}
+				</UserInfo>
+
+				<RecipesContainer recipes={recipes}>
+					<h3>Recipes</h3>
+				</RecipesContainer>
+			</StyledUser>
+		</>
 	);
 };
 

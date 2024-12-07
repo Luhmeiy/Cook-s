@@ -1,3 +1,3 @@
 export type DecodedUser = {
-	username: string;
+	_id: string;
 };

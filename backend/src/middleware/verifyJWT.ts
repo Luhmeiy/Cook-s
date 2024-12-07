@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { DecodedUser } from "@/types/DecodedUser";
 
 interface CustomRequest extends Request {
-	user: string;
+	_id: string;
 }
 
 export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +22,7 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
 			throw new Error("Forbidden.");
 		}
 
-		(req as CustomRequest).user = (decoded as DecodedUser).username;
+		(req as CustomRequest)._id = (decoded as DecodedUser)._id;
 
 		next();
 	});

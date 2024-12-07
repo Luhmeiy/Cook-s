@@ -1,22 +1,29 @@
 import { CaretLeft } from "@phosphor-icons/react";
+import FloatingMessage from "@/components/FloatingMessage";
 import { GoBackLink } from "@/styles/Form.styled";
 import RecipeForm from "@/components/RecipeForm";
 import { usePostRecipeMutation } from "@/features/recipes/recipesApiSlice";
 
 const NewRecipe = () => {
-	const [postRecipe, { isLoading: isLoadingPostRecipe }] =
-		usePostRecipeMutation();
-
-	if (isLoadingPostRecipe) return <p>Loading...</p>;
+	const [postRecipe, { isError }] = usePostRecipeMutation();
 
 	return (
-		<div>
-			<GoBackLink to="/">
-				<CaretLeft /> Go back
-			</GoBackLink>
+		<>
+			{isError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to save recipe."
+				/>
+			)}
 
-			<RecipeForm submitRecipe={postRecipe} />
-		</div>
+			<div>
+				<GoBackLink to="/">
+					<CaretLeft /> Go back
+				</GoBackLink>
+
+				<RecipeForm submitRecipe={postRecipe} />
+			</div>
+		</>
 	);
 };
 

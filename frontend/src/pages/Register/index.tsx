@@ -15,11 +15,14 @@ import { InputContainer, PublicContainer } from "@/styles/Form.styled";
 
 // components / Redux
 import Button from "@/components/Button";
+import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
 import { useRegisterMutation } from "@/features/auth/authApiSlice";
 
 const Register = () => {
 	const navigate = useNavigate();
+
+	const [register, { isError, isLoading }] = useRegisterMutation();
 
 	const [isGoogle, setIsGoogle] = useState(false);
 	const [username, setUsername] = useState("");
@@ -29,8 +32,6 @@ const Register = () => {
 	const [isPublic, setIsPublic] = useState(false);
 	const [step, setStep] = useState(0);
 
-	const [register, { isLoading }] = useRegisterMutation();
-
 	const handleNextStep = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -39,27 +40,23 @@ const Register = () => {
 
 	const handleGoogleSignUp = useGoogleLogin({
 		onSuccess: async (tokenResponse) => {
-			try {
-				const response = await fetch(
-					"https://www.googleapis.com/oauth2/v3/userinfo",
-					{
-						headers: {
-							Authorization: `Bearer ${tokenResponse.access_token}`,
-						},
-					}
-				);
+			const response = await fetch(
+				"https://www.googleapis.com/oauth2/v3/userinfo",
+				{
+					headers: {
+						Authorization: `Bearer ${tokenResponse.access_token}`,
+					},
+				}
+			);
 
-				const userInfo = await response.json();
+			const userInfo = await response.json();
 
-				setIsGoogle(true);
+			setIsGoogle(true);
 
-				setUsername(userInfo.name);
-				setEmail(userInfo.email);
+			setUsername(userInfo.name);
+			setEmail(userInfo.email);
 
-				setStep(1);
-			} catch (error) {
-				console.error(error);
-			}
+			setStep(1);
 		},
 		onError: () => {
 			console.error("Login Failed");
@@ -69,27 +66,23 @@ const Register = () => {
 	const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			const { error } = await register({
-				username,
-				email,
-				password,
-				description,
-				isPublic,
-			});
+		const { error } = await register({
+			username,
+			email,
+			password,
+			description,
+			isPublic,
+		});
 
-			if (!error) {
-				setIsGoogle(false);
-				setUsername("");
-				setEmail("");
-				setPassword("");
-				setDescription("");
-				setIsPublic(false);
+		if (!error) {
+			setIsGoogle(false);
+			setUsername("");
+			setEmail("");
+			setPassword("");
+			setDescription("");
+			setIsPublic(false);
 
-				navigate("/auth/login");
-			}
-		} catch (error) {
-			console.log(error);
+			navigate("/auth/login");
 		}
 	};
 
@@ -97,6 +90,10 @@ const Register = () => {
 
 	return (
 		<>
+			{isError || (
+				<FloatingMessage type="error" message="User already exists." />
+			)}
+
 			<LayoutInfo>
 				<div>
 					<h2>Welcome!</h2>

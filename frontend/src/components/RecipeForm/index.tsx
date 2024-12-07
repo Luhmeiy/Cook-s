@@ -91,21 +91,14 @@ const RecipeForm = ({
 			},
 		};
 
-		try {
-			const result = await submitRecipe({
-				id: recipe?._id || "",
-				data: { data: newRecipe },
-			});
+		const { error } = await submitRecipe({
+			id: recipe?._id || "",
+			data: { data: newRecipe },
+		});
 
-			if (result.data.message) {
-				const redirectLink = recipe ? `/recipe/${recipe?._id}` : "/";
-
-				navigate(redirectLink);
-			} else {
-				console.log(result.data.error);
-			}
-		} catch (error) {
-			console.log(error);
+		if (!error) {
+			const redirectLink = recipe ? `/recipe/${recipe?._id}` : "/";
+			navigate(redirectLink);
 		}
 	};
 

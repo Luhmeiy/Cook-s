@@ -10,6 +10,7 @@ import { IngredientsContainer } from "./List.styled";
 
 // components / types / Redux
 import Button from "@/components/Button";
+import FloatingMessage from "@/components/FloatingMessage";
 import Ingredient from "@/components/Ingredient";
 import NewIngredientForm from "@/components/NewIngredientForm";
 import { IngredientType } from "@/interfaces/IngredientType";
@@ -23,12 +24,16 @@ import {
 } from "@/features/lists/listsApiSlice";
 
 const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
+	const sendToList = listType === "ingredient" ? "shopping" : "ingredient";
+
 	const navigate = useNavigate();
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
 
-	const [postIngredient] = usePostIngredientMutation();
-	const [deleteIngredient] = useDeleteIngredientMutation();
+	const [postIngredient, { isError: isPostError, isSuccess }] =
+		usePostIngredientMutation();
+	const [deleteIngredient, { isError: isDeleteError }] =
+		useDeleteIngredientMutation();
 
 	const [open, setOpen] = useState(false);
 
@@ -41,13 +46,13 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 			list = user?.shoppingList.filter((ingredient) => ingredient.bought);
 		}
 
-		try {
-			await postIngredient({
-				id: user?._id,
-				list: list?.map((ingredient) => delete ingredient._id),
-				listType: listType === "ingredient" ? "shopping" : "ingredient",
-			});
+		const { error } = await postIngredient({
+			id: user?._id,
+			list: list?.map(({ _id, ...rest }) => rest),
+			listType: sendToList,
+		});
 
+		if (!error) {
 			list?.map(
 				async ({ _id }) =>
 					await deleteIngredient({
@@ -55,8 +60,6 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 						ingredient: _id,
 					})
 			);
-		} catch (error) {
-			console.log(error);
 		}
 	};
 
@@ -67,48 +70,69 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 	}, [isLoading, user, navigate]);
 
 	return (
-		<StyledRecipes>
-			<RecipeContainerTitle>
-				<h2>
-					{listType === "ingredient"
-						? "Available Ingredients"
-						: "Shopping List"}
-				</h2>
-
-				<Button onClick={() => setOpen(true)}>
-					Add New Ingredient <Plus size={20} weight="light" />
-				</Button>
-
-				<NewIngredientForm
-					open={open}
-					setOpen={setOpen}
-					listType={listType}
+		<>
+			{isPostError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to move ingredient to another list."
 				/>
-			</RecipeContainerTitle>
-
-			<IngredientsContainer>
-				{user && user[`${listType}List`].length ? (
-					user[`${listType}List`].map((ingredient) => (
-						<Ingredient
-							ingredientProps={ingredient}
-							handleAddIngredients={handleAddIngredients}
-							key={ingredient._id}
-						/>
-					))
-				) : (
-					<p>No ingredients available.</p>
-				)}
-			</IngredientsContainer>
-
-			{listType === "shopping" && (
-				<div>
-					<Button onClick={() => handleAddIngredients()}>
-						Add Bought Ingredients to Ingredients List{" "}
-						<Plus size={20} weight="light" />
-					</Button>
-				</div>
 			)}
-		</StyledRecipes>
+			{isSuccess && (
+				<FloatingMessage
+					type="success"
+					message={`Ingredient moved to ${sendToList} list.`}
+				/>
+			)}
+			{isDeleteError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to delete ingredient."
+				/>
+			)}
+
+			<StyledRecipes>
+				<RecipeContainerTitle>
+					<h2>
+						{listType === "ingredient"
+							? "Available Ingredients"
+							: "Shopping List"}
+					</h2>
+
+					<Button onClick={() => setOpen(true)}>
+						Add New Ingredient <Plus size={20} weight="light" />
+					</Button>
+
+					<NewIngredientForm
+						open={open}
+						setOpen={setOpen}
+						listType={listType}
+					/>
+				</RecipeContainerTitle>
+
+				<IngredientsContainer>
+					{user && user[`${listType}List`].length ? (
+						user[`${listType}List`].map((ingredient) => (
+							<Ingredient
+								ingredientProps={ingredient}
+								handleAddIngredients={handleAddIngredients}
+								key={ingredient._id}
+							/>
+						))
+					) : (
+						<p>No ingredients available.</p>
+					)}
+				</IngredientsContainer>
+
+				{listType === "shopping" && (
+					<div>
+						<Button onClick={() => handleAddIngredients()}>
+							Add Bought Ingredients to Ingredients List{" "}
+							<Plus size={20} weight="light" />
+						</Button>
+					</div>
+				)}
+			</StyledRecipes>
+		</>
 	);
 };
 

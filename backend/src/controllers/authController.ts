@@ -35,13 +35,13 @@ export const login = expressAsyncHandler(async (req, res) => {
 		}
 
 		const accessToken = jwt.sign(
-			{ username: foundUser.username },
+			{ _id: foundUser._id },
 			process.env.ACCESS_TOKEN_SECRET!,
 			{ expiresIn: "15m" }
 		);
 
 		const refreshToken = jwt.sign(
-			{ username: foundUser.username },
+			{ _id: foundUser._id },
 			process.env.REFRESH_TOKEN_SECRET!,
 			{ expiresIn: "7d" }
 		);
@@ -205,9 +205,9 @@ export const refresh = (req: Request, res: Response) => {
 				throw new Error("Forbidden.");
 			}
 
-			const foundUser = await User.findOne({
-				username: (decoded as DecodedUser).username,
-			}).exec();
+			const foundUser = await User.findById(
+				(decoded as DecodedUser)._id
+			).exec();
 
 			if (!foundUser) {
 				res.status(401);
@@ -217,7 +217,7 @@ export const refresh = (req: Request, res: Response) => {
 			const accessToken = jwt.sign(
 				{
 					UserInfo: {
-						username: foundUser.username,
+						_id: foundUser._id,
 					},
 				},
 				process.env.ACCESS_TOKEN_SECRET!,

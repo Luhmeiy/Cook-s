@@ -24,6 +24,7 @@ import {
 // components / types / Redux
 import Button from "@/components/Button";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import FloatingMessage from "@/components/FloatingMessage";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
 import UserButton from "@/components/UserButton";
@@ -41,8 +42,11 @@ const RecipePage = () => {
 
 	const navigate = useNavigate();
 
-	const [postIngredient] = usePostIngredientMutation();
-	const [deleteRecipe] = useDeleteRecipeMutation();
+	const [postIngredient, { isError: isPostError }] =
+		usePostIngredientMutation();
+	const [deleteRecipe, { isError: isDeleteError }] =
+		useDeleteRecipeMutation();
+
 	const { data, isLoading, error } = useGetRecipeByIdQuery(id!, {
 		refetchOnMountOrArgChange: true,
 	});
@@ -78,135 +82,149 @@ const RecipePage = () => {
 			(ingredient) => !verifyIngredientAvailability(ingredient)
 		);
 
-		try {
-			await postIngredient({
-				id: user?._id,
-				list: list.map((ingredient) => delete ingredient._id),
-				listType: "shopping",
-			});
-		} catch (error) {
-			console.log(error);
-		}
+		await postIngredient({
+			id: user?._id,
+			list: list.map((ingredient) => delete ingredient._id),
+			listType: "shopping",
+		});
 	};
 
 	const handleDeleteRecipe = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			const { error } = await deleteRecipe({ id });
+		const { error } = await deleteRecipe({ id });
 
-			if (!error) {
-				navigate("/");
-			}
-		} catch (error) {
-			console.log(error);
-		}
+		if (!error) navigate("/");
 	};
 
 	return (
-		<StyledRecipePage>
-			<div>
-				<RecipeInfo>
-					{recipe && <RecipeTitle recipe={recipe} alternate={true} />}
+		<>
+			{isPostError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to add ingredients."
+				/>
+			)}
+			{isDeleteError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to delete recipe."
+				/>
+			)}
 
-					<div>
-						<RecipeCategory
-							$category={recipe?.category ? true : false}
-						>
-							{recipe?.category || "Sem Categoria"}
-						</RecipeCategory>
-
-						{recipe?.prepTime && (
-							<RecipeTime>
-								<Timer size={16} weight="thin" />
-
-								{recipe.prepTime}
-							</RecipeTime>
+			<StyledRecipePage>
+				<div>
+					<RecipeInfo>
+						{recipe && (
+							<RecipeTitle recipe={recipe} alternate={true} />
 						)}
 
-						{recipe?.servings && (
-							<p>
-								<span>Servings:</span> {recipe.servings}
-							</p>
+						<div>
+							<RecipeCategory
+								$category={recipe?.category ? true : false}
+							>
+								{recipe?.category || "Sem Categoria"}
+							</RecipeCategory>
+
+							{recipe?.prepTime && (
+								<RecipeTime>
+									<Timer size={16} weight="thin" />
+
+									{recipe.prepTime}
+								</RecipeTime>
+							)}
+
+							{recipe?.servings && (
+								<p>
+									<span>Servings:</span> {recipe.servings}
+								</p>
+							)}
+						</div>
+					</RecipeInfo>
+
+					<Description>
+						<h3>Description</h3>
+						{recipe?.description || "No description provided."}
+					</Description>
+
+					<ListContainer>
+						<h3>Ingredients</h3>
+						{recipe?.ingredients.map((ingredient, index) => {
+							const isAvailable =
+								verifyIngredientAvailability(ingredient);
+
+							return (
+								<Step
+									step={ingredient}
+									index={index}
+									isAvailable={isAvailable}
+									key={index}
+								/>
+							);
+						})}
+
+						{user && (
+							<Button
+								$variant="gray"
+								onClick={handleAddIngredients}
+							>
+								Add remaining ingredients to shopping list{" "}
+								<Plus />
+							</Button>
 						)}
-					</div>
-				</RecipeInfo>
+					</ListContainer>
 
-				<Description>
-					<h3>Description</h3>
-					{recipe?.description || "No description provided."}
-				</Description>
+					<ListContainer>
+						<h3>Instructions</h3>
+						{recipe?.instructions
+							.split("\n")
+							.map((instruction, index) => (
+								<Step
+									step={instruction}
+									index={index}
+									key={index}
+								/>
+							))}
+					</ListContainer>
+				</div>
 
-				<ListContainer>
-					<h3>Ingredients</h3>
-					{recipe?.ingredients.map((ingredient, index) => {
-						const isAvailable =
-							verifyIngredientAvailability(ingredient);
-
-						return (
-							<Step
-								step={ingredient}
-								index={index}
-								isAvailable={isAvailable}
-								key={index}
-							/>
-						);
-					})}
-
-					{user && (
-						<Button $variant="gray" onClick={handleAddIngredients}>
-							Add remaining ingredients to shopping list <Plus />
-						</Button>
+				<div>
+					{recipe?.createdBy.username ? (
+						<div>
+							<p>Created by</p>
+							<UserButton to={`/user/${recipe?.createdBy._id}`}>
+								<UserCircle size={24} weight="bold" />
+								{recipe?.createdBy.username}
+							</UserButton>
+						</div>
+					) : (
+						<p>User not found.</p>
 					)}
-				</ListContainer>
 
-				<ListContainer>
-					<h3>Instructions</h3>
-					{recipe?.instructions
-						.split("\n")
-						.map((instruction, index) => (
-							<Step
-								step={instruction}
-								index={index}
-								key={index}
+					{recipe?.userId === user?._id && (
+						<ButtonContainer>
+							<Button to={`/edit-recipe/${id}`}>
+								Edit Recipe <PencilSimple weight="light" />
+							</Button>
+
+							<Button
+								$variant="red"
+								onClick={() => setOpen(true)}
+							>
+								Delete Recipe <X weight="light" />
+							</Button>
+
+							<ConfirmDeleteModal
+								title={recipe.name}
+								open={open}
+								setOpen={setOpen}
+								deleteFunction={handleDeleteRecipe}
 							/>
-						))}
-				</ListContainer>
-			</div>
-
-			<div>
-				{recipe?.createdBy.username ? (
-					<div>
-						<p>Created by</p>
-						<UserButton to={`/user/${recipe?.createdBy._id}`}>
-							<UserCircle size={24} weight="bold" />
-							{recipe?.createdBy.username}
-						</UserButton>
-					</div>
-				) : (
-					<p>User not found.</p>
-				)}
-
-				{recipe?.userId === user?._id && (
-					<ButtonContainer>
-						<Button to={`/edit-recipe/${id}`}>
-							Edit Recipe <PencilSimple weight="light" />
-						</Button>
-
-						<Button $variant="red" onClick={() => setOpen(true)}>
-							Delete Recipe <X weight="light" />
-						</Button>
-
-						<ConfirmDeleteModal
-							title={recipe.name}
-							open={open}
-							setOpen={setOpen}
-							deleteFunction={handleDeleteRecipe}
-						/>
-					</ButtonContainer>
-				)}
-			</div>
-		</StyledRecipePage>
+						</ButtonContainer>
+					)}
+				</div>
+			</StyledRecipePage>
+		</>
 	);
 };
 

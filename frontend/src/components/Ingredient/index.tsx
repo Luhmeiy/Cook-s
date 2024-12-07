@@ -14,13 +14,14 @@ import {
 
 // components / types / Redux
 import Button from "../Button";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
+import FloatingMessage from "../FloatingMessage";
 import { IngredientType } from "@/interfaces/IngredientType";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
 	useDeleteIngredientMutation,
 	useUpdateIngredientMutation,
 } from "@/features/lists/listsApiSlice";
-import ConfirmDeleteModal from "../ConfirmDeleteModal";
 
 interface IngredientProps {
 	ingredientProps: {
@@ -41,8 +42,10 @@ const Ingredient = ({
 
 	const userId = useSelector(selectCurrentUserId);
 
-	const [deleteIngredient] = useDeleteIngredientMutation();
-	const [updateIngredient] = useUpdateIngredientMutation();
+	const [deleteIngredient, { isError: isDeleteError }] =
+		useDeleteIngredientMutation();
+	const [updateIngredient, { isError: isUpdateError }] =
+		useUpdateIngredientMutation();
 
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
@@ -50,47 +53,51 @@ const Ingredient = ({
 
 	const handleCheckIngredient = async () => {
 		const updatedBought = !ingredient.bought;
-		setIngredient((prev) => ({ ...prev, bought: updatedBought }));
 
-		try {
-			await updateIngredient({
-				userId,
-				ingredient: ingredient._id,
-				updatedIngredient: { ...ingredient, bought: updatedBought },
-			});
-		} catch (error) {
-			console.log(error);
+		const { error } = await updateIngredient({
+			userId,
+			ingredient: ingredient._id,
+			updatedIngredient: { ...ingredient, bought: updatedBought },
+		});
+
+		if (!error) {
+			setIngredient((prev) => ({ ...prev, bought: updatedBought }));
 		}
 	};
 
 	const handleDeleteIngredient = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			await deleteIngredient({ userId, ingredient: ingredient._id });
-		} catch (error) {
-			console.log(error);
-		}
+		await deleteIngredient({ userId, ingredient: ingredient._id });
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			await updateIngredient({
-				userId,
-				ingredient: ingredient._id,
-				updatedIngredient: ingredient,
-			});
+		const { error } = await updateIngredient({
+			userId,
+			ingredient: ingredient._id,
+			updatedIngredient: ingredient,
+		});
 
-			setIsEditing(false);
-		} catch (error) {
-			console.log(error);
-		}
+		if (!error) setIsEditing(false);
 	};
 
 	return (
 		<>
+			{isDeleteError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to delete ingredient."
+				/>
+			)}
+			{isUpdateError && (
+				<FloatingMessage
+					type="error"
+					message="Failed to update ingredient."
+				/>
+			)}
+
 			{isEditing ? (
 				<IngredientForm onSubmit={handleSubmit}>
 					<InputContainer>

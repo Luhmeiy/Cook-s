@@ -15,44 +15,41 @@ import { InputContainer } from "@/styles/Form.styled";
 
 // components / Redux
 import Button from "@/components/Button";
+import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
 import { useLoginMutation } from "@/features/auth/authApiSlice";
 
 const Login = () => {
 	const navigate = useNavigate();
 
+	const [login, { isError, isLoading }] = useLoginMutation();
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const [login, { isLoading }] = useLoginMutation();
-
 	const handleGoogleSignIn = useGoogleLogin({
 		onSuccess: async (tokenResponse) => {
-			try {
-				const response = await fetch(
-					"https://www.googleapis.com/oauth2/v3/userinfo",
-					{
-						headers: {
-							Authorization: `Bearer ${tokenResponse.access_token}`,
-						},
-					}
-				);
-
-				const userInfo = await response.json();
-
-				const { error } = await login({
-					email: userInfo.email,
-					isGoogle: true,
-				});
-
-				if (!error) {
-					setEmail("");
-					setPassword("");
-
-					navigate("/");
+			const response = await fetch(
+				"https://www.googleapis.com/oauth2/v3/userinfo",
+				{
+					headers: {
+						Authorization: `Bearer ${tokenResponse.access_token}`,
+					},
 				}
-			} catch (error) {
-				console.error(error);
+			);
+
+			const { email: googleEmail } = await response.json();
+
+			const { error } = await login({
+				email: googleEmail,
+				isGoogle: true,
+			});
+
+			if (!error) {
+				setEmail("");
+				setPassword("");
+
+				navigate("/");
 			}
 		},
 		onError: () => {
@@ -63,20 +60,16 @@ const Login = () => {
 	const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		try {
-			const { error } = await login({
-				email,
-				password,
-			});
+		const { error } = await login({
+			email,
+			password,
+		});
 
-			if (!error) {
-				setEmail("");
-				setPassword("");
+		if (!error) {
+			setEmail("");
+			setPassword("");
 
-				navigate("/");
-			}
-		} catch (error) {
-			console.log(error);
+			navigate("/");
 		}
 	};
 
@@ -84,6 +77,13 @@ const Login = () => {
 
 	return (
 		<>
+			{isError && (
+				<FloatingMessage
+					type="error"
+					message="Email or password is wrong."
+				/>
+			)}
+
 			<img
 				src="https://images.unsplash.com/photo-1452251889946-8ff5ea7b27ab?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 				alt="Cooking"
