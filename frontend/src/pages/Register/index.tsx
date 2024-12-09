@@ -17,12 +17,21 @@ import { InputContainer, PublicContainer } from "@/styles/Form.styled";
 import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
-import { useRegisterMutation } from "@/features/auth/authApiSlice";
+import {
+	useRegisterMutation,
+	useVerifyEmailMutation,
+} from "@/features/auth/authApiSlice";
+
+type UserInfo = {
+	email: string;
+	name: string;
+};
 
 const Register = () => {
 	const navigate = useNavigate();
 
 	const [register, { isError, isLoading }] = useRegisterMutation();
+	const [verifyEmail, { isError: isErrorEmail }] = useVerifyEmailMutation();
 
 	const [isGoogle, setIsGoogle] = useState(false);
 	const [username, setUsername] = useState("");
@@ -32,10 +41,28 @@ const Register = () => {
 	const [isPublic, setIsPublic] = useState(false);
 	const [step, setStep] = useState(0);
 
-	const handleNextStep = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	const handleNextStep = async ({
+		e,
+		userInfo,
+	}: {
+		e?: FormEvent<HTMLFormElement>;
+		userInfo?: UserInfo;
+	}) => {
+		e?.preventDefault();
 
-		setStep(1);
+		const { error } = await verifyEmail({
+			email: userInfo?.email || email,
+		});
+
+		if (!error) {
+			if (userInfo) {
+				setIsGoogle(true);
+				setUsername(userInfo.name);
+				setEmail(userInfo.email);
+			}
+
+			setStep(1);
+		}
 	};
 
 	const handleGoogleSignUp = useGoogleLogin({
@@ -49,14 +76,9 @@ const Register = () => {
 				}
 			);
 
-			const userInfo = await response.json();
+			const userInfo = (await response.json()) as UserInfo;
 
-			setIsGoogle(true);
-
-			setUsername(userInfo.name);
-			setEmail(userInfo.email);
-
-			setStep(1);
+			handleNextStep({ userInfo });
 		},
 		onError: () => {
 			console.error("Login Failed");
@@ -90,7 +112,13 @@ const Register = () => {
 
 	return (
 		<>
-			{isError || (
+			{isErrorEmail && (
+				<FloatingMessage
+					type="error"
+					message="Email is already in use."
+				/>
+			)}
+			{isError && (
 				<FloatingMessage type="error" message="User already exists." />
 			)}
 
@@ -118,7 +146,7 @@ const Register = () => {
 							<hr />
 						</OrDivider>
 
-						<StyledForm onSubmit={handleNextStep}>
+						<StyledForm onSubmit={(e) => handleNextStep({ e })}>
 							<InputContainer>
 								Name
 								<input

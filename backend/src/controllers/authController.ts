@@ -100,6 +100,28 @@ export const register = expressAsyncHandler(async (req, res) => {
 	}
 });
 
+export const verifyEmail = expressAsyncHandler(async (req, res) => {
+	const { email } = req.body;
+
+	if (!email) {
+		res.status(400);
+		throw new Error("Email is required.");
+	}
+
+	const lowerCaseEmail = email.toLowerCase();
+
+	const existingUser = await User.findOne({ email: lowerCaseEmail });
+
+	if (existingUser) {
+		res.status(409);
+		throw new Error("User already exists.");
+	}
+
+	res.status(200).json({
+		message: "User doesn't exist.",
+	});
+});
+
 export const forgotPassword = expressAsyncHandler(async (req, res) => {
 	const { email } = req.body;
 
