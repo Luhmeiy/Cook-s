@@ -2,11 +2,10 @@ import styled from "styled-components";
 import { X } from "@phosphor-icons/react";
 import { flexContainer } from "@/GlobalStyles";
 
-export const StyledModalForm = styled.form<{ $gap?: number }>`
-	${flexContainer({ $column: true })}
+export const StyledModalForm = styled.form`
+	${flexContainer({ $column: true, $gap: 0.5 })}
 	background-color: var(--background);
 	border-radius: 0.25rem;
-	gap: ${({ $gap }) => ($gap ? `${$gap}rem` : "0.5rem")};
 	left: 50%;
 	padding: 2rem;
 	position: absolute;
@@ -15,7 +14,7 @@ export const StyledModalForm = styled.form<{ $gap?: number }>`
 	transform: translate(-50%, -50%);
 
 	& > h3 {
-		margin-bottom: ${({ $gap }) => !$gap && "0.5rem"};
+		margin-bottom: 0.5rem;
 	}
 
 	& > div {

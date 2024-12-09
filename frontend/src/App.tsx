@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Search from "./pages/Search";
 import User from "./pages/User";
+import Settings from "./pages/Settings";
 import Recipes from "./pages/Recipes";
 import List from "./pages/List";
 import NewRecipe from "./pages/NewRecipe";
@@ -33,6 +34,7 @@ function App() {
 				<Route path="*" element={<NotFound />} />
 				<Route path="search/:search" element={<Search />} />
 				<Route path="user/:id" element={<User />} />
+				<Route path="settings" element={<Settings />} />
 				<Route path="recipes" element={<Recipes />} />
 				<Route
 					path="ingredients"

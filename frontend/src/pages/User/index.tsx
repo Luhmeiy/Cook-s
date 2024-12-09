@@ -1,8 +1,7 @@
 // packages
-import { FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { PencilSimple, X } from "@phosphor-icons/react";
+import { GearSix } from "@phosphor-icons/react";
 
 // styles
 import { StyledNotFound } from "../NotFound/NotFound.styled";
@@ -10,17 +9,10 @@ import { StyledUser, UserInfo } from "./User.styled";
 
 // components / Redux
 import Button from "@/components/Button";
-import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
-import EditUserForm from "@/components/EditUserForm";
-import FloatingMessage from "@/components/FloatingMessage";
-import PasswordInput from "@/components/PasswordInput";
 import RecipesContainer from "@/components/RecipesContainer";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import { useGetUserRecipesQuery } from "@/features/recipes/recipesApiSlice";
-import {
-	useDeleteUserMutation,
-	useGetUserByIdQuery,
-} from "@/features/users/usersApiSlice";
+import { useGetUserByIdQuery } from "@/features/users/usersApiSlice";
 
 const User = () => {
 	const { id } = useParams();
@@ -35,12 +27,6 @@ const User = () => {
 	} = useGetUserByIdQuery({ id, userId });
 	const { data, isLoading: isLoadingRecipes } = useGetUserRecipesQuery(id!);
 
-	const [deleteUser, { isError }] = useDeleteUserMutation();
-
-	const [password, setPassword] = useState("");
-	const [openEdit, setOpenEdit] = useState(false);
-	const [openDelete, setOpenDelete] = useState(false);
-
 	if (isLoadingUser || isLoadingRecipes) return <p>Loading...</p>;
 	if (error) {
 		return (
@@ -53,68 +39,27 @@ const User = () => {
 
 	const recipes = data?.recipes || [];
 
-	const handleDeleteUser = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		const { error } = await deleteUser({ id, password });
-
-		if (!error) navigate("/");
-	};
-
 	return (
-		<>
-			{isError && (
-				<FloatingMessage
-					type="error"
-					message="Failed to delete user."
-				/>
-			)}
+		<StyledUser>
+			<UserInfo>
+				<div>
+					<h2>{user?.username}</h2>
+					<p>{user?.description || "No description provided."}</p>
+				</div>
 
-			<StyledUser>
-				<UserInfo>
-					<div>
-						<h2>{user?.username}</h2>
-						<p>{user?.description || "No description provided."}</p>
-					</div>
+				{id === userId && (
+					<GearSix
+						size={32}
+						weight="bold"
+						onClick={() => navigate("/settings")}
+					/>
+				)}
+			</UserInfo>
 
-					{id === userId && (
-						<div>
-							<Button onClick={() => setOpenEdit(true)}>
-								Edit User <PencilSimple weight="light" />
-							</Button>
-
-							<EditUserForm
-								open={openEdit}
-								setOpen={setOpenEdit}
-							/>
-
-							<Button
-								$variant="red"
-								onClick={() => setOpenDelete(true)}
-							>
-								Delete User <X weight="light" />
-							</Button>
-
-							<ConfirmDeleteModal
-								title="your account"
-								open={openDelete}
-								setOpen={setOpenDelete}
-								deleteFunction={handleDeleteUser}
-							>
-								<PasswordInput
-									password={password}
-									setPassword={setPassword}
-								/>
-							</ConfirmDeleteModal>
-						</div>
-					)}
-				</UserInfo>
-
-				<RecipesContainer recipes={recipes}>
-					<h3>Recipes</h3>
-				</RecipesContainer>
-			</StyledUser>
-		</>
+			<RecipesContainer recipes={recipes}>
+				<h3>Recipes</h3>
+			</RecipesContainer>
+		</StyledUser>
 	);
 };
 

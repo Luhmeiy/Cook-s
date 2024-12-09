@@ -12,8 +12,4 @@ export const StyledUser = styled.div`
 
 export const UserInfo = styled.div`
 	${flexContainer({ $justify: "space-between" })}
-
-	& div:nth-of-type(2) {
-		${flexContainer({ $column: true, $gap: 0.5 })}
-	}
 `;

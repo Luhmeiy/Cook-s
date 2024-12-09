@@ -141,6 +141,13 @@ const Header = () => {
 								Your profile
 							</Link>
 
+							<Link
+								to="/settings"
+								onClick={() => setUserEl(null)}
+							>
+								Settings
+							</Link>
+
 							<button onClick={handleLogout}>
 								<SignOut size={20} weight="light" /> Logout
 							</button>
