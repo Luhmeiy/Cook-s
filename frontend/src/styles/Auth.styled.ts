@@ -34,10 +34,13 @@ export const StyledForm = styled.form`
 	}
 `;
 
-export const StyledLink = styled(Link)<{ $underline?: boolean }>`
+export const StyledLink = styled(Link)<{
+	$underline?: boolean;
+	$startText?: boolean;
+}>`
 	color: var(--primary);
 	font-weight: 600;
-	text-align: end;
+	text-align: ${({ $startText }) => ($startText ? "start" : "end")};
 	text-decoration: ${({ $underline }) => $underline && "underline"};
 
 	&:hover {

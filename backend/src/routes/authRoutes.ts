@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+	changePassword,
 	forgotPassword,
 	login,
 	logout,
@@ -8,6 +9,7 @@ import {
 	resetPassword,
 	verifyEmail,
 } from "@/controllers/authController";
+import { verifyJWT } from "@/middleware/verifyJWT";
 
 export const router = Router();
 
@@ -18,3 +20,6 @@ router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
 router.route("/refresh").get(refresh);
 router.route("/logout").post(logout);
+
+router.use(verifyJWT);
+router.route("/change-password").post(changePassword);

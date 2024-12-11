@@ -122,6 +122,35 @@ export const verifyEmail = expressAsyncHandler(async (req, res) => {
 	});
 });
 
+export const changePassword = expressAsyncHandler(async (req, res) => {
+	const { userId, currentPassword, newPassword } = req.body;
+
+	const foundUser = await User.findById(userId);
+
+	if (!foundUser) {
+		res.status(404);
+		throw new Error("User not found.");
+	}
+
+	const isMatch = await bcrypt.compare(currentPassword, foundUser.password);
+
+	if (!isMatch) {
+		res.status(400);
+		throw new Error("Wrong password.");
+	}
+
+	foundUser.password = await bcrypt.hash(newPassword, 10);
+	await foundUser.save();
+
+	res.clearCookie("jwt", {
+		httpOnly: true,
+		sameSite: "none",
+		secure: true,
+	});
+
+	res.json({ message: "Password successfully updated." });
+});
+
 export const forgotPassword = expressAsyncHandler(async (req, res) => {
 	const { email } = req.body;
 

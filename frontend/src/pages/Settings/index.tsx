@@ -1,10 +1,11 @@
 // packages
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { X } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 
 // styles
+import { StyledLink } from "@/styles/Auth.styled";
 import {
 	StyledSettings,
 	UserPanel,
@@ -18,12 +19,16 @@ import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import EditUserForm from "@/components/EditUserForm";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
-import { selectCurrentUserId } from "@/features/auth/authSlice";
+import {
+	selectAuthLoading,
+	selectCurrentUserId,
+} from "@/features/auth/authSlice";
 import { useDeleteUserMutation } from "@/features/users/usersApiSlice";
 
 const Settings = () => {
 	const navigate = useNavigate();
 	const userId = useSelector(selectCurrentUserId);
+	const isLoading = useSelector(selectAuthLoading);
 
 	const [deleteUser, { isError }] = useDeleteUserMutation();
 
@@ -44,6 +49,12 @@ const Settings = () => {
 		1: (
 			<div>
 				<h3>Change Password</h3>
+
+				<p>Changing your password will disconnect you.</p>
+
+				<StyledLink to="/auth/change-password" $underline $startText>
+					Change password
+				</StyledLink>
 			</div>
 		),
 		2: (
@@ -68,6 +79,12 @@ const Settings = () => {
 			</div>
 		),
 	};
+
+	useEffect(() => {
+		if (!isLoading && !userId) {
+			navigate("/");
+		}
+	}, [isLoading, userId, navigate]);
 
 	return (
 		<>

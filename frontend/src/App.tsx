@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useRefreshQuery } from "./features/auth/authApiSlice";
 
 // Layouts
@@ -19,10 +19,15 @@ import EditRecipe from "./pages/EditRecipe";
 import RecipePage from "./pages/Recipe";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ChangePassword from "./pages/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 function App() {
+	const location = useLocation();
+
+	const isChangePasswordRoute = location.pathname === "/auth/change-password";
+
 	const { data: user, isLoading } = useRefreshQuery(null);
 
 	if (isLoading) return <p>Loading...</p>;
@@ -49,7 +54,7 @@ function App() {
 			<Route
 				path="auth"
 				element={
-					!isLoading && !user ? (
+					(!isLoading && !user) || isChangePasswordRoute ? (
 						<AuthLayout />
 					) : (
 						<Navigate to="/" replace />
@@ -59,6 +64,7 @@ function App() {
 				<Route index element={<NotFound />} />
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
+				<Route path="change-password" element={<ChangePassword />} />
 				<Route path="forgot-password" element={<ForgotPassword />} />
 				<Route
 					path="reset-password/:token"

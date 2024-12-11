@@ -26,7 +26,10 @@ const ResetPassword = () => {
 	return (
 		<>
 			{isError && (
-				<FloatingMessage type="error" message="Failed to edit user." />
+				<FloatingMessage
+					type="error"
+					message="Failed to reset password."
+				/>
 			)}
 
 			<StyledPasswordForm onSubmit={handleSubmit}>

@@ -1,4 +1,4 @@
-import bcrypt, { compare } from "bcrypt";
+import { compare } from "bcrypt";
 import expressAsyncHandler from "express-async-handler";
 import User from "@/models/User";
 
@@ -27,10 +27,6 @@ export const updateUser = expressAsyncHandler(async (req, res) => {
 	if (!id || !data) {
 		res.status(400);
 		throw new Error("All fields are required.");
-	}
-
-	if (data.password) {
-		data.password = await bcrypt.hash(data.password, 10);
 	}
 
 	const updatedUser = await User.findByIdAndUpdate(id, data).select(
