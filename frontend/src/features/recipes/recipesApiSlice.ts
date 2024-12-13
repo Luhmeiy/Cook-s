@@ -23,7 +23,7 @@ export const recipesApiSlice = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Recipes"],
 		}),
-		patchRecipe: builder.mutation({
+		updateRecipe: builder.mutation({
 			query: ({ id, data }) => ({
 				url: `/recipes/${id}`,
 				method: "PATCH",
@@ -46,7 +46,7 @@ export const {
 	useGetUserRecipesQuery,
 	useGetRecipeByIdQuery,
 	usePostRecipeMutation,
-	usePatchRecipeMutation,
+	useUpdateRecipeMutation,
 	useDeleteRecipeMutation,
 } = recipesApiSlice;
 

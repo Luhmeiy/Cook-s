@@ -5,18 +5,17 @@ import User from "@/models/User";
 export const getUser = expressAsyncHandler(async (req, res) => {
 	const { id, userId } = req.params;
 
-	if (!id) {
-		res.status(400);
-		throw new Error("User ID required.");
+	if (!id || !userId) {
+		res.status(400).json({ message: "User ID required." });
+		return;
 	}
 
 	const user = await User.findById(id).exec();
 
 	if (user && (user.public || user._id.toString() === userId)) {
-		res.json(user);
+		res.status(200).json(user);
 	} else {
-		res.status(400);
-		throw new Error("User not found.");
+		res.status(400).json({ message: "User not found." });
 	}
 });
 
@@ -25,61 +24,69 @@ export const updateUser = expressAsyncHandler(async (req, res) => {
 	const { data } = req.body;
 
 	if (!id || !data) {
-		res.status(400);
-		throw new Error("All fields are required.");
+		res.status(400).json({ message: "All fields are required." });
+		return;
 	}
 
-	const updatedUser = await User.findByIdAndUpdate(id, data).select(
-		"username"
-	);
+	try {
+		const updatedUser = await User.findByIdAndUpdate(id, data).select(
+			"username"
+		);
 
-	if (!updatedUser) {
-		res.status(400);
-		throw new Error("User not found.");
+		if (updatedUser) {
+			res.status(200).json({
+				message: `User ${updatedUser.username} updated.`,
+			});
+		}
+	} catch (error) {
+		res.status(400).json({ message: "Failed to edit user." });
 	}
-
-	res.json({ message: `User ${updatedUser.username} updated.` });
 });
 
 export const deleteUser = expressAsyncHandler(async (req, res) => {
 	const { id, password } = req.params;
 
 	if (!id || !password) {
-		res.status(400);
-		throw new Error("User ID and password required.");
+		res.status(400).json({ message: "User ID and password required." });
+		return;
 	}
 
 	const user = await User.findById(id).exec();
 
 	if (!user) {
-		res.status(401);
-		throw new Error("User not found.");
+		res.status(400).json({ message: "User not found." });
+		return;
 	}
 
-	const match = await compare(password, user.password);
+	try {
+		const match = await compare(password, user.password);
 
-	if (!match) {
-		res.status(401);
-		throw new Error("Wrong password.");
+		if (!match) {
+			res.status(401).json({ message: "Wrong password." });
+			return;
+		}
+
+		const deletedUser = await User.findByIdAndDelete(id).select("username");
+
+		if (!deletedUser) throw new Error();
+
+		const cookies = req.cookies;
+
+		if (!cookies?.jwt) {
+			res.status(400).json({ message: "No cookie found." });
+			return;
+		}
+
+		res.clearCookie("jwt", {
+			httpOnly: true,
+			sameSite: "none",
+			secure: true,
+		});
+
+		res.status(200).json({
+			message: `User ${deletedUser.username} deleted.`,
+		});
+	} catch (error) {
+		res.status(400).json({ message: "Failed to delete user." });
 	}
-
-	const deletedUser = await User.findByIdAndDelete(id).select("username");
-
-	if (!deletedUser) {
-		res.status(400);
-		throw new Error("User not found.");
-	}
-
-	const cookies = req.cookies;
-
-	if (!cookies?.jwt) {
-		res.status(204);
-		throw new Error("No cookie found.");
-	}
-
-	res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
-
-	res.json({
-		message: `User ${deletedUser.username} deleted.`,
-	});
 });

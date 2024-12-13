@@ -7,6 +7,7 @@ import { PasswordTitle } from "./ChangePassword.styled";
 import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { useChangePasswordMutation } from "@/features/auth/authApiSlice";
 import {
 	selectAuthLoading,
@@ -18,7 +19,8 @@ const ChangePassword = () => {
 	const userId = useSelector(selectCurrentUserId);
 	const isLoading = useSelector(selectAuthLoading);
 
-	const [changePassword, { isError }] = useChangePasswordMutation();
+	const [changePassword, { error, isError, isLoading: isLoadingPassword }] =
+		useChangePasswordMutation();
 
 	const [currentPassword, setCurrentPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
@@ -46,7 +48,7 @@ const ChangePassword = () => {
 			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to change password."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 
@@ -76,7 +78,7 @@ const ChangePassword = () => {
 					/>
 				</InputContainer>
 
-				<Button>Change Password</Button>
+				<Button disabled={isLoadingPassword}>Change Password</Button>
 			</StyledPasswordForm>
 		</>
 	);

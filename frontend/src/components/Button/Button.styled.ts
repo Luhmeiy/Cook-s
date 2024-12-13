@@ -28,4 +28,13 @@ export const StyledButton = styled.button<{
 	&:active {
 		filter: brightness(115%);
 	}
+
+	&:disabled {
+		background-color: #c3c3c3;
+		cursor: not-allowed;
+
+		&:hover {
+			filter: none;
+		}
+	}
 `;

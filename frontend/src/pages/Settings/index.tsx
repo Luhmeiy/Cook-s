@@ -24,13 +24,15 @@ import {
 	selectCurrentUserId,
 } from "@/features/auth/authSlice";
 import { useDeleteUserMutation } from "@/features/users/usersApiSlice";
+import { ErrorType } from "@/interfaces/ErrorType";
 
 const Settings = () => {
 	const navigate = useNavigate();
 	const userId = useSelector(selectCurrentUserId);
 	const isLoading = useSelector(selectAuthLoading);
 
-	const [deleteUser, { isError }] = useDeleteUserMutation();
+	const [deleteUser, { error, isError, isLoading: isLoadingDeleteUser }] =
+		useDeleteUserMutation();
 
 	const [step, setStep] = useState(0);
 	const [password, setPassword] = useState("");
@@ -70,6 +72,7 @@ const Settings = () => {
 					open={openDelete}
 					setOpen={setOpenDelete}
 					deleteFunction={handleDeleteUser}
+					isLoadingDelete={isLoadingDeleteUser}
 				>
 					<PasswordInput
 						password={password}
@@ -91,7 +94,7 @@ const Settings = () => {
 			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to delete user."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 

@@ -10,6 +10,7 @@ import { CloseButton, StyledModalForm } from "@/styles/Modal.styled";
 // components / Redux
 import Button from "../Button";
 import FloatingMessage from "../FloatingMessage";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { usePostIngredientMutation } from "@/features/lists/listsApiSlice";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 
@@ -23,7 +24,8 @@ const NewIngredientForm = ({
 	listType: string;
 }) => {
 	const userId = useSelector(selectCurrentUserId);
-	const [postIngredient, { isError }] = usePostIngredientMutation();
+	const [postIngredient, { error, isError, isLoading }] =
+		usePostIngredientMutation();
 
 	const [ingredient, setIngredient] = useState("");
 	const [quantity, setQuantity] = useState(0);
@@ -52,7 +54,7 @@ const NewIngredientForm = ({
 			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to post ingredient."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 
@@ -97,7 +99,7 @@ const NewIngredientForm = ({
 						</InputContainer>
 					</div>
 
-					<Button>Save</Button>
+					<Button disabled={isLoading}>Save</Button>
 				</StyledModalForm>
 			</Modal>
 		</>

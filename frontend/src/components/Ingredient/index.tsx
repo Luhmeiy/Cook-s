@@ -16,6 +16,7 @@ import {
 import Button from "../Button";
 import ConfirmDeleteModal from "../ConfirmDeleteModal";
 import FloatingMessage from "../FloatingMessage";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { IngredientType } from "@/interfaces/IngredientType";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
@@ -42,10 +43,19 @@ const Ingredient = ({
 
 	const userId = useSelector(selectCurrentUserId);
 
-	const [deleteIngredient, { isError: isDeleteError }] =
-		useDeleteIngredientMutation();
-	const [updateIngredient, { isError: isUpdateError }] =
+	const [
+		deleteIngredient,
+		{
+			error: deleteError,
+			isError: isDeleteError,
+			isLoading: isLoadingDelete,
+		},
+	] = useDeleteIngredientMutation();
+	const [updateIngredient, { error: updateError, isError: isUpdateError }] =
 		useUpdateIngredientMutation();
+
+	const isError = isDeleteError || isUpdateError;
+	const error = deleteError || updateError;
 
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
@@ -85,16 +95,10 @@ const Ingredient = ({
 
 	return (
 		<>
-			{isDeleteError && (
+			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to delete ingredient."
-				/>
-			)}
-			{isUpdateError && (
-				<FloatingMessage
-					type="error"
-					message="Failed to update ingredient."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 
@@ -183,6 +187,7 @@ const Ingredient = ({
 							open={open}
 							setOpen={setOpen}
 							deleteFunction={handleDeleteIngredient}
+							isLoadingDelete={isLoadingDelete}
 						/>
 
 						{location.pathname === "/ingredients" && (

@@ -28,6 +28,7 @@ import FloatingMessage from "@/components/FloatingMessage";
 import RecipeTitle from "@/components/RecipeTitle";
 import Step from "@/components/Step";
 import UserButton from "@/components/UserButton";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { IngredientType } from "@/interfaces/IngredientType";
 import { selectCurrentUser } from "@/features/auth/authSlice";
 import {
@@ -38,32 +39,35 @@ import { usePostIngredientMutation } from "@/features/lists/listsApiSlice";
 
 const RecipePage = () => {
 	const { id } = useParams();
-	const user = useSelector(selectCurrentUser);
-
 	const navigate = useNavigate();
 
-	const [postIngredient, { isError: isPostError }] =
-		usePostIngredientMutation();
-	const [deleteRecipe, { isError: isDeleteError }] =
-		useDeleteRecipeMutation();
+	const user = useSelector(selectCurrentUser);
 
-	const { data, isLoading, error } = useGetRecipeByIdQuery(id!, {
+	const [
+		postIngredient,
+		{ error: postError, isError: isPostError, isLoading: isLoadingPost },
+	] = usePostIngredientMutation();
+	const [
+		deleteRecipe,
+		{
+			error: deleteError,
+			isError: isDeleteError,
+			isLoading: isLoadingDelete,
+		},
+	] = useDeleteRecipeMutation();
+
+	const isError = isPostError || isDeleteError;
+	const error = postError || deleteError;
+
+	const {
+		data,
+		error: recipeError,
+		isLoading,
+	} = useGetRecipeByIdQuery(id!, {
 		refetchOnMountOrArgChange: true,
 	});
 
 	const [open, setOpen] = useState(false);
-
-	if (isLoading) return <p>Loading...</p>;
-	if (error) {
-		return (
-			<StyledNotFound>
-				<h2>Recipe Not Found</h2>
-				<Button to="/">Go Back</Button>
-			</StyledNotFound>
-		);
-	}
-
-	const { recipe } = data!;
 
 	const verifyIngredientAvailability = (
 		ingredient: Omit<IngredientType, "_id">
@@ -97,18 +101,25 @@ const RecipePage = () => {
 		if (!error) navigate("/");
 	};
 
+	if (isLoading) return <p>Loading...</p>;
+
+	if (recipeError) {
+		return (
+			<StyledNotFound>
+				<h2>Recipe Not Found</h2>
+				<Button to="/">Go Back</Button>
+			</StyledNotFound>
+		);
+	}
+
+	const { recipe } = data!;
+
 	return (
 		<>
-			{isPostError && (
+			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to add ingredients."
-				/>
-			)}
-			{isDeleteError && (
-				<FloatingMessage
-					type="error"
-					message="Failed to delete recipe."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 
@@ -167,6 +178,7 @@ const RecipePage = () => {
 							<Button
 								$variant="gray"
 								onClick={handleAddIngredients}
+								disabled={isLoadingPost}
 							>
 								Add remaining ingredients to shopping list{" "}
 								<Plus />
@@ -210,6 +222,7 @@ const RecipePage = () => {
 							<Button
 								$variant="red"
 								onClick={() => setOpen(true)}
+								disabled={isLoadingDelete}
 							>
 								Delete Recipe <X weight="light" />
 							</Button>
@@ -219,6 +232,7 @@ const RecipePage = () => {
 								open={open}
 								setOpen={setOpen}
 								deleteFunction={handleDeleteRecipe}
+								isLoadingDelete={isLoadingDelete}
 							/>
 						</ButtonContainer>
 					)}

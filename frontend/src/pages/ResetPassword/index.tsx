@@ -5,13 +5,15 @@ import { StyledPasswordForm } from "@/styles/Password.styled";
 import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { useResetPasswordMutation } from "@/features/auth/authApiSlice";
 
 const ResetPassword = () => {
 	const { token } = useParams();
 
 	const navigate = useNavigate();
-	const [resetPassword, { isError }] = useResetPasswordMutation();
+	const [resetPassword, { error, isError, isLoading }] =
+		useResetPasswordMutation();
 
 	const [password, setPassword] = useState("");
 
@@ -28,7 +30,7 @@ const ResetPassword = () => {
 			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to reset password."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 
@@ -43,7 +45,7 @@ const ResetPassword = () => {
 					/>
 				</InputContainer>
 
-				<Button>Reset Password</Button>
+				<Button disabled={isLoading}>Reset Password</Button>
 			</StyledPasswordForm>
 		</>
 	);

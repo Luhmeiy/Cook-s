@@ -17,6 +17,7 @@ import { InputContainer, PublicContainer } from "@/styles/Form.styled";
 import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
+import { ErrorType } from "@/interfaces/ErrorType";
 import {
 	useRegisterMutation,
 	useVerifyEmailMutation,
@@ -30,8 +31,19 @@ type UserInfo = {
 const Register = () => {
 	const navigate = useNavigate();
 
-	const [register, { isError, isLoading }] = useRegisterMutation();
-	const [verifyEmail, { isError: isErrorEmail }] = useVerifyEmailMutation();
+	const [
+		register,
+		{
+			error: registerError,
+			isError: isRegisterError,
+			isLoading,
+			isUninitialized,
+		},
+	] = useRegisterMutation();
+	const [
+		verifyEmail,
+		{ error: emailError, isError: isEmailError, isLoading: isLoadingEmail },
+	] = useVerifyEmailMutation();
 
 	const [isGoogle, setIsGoogle] = useState(false);
 	const [username, setUsername] = useState("");
@@ -108,18 +120,18 @@ const Register = () => {
 		}
 	};
 
-	if (isLoading) return <p>Loading...</p>;
+	if (isUninitialized && isLoading) return <p>Loading...</p>;
+
+	const isError = isRegisterError || isEmailError;
+	const error = registerError || emailError;
 
 	return (
 		<>
-			{isErrorEmail && (
+			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Email is already in use."
+					message={(error as ErrorType).data.message}
 				/>
-			)}
-			{isError && (
-				<FloatingMessage type="error" message="User already exists." />
 			)}
 
 			<LayoutInfo>
@@ -179,7 +191,7 @@ const Register = () => {
 								/>
 							</InputContainer>
 
-							<Button>Continue</Button>
+							<Button disabled={isLoadingEmail}>Continue</Button>
 						</StyledForm>
 					</>
 				) : (
@@ -238,7 +250,7 @@ const Register = () => {
 								</div>
 							</PublicContainer>
 
-							<Button>Sign up</Button>
+							<Button disabled={isLoading}>Sign up</Button>
 						</StyledForm>
 					</>
 				)}

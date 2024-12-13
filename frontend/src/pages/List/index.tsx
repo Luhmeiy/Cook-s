@@ -22,6 +22,7 @@ import {
 	useDeleteIngredientMutation,
 	usePostIngredientMutation,
 } from "@/features/lists/listsApiSlice";
+import { ErrorType } from "@/interfaces/ErrorType";
 
 const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 	const sendToList = listType === "ingredient" ? "shopping" : "ingredient";
@@ -30,10 +31,14 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 	const user = useSelector(selectCurrentUser);
 	const isLoading = useSelector(selectAuthLoading);
 
-	const [postIngredient, { isError: isPostError, isSuccess }] =
-		usePostIngredientMutation();
-	const [deleteIngredient, { isError: isDeleteError }] =
+	const [
+		postIngredient,
+		{ isError: isPostError, isLoading: isLoadingIngredient, isSuccess },
+	] = usePostIngredientMutation();
+	const [deleteIngredient, { error, isError: isDeleteError }] =
 		useDeleteIngredientMutation();
+
+	const isError = isPostError || isDeleteError;
 
 	const [open, setOpen] = useState(false);
 
@@ -71,22 +76,19 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 
 	return (
 		<>
-			{isPostError && (
+			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to move ingredient to another list."
+					message={
+						(error as ErrorType).data.message ||
+						"Failed to move ingredient to another list."
+					}
 				/>
 			)}
 			{isSuccess && (
 				<FloatingMessage
 					type="success"
 					message={`Ingredient moved to ${sendToList} list.`}
-				/>
-			)}
-			{isDeleteError && (
-				<FloatingMessage
-					type="error"
-					message="Failed to delete ingredient."
 				/>
 			)}
 
@@ -125,7 +127,10 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 
 				{listType === "shopping" && (
 					<div>
-						<Button onClick={() => handleAddIngredients()}>
+						<Button
+							onClick={() => handleAddIngredients()}
+							disabled={isLoadingIngredient}
+						>
 							Add Bought Ingredients to Ingredients List{" "}
 							<Plus size={20} weight="light" />
 						</Button>

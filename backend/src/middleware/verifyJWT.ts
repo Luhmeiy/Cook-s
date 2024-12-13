@@ -18,8 +18,7 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
 
 	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, decoded) => {
 		if (err) {
-			res.status(403);
-			throw new Error("Forbidden.");
+			return res.status(403).json({ message: "Forbidden." });
 		}
 
 		(req as CustomRequest)._id = (decoded as DecodedUser)._id;

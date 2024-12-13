@@ -9,12 +9,14 @@ import { StyledEditUserForm } from "./EditUserForm.styled";
 // components / Redux
 import Button from "../Button";
 import FloatingMessage from "../FloatingMessage";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { selectCurrentUser } from "@/features/auth/authSlice";
-import { usePatchUserMutation } from "@/features/users/usersApiSlice";
+import { useUpdateUserMutation } from "@/features/users/usersApiSlice";
 
 const EditUserForm = () => {
 	const user = useSelector(selectCurrentUser);
-	const [patchUser, { isError, isSuccess }] = usePatchUserMutation();
+	const [updateUser, { data, error, isError, isLoading, isSuccess }] =
+		useUpdateUserMutation();
 
 	const [username, setUsername] = useState(user?.username);
 	const [description, setDescription] = useState(user?.description);
@@ -23,7 +25,7 @@ const EditUserForm = () => {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		await patchUser({
+		await updateUser({
 			id: user?._id,
 			data: {
 				data: { username, description, public: isPublic },
@@ -34,10 +36,13 @@ const EditUserForm = () => {
 	return (
 		<>
 			{isError && (
-				<FloatingMessage type="error" message="Failed to edit user." />
+				<FloatingMessage
+					type="error"
+					message={(error as ErrorType).data.message}
+				/>
 			)}
 			{isSuccess && (
-				<FloatingMessage type="success" message="User edited." />
+				<FloatingMessage type="success" message={data.message} />
 			)}
 
 			<StyledEditUserForm onSubmit={handleSubmit}>
@@ -90,7 +95,7 @@ const EditUserForm = () => {
 					</div>
 				</PublicContainer>
 
-				<Button>Save</Button>
+				<Button disabled={isLoading}>Save</Button>
 			</StyledEditUserForm>
 		</>
 	);

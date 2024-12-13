@@ -19,8 +19,8 @@ export const addToList = expressAsyncHandler(
 		const { id, list, listType } = req.body;
 
 		if (!id || !list.length || !listType) {
-			res.status(400);
-			throw new Error("All fields are required.");
+			res.status(400).json({ message: "All fields are required." });
+			return;
 		}
 
 		const user = await User.findById(id)
@@ -28,54 +28,58 @@ export const addToList = expressAsyncHandler(
 			.exec();
 
 		if (!user) {
-			res.status(400);
-			throw new Error("User not found.");
+			res.status(400).json({ message: "User not found." });
+			return;
 		}
 
-		list.forEach(async (ingredient) => {
-			const result = await Promise.all(
-				user[`${listType}List`].map(async (userIngredient) => {
-					const result =
-						userIngredient.ingredient.toLowerCase() ===
-							ingredient.ingredient.toLowerCase() &&
-						userIngredient.unit.toLowerCase() ===
-							ingredient.unit.toLowerCase();
+		try {
+			list.forEach(async (ingredient) => {
+				const result = await Promise.all(
+					user[`${listType}List`].map(async (userIngredient) => {
+						const result =
+							userIngredient.ingredient.toLowerCase() ===
+								ingredient.ingredient.toLowerCase() &&
+							userIngredient.unit.toLowerCase() ===
+								ingredient.unit.toLowerCase();
 
-					if (result) {
-						await User.updateOne(
-							{
-								_id: id,
-								[`${listType}List._id`]: userIngredient._id,
-							},
-							{
-								$set: {
-									[`${listType}List.$`]: {
-										...userIngredient.toObject(),
-										quantity:
-											userIngredient.quantity +
-											ingredient.quantity,
-									},
+						if (result) {
+							await User.updateOne(
+								{
+									_id: id,
+									[`${listType}List._id`]: userIngredient._id,
 								},
-							}
-						);
+								{
+									$set: {
+										[`${listType}List.$`]: {
+											...userIngredient.toObject(),
+											quantity:
+												userIngredient.quantity +
+												ingredient.quantity,
+										},
+									},
+								}
+							);
+						}
+
+						return result;
+					})
+				);
+
+				if (!result.includes(true)) {
+					if (!("bought" in ingredient) && listType === "shopping") {
+						ingredient.bought = false;
 					}
 
-					return result;
-				})
-			);
-
-			if (!result.includes(true)) {
-				if (!("bought" in ingredient) && listType === "shopping") {
-					ingredient.bought = false;
+					user[`${listType}List`].push(ingredient);
 				}
+			});
 
-				user[`${listType}List`].push(ingredient);
-			}
-		});
+			await user.save();
 
-		await user.save();
-
-		res.json({ message: `Ingredients added to list.` });
+			res.status(200).json({ message: "Ingredients added to list." });
+		} catch (error) {
+			res.status(400).json({ message: "Failed to add ingredients." });
+		}
 	}
 );
 
@@ -99,34 +103,42 @@ export const updateList = expressAsyncHandler(
 		const { updatedIngredient } = req.body;
 
 		if (!userId || !ingredient || !updatedIngredient) {
-			res.status(400);
-			throw new Error("All fields are required.");
+			res.status(400).json({ message: "All fields are required." });
+			return;
 		}
 
 		const user = await User.findById(userId);
 
 		if (!user) {
-			res.status(400);
-			throw new Error("User not found.");
+			res.status(400).json({ message: "User not found." });
+			return;
 		}
 
-		if (
-			user.ingredientList.some(({ _id }) => _id.toString() === ingredient)
-		) {
-			await User.updateOne(
-				{ _id: userId, "ingredientList._id": ingredient },
-				{ $set: { "ingredientList.$": updatedIngredient } }
-			);
-		} else if (
-			user.shoppingList.some(({ _id }) => _id.toString() === ingredient)
-		) {
-			await User.updateOne(
-				{ _id: userId, "shoppingList._id": ingredient },
-				{ $set: { "shoppingList.$": updatedIngredient } }
-			);
-		}
+		try {
+			if (
+				user.ingredientList.some(
+					({ _id }) => _id.toString() === ingredient
+				)
+			) {
+				await User.updateOne(
+					{ _id: userId, "ingredientList._id": ingredient },
+					{ $set: { "ingredientList.$": updatedIngredient } }
+				);
+			} else if (
+				user.shoppingList.some(
+					({ _id }) => _id.toString() === ingredient
+				)
+			) {
+				await User.updateOne(
+					{ _id: userId, "shoppingList._id": ingredient },
+					{ $set: { "shoppingList.$": updatedIngredient } }
+				);
+			}
 
-		res.json({ message: "List updated." });
+			res.status(200).json({ message: "Ingredient updated." });
+		} catch (error) {
+			res.status(400).json({ message: "Failed to update ingredient." });
+		}
 	}
 );
 
@@ -134,21 +146,20 @@ export const deleteFromList = expressAsyncHandler(async (req, res) => {
 	const { userId, ingredient } = req.params;
 
 	if (!userId || !ingredient) {
-		res.status(400);
-		throw new Error("All fields are required.");
+		res.status(400).json({ message: "All fields are required." });
+		return;
 	}
 
-	const user = await User.findByIdAndUpdate(userId, {
-		$pull: {
-			ingredientList: { _id: ingredient },
-			shoppingList: { _id: ingredient },
-		},
-	});
+	try {
+		await User.findByIdAndUpdate(userId, {
+			$pull: {
+				ingredientList: { _id: ingredient },
+				shoppingList: { _id: ingredient },
+			},
+		});
 
-	if (!user) {
-		res.status(400);
-		throw new Error("User not found.");
+		res.status(200).json({ message: `${ingredient} deleted.` });
+	} catch (error) {
+		res.status(400).json({ message: "Failed to delete ingredient." });
 	}
-
-	res.json({ message: `Ingredient ${ingredient} deleted.` });
 });

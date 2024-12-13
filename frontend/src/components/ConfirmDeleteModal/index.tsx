@@ -8,12 +8,14 @@ const ConfirmDeleteModal = ({
 	open,
 	setOpen,
 	deleteFunction,
+	isLoadingDelete,
 	children,
 }: {
 	title: string;
 	open: boolean;
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
 	deleteFunction: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+	isLoadingDelete: boolean;
 	children?: ReactNode;
 }) => {
 	return (
@@ -25,7 +27,9 @@ const ConfirmDeleteModal = ({
 
 				{children}
 
-				<Button $variant="red">Delete {title}</Button>
+				<Button $variant="red" disabled={isLoadingDelete}>
+					Delete {title}
+				</Button>
 			</StyledModalForm>
 		</Modal>
 	);

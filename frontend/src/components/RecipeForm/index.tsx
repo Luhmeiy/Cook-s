@@ -31,9 +31,11 @@ const defaultIngredient = {
 
 const RecipeForm = ({
 	submitRecipe,
+	isLoadingSubmit,
 	recipe,
 }: {
 	submitRecipe: PostRecipeType;
+	isLoadingSubmit: boolean;
 	recipe?: Recipe;
 }) => {
 	const navigate = useNavigate();
@@ -285,7 +287,7 @@ const RecipeForm = ({
 			</div>
 
 			<div>
-				<Button>Save Recipe</Button>
+				<Button disabled={isLoadingSubmit}>Save Recipe</Button>
 			</div>
 		</StyledRecipeForm>
 	);

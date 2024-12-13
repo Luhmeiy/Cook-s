@@ -8,7 +8,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 			keepUnusedDataFor: 0,
 			providesTags: ["UserById"],
 		}),
-		patchUser: builder.mutation({
+		updateUser: builder.mutation({
 			query: ({ id, data }) => ({
 				url: `/user/${id}`,
 				method: "PATCH",
@@ -36,6 +36,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 
 export const {
 	useGetUserByIdQuery,
-	usePatchUserMutation,
+	useUpdateUserMutation,
 	useDeleteUserMutation,
 } = usersApiSlice;

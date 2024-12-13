@@ -4,12 +4,13 @@ import { Link } from "react-router-dom";
 import { FilePlus, Star } from "@phosphor-icons/react";
 import { StyledRecipeTitle } from "./RecipeTitle.styled";
 import FloatingMessage from "../FloatingMessage";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { Recipe } from "@/interfaces/Recipe";
-import {
-	usePatchRecipeMutation,
-	usePostRecipeMutation,
-} from "@/features/recipes/recipesApiSlice";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
+import {
+	usePostRecipeMutation,
+	useUpdateRecipeMutation,
+} from "@/features/recipes/recipesApiSlice";
 
 const RecipeTitle = ({
 	recipe,
@@ -22,8 +23,12 @@ const RecipeTitle = ({
 
 	const [favorite, setFavorite] = useState(recipe.favorite || false);
 
-	const [updateRecipe, { isError: isUpdateError }] = usePatchRecipeMutation();
-	const [postRecipe, { isError: isPostError }] = usePostRecipeMutation();
+	const [updateRecipe, { isError: isUpdateError }] =
+		useUpdateRecipeMutation();
+	const [postRecipe, { error: postError, isError: isPostError }] =
+		usePostRecipeMutation();
+
+	const isError = isUpdateError || isPostError;
 
 	const handleFavorite = async () => {
 		setFavorite(!favorite);
@@ -44,16 +49,13 @@ const RecipeTitle = ({
 
 	return (
 		<>
-			{isUpdateError && (
+			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Failed to add recipe to favorites."
-				/>
-			)}
-			{isPostError && (
-				<FloatingMessage
-					type="error"
-					message="Failed to save recipe."
+					message={
+						(postError as ErrorType).data.message ||
+						"Failed to add recipe to favorites."
+					}
 				/>
 			)}
 

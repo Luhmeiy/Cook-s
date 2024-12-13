@@ -17,12 +17,14 @@ import { InputContainer } from "@/styles/Form.styled";
 import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { useLoginMutation } from "@/features/auth/authApiSlice";
 
 const Login = () => {
 	const navigate = useNavigate();
 
-	const [login, { isError, isLoading }] = useLoginMutation();
+	const [login, { error, isError, isLoading, isUninitialized }] =
+		useLoginMutation();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -73,14 +75,14 @@ const Login = () => {
 		}
 	};
 
-	if (isLoading) return <p>Loading...</p>;
+	if (isUninitialized && isLoading) return <p>Loading...</p>;
 
 	return (
 		<>
 			{isError && (
 				<FloatingMessage
 					type="error"
-					message="Email or password is wrong."
+					message={(error as ErrorType).data.message}
 				/>
 			)}
 
@@ -133,7 +135,7 @@ const Login = () => {
 						Forgot Password?
 					</StyledLink>
 
-					<Button>Log in</Button>
+					<Button disabled={isLoading}>Log in</Button>
 				</StyledForm>
 
 				<p>

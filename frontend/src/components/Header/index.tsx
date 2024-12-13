@@ -22,7 +22,7 @@ const Header = () => {
 	const navigate = useNavigate();
 
 	const user = useSelector(selectCurrentUser);
-	const [logout, { isLoading }] = useSendLogoutMutation();
+	const [logout, { isLoading, isUninitialized }] = useSendLogoutMutation();
 
 	const [search, setSearch] = useState("");
 
@@ -46,7 +46,7 @@ const Header = () => {
 		await logout(null);
 	};
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isUninitialized && isLoading) return <div>Loading...</div>;
 
 	return (
 		<StyledHeader>

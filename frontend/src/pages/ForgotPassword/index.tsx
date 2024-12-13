@@ -3,10 +3,11 @@ import { InputContainer } from "@/styles/Form.styled";
 import { StyledPasswordForm } from "@/styles/Password.styled";
 import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
+import { ErrorType } from "@/interfaces/ErrorType";
 import { useForgotPasswordMutation } from "@/features/auth/authApiSlice";
 
 const ForgotPassword = () => {
-	const [forgotPassword, { isError, isSuccess }] =
+	const [forgotPassword, { data, error, isError, isLoading, isSuccess }] =
 		useForgotPasswordMutation();
 
 	const [email, setEmail] = useState("");
@@ -20,10 +21,13 @@ const ForgotPassword = () => {
 	return (
 		<>
 			{isError && (
-				<FloatingMessage type="error" message="Failed to send email." />
+				<FloatingMessage
+					type="error"
+					message={(error as ErrorType).data.message}
+				/>
 			)}
 			{isSuccess && (
-				<FloatingMessage type="success" message="Email sent." />
+				<FloatingMessage type="success" message={data.message} />
 			)}
 
 			<StyledPasswordForm onSubmit={handleSubmit}>
@@ -39,7 +43,7 @@ const ForgotPassword = () => {
 					/>
 				</InputContainer>
 
-				<Button>Send Email</Button>
+				<Button disabled={isLoading}>Send Email</Button>
 			</StyledPasswordForm>
 		</>
 	);
