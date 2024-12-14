@@ -22,6 +22,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
 				body: { ...credentials },
 			}),
 		}),
+		confirmEmail: builder.mutation({
+			query: (credentials) => ({
+				url: "/auth/confirm-email",
+				method: "POST",
+				body: { ...credentials },
+			}),
+		}),
 		verifyEmail: builder.mutation({
 			query: (credentials) => ({
 				url: "/auth/verify-email",
@@ -81,6 +88,7 @@ export const {
 	useRefreshQuery,
 	useLoginMutation,
 	useRegisterMutation,
+	useConfirmEmailMutation,
 	useVerifyEmailMutation,
 	useChangePasswordMutation,
 	useForgotPasswordMutation,

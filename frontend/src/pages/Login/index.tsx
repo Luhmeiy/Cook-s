@@ -1,6 +1,6 @@
 // packages
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { GoogleLogo } from "@phosphor-icons/react";
 import { useGoogleLogin } from "@react-oauth/google";
 
@@ -22,6 +22,10 @@ import { useLoginMutation } from "@/features/auth/authApiSlice";
 
 const Login = () => {
 	const navigate = useNavigate();
+
+	const [searchParams] = useSearchParams();
+	const isConfirmed = searchParams.get("isConfirmed");
+	const confirmEmail = searchParams.get("confirmEmail");
 
 	const [login, { error, isError, isLoading, isUninitialized }] =
 		useLoginMutation();
@@ -83,6 +87,18 @@ const Login = () => {
 				<FloatingMessage
 					type="error"
 					message={(error as ErrorType).data.message}
+				/>
+			)}
+			{isConfirmed === "true" && (
+				<FloatingMessage
+					type="success"
+					message="Email successfully confirmed."
+				/>
+			)}
+			{confirmEmail === "true" && (
+				<FloatingMessage
+					type="success"
+					message="A confirmation link was sent to your email."
 				/>
 			)}
 

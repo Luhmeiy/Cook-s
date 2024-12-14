@@ -7,7 +7,7 @@ import { Request, Response } from "express";
 import User from "@/models/User";
 import { DecodedUser } from "@/types/DecodedUser";
 
-type DecodedPasswordJwt = {
+type DecodedJwt = {
 	_id: string;
 	purpose: string;
 };
@@ -90,6 +90,7 @@ export const register = expressAsyncHandler(async (req, res) => {
 		password: hashedPassword,
 		description,
 		public: isPublic,
+		confirmed: false,
 		ingredientList: [],
 		shoppingList: [],
 	};
@@ -97,11 +98,73 @@ export const register = expressAsyncHandler(async (req, res) => {
 	try {
 		const user = await User.create(userObject);
 
+		const transporter = nodemailer.createTransport({
+			service: "gmail",
+			host: "smtp.gmail.com",
+			port: 465,
+			secure: true,
+			auth: {
+				user: process.env.EMAIL,
+				pass: process.env.EMAIL_PASSWORD,
+			},
+		});
+
+		jwt.sign(
+			{ _id: user._id, purpose: "confirm-email" },
+			process.env.ACCESS_TOKEN_SECRET!,
+			{ expiresIn: "1h" },
+			(err, confirmToken) => {
+				const resetLink = `${process.env.CLIENT_URL}/auth/confirm-email/${confirmToken}`;
+
+				transporter.sendMail({
+					from: process.env.EMAIL,
+					to: email,
+					subject: "Confirm your email",
+					text: `Click the link to confirm your email: ${resetLink}`,
+				});
+			}
+		);
+
 		res.status(201).json({
 			message: `New user ${user.username} created.`,
 		});
 	} catch (error) {
 		res.status(400).json({ message: "Failed to register." });
+	}
+});
+
+export const confirmEmail = expressAsyncHandler(async (req, res) => {
+	const { token } = req.body;
+
+	try {
+		const decoded = jwt.verify(
+			token,
+			process.env.ACCESS_TOKEN_SECRET!
+		) as DecodedJwt;
+
+		if (decoded.purpose !== "confirm-email") {
+			res.status(400).json({ message: "Invalid token purpose." });
+			return;
+		}
+
+		const user = await User.findById(decoded._id);
+
+		if (!user) {
+			res.status(404).json({ message: "User not found." });
+			return;
+		}
+
+		user.confirmed = true;
+		await user.save();
+
+		res.status(200).json({ message: "Email successfully confirmed." });
+	} catch (error) {
+		if ((error as { name: string }).name === "TokenExpiredError") {
+			res.status(400).json({ message: "Token expired." });
+			return;
+		}
+
+		res.status(500).json({ message: "Failed to confirm your email." });
 	}
 });
 
@@ -218,7 +281,7 @@ export const resetPassword = expressAsyncHandler(async (req, res) => {
 		const decoded = jwt.verify(
 			token,
 			process.env.ACCESS_TOKEN_SECRET!
-		) as DecodedPasswordJwt;
+		) as DecodedJwt;
 
 		if (decoded.purpose !== "password-reset") {
 			res.status(400).json({ message: "Invalid token purpose." });
@@ -235,7 +298,7 @@ export const resetPassword = expressAsyncHandler(async (req, res) => {
 		user.password = await bcrypt.hash(password, 10);
 		await user.save();
 
-		res.status(200).json({ message: "Password successfully reset" });
+		res.status(200).json({ message: "Password successfully reset." });
 	} catch (error) {
 		if ((error as { name: string }).name === "TokenExpiredError") {
 			res.status(400).json({ message: "Token expired." });

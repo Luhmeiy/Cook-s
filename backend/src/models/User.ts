@@ -21,6 +21,10 @@ const userSchema = new Schema({
 		type: Boolean,
 		required: true,
 	},
+	confirmed: {
+		type: Boolean,
+		required: true,
+	},
 	ingredientList: [
 		{
 			ingredient: {

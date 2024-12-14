@@ -19,6 +19,7 @@ import EditRecipe from "./pages/EditRecipe";
 import RecipePage from "./pages/Recipe";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ConfirmEmail from "./pages/ConfirmEmail";
 import ChangePassword from "./pages/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -64,6 +65,7 @@ function App() {
 				<Route index element={<NotFound />} />
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
+				<Route path="confirm-email/:token" element={<ConfirmEmail />} />
 				<Route path="change-password" element={<ChangePassword />} />
 				<Route path="forgot-password" element={<ForgotPassword />} />
 				<Route

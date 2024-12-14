@@ -116,7 +116,7 @@ const Register = () => {
 			setDescription("");
 			setIsPublic(false);
 
-			navigate("/auth/login");
+			navigate("/auth/login?confirmEmail=true");
 		}
 	};
 
