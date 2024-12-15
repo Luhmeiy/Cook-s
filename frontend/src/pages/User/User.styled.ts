@@ -12,4 +12,8 @@ export const StyledUser = styled.div`
 
 export const UserInfo = styled.div`
 	${flexContainer({ $justify: "space-between" })}
+
+	& svg {
+		cursor: pointer;
+	}
 `;

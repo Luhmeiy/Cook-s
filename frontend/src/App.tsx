@@ -37,7 +37,8 @@ function App() {
 		<Routes>
 			<Route path="/" element={<Layout />}>
 				<Route index element={user ? <UserRecipes /> : <Home />} />
-				<Route path="*" element={<NotFound />} />
+				<Route path="*" element={<Navigate to="/404" />} />
+				<Route path="404" element={<NotFound />} />
 				<Route path="search/:search" element={<Search />} />
 				<Route path="user/:id" element={<User />} />
 				<Route path="settings" element={<Settings />} />
