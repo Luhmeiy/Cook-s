@@ -17,7 +17,7 @@ import Button from "../Button";
 import ConfirmDeleteModal from "../ConfirmDeleteModal";
 import FloatingMessage from "../FloatingMessage";
 import { ErrorType } from "@/interfaces/ErrorType";
-import { IngredientType } from "@/interfaces/IngredientType";
+import { IngredientTypeWithId } from "@/interfaces/IngredientType";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 import {
 	useDeleteIngredientMutation,
@@ -32,7 +32,7 @@ interface IngredientProps {
 		unit: string;
 		bought?: boolean;
 	};
-	handleAddIngredients: (ingredient?: IngredientType) => Promise<void>;
+	handleAddIngredients: (ingredient?: IngredientTypeWithId) => Promise<void>;
 }
 
 const Ingredient = ({

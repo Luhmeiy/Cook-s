@@ -13,7 +13,9 @@ import Button from "@/components/Button";
 import FloatingMessage from "@/components/FloatingMessage";
 import Ingredient from "@/components/Ingredient";
 import NewIngredientForm from "@/components/NewIngredientForm";
-import { IngredientType } from "@/interfaces/IngredientType";
+import SortMenu from "@/components/SortMenu";
+import { ErrorType } from "@/interfaces/ErrorType";
+import { IngredientTypeWithId } from "@/interfaces/IngredientType";
 import {
 	selectAuthLoading,
 	selectCurrentUser,
@@ -22,7 +24,6 @@ import {
 	useDeleteIngredientMutation,
 	usePostIngredientMutation,
 } from "@/features/lists/listsApiSlice";
-import { ErrorType } from "@/interfaces/ErrorType";
 
 const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 	const sendToList = listType === "ingredient" ? "shopping" : "ingredient";
@@ -41,8 +42,11 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 	const isError = isPostError || isDeleteError;
 
 	const [open, setOpen] = useState(false);
+	const [ingredients, setIngredients] = useState<IngredientTypeWithId[]>();
+	const [sortedIngredients, setSortedIngredients] =
+		useState<IngredientTypeWithId[]>();
 
-	const handleAddIngredients = async (ingredient?: IngredientType) => {
+	const handleAddIngredients = async (ingredient?: IngredientTypeWithId) => {
 		let list;
 
 		if (ingredient) {
@@ -72,7 +76,11 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 		if (!isLoading && !user) {
 			navigate("/");
 		}
-	}, [isLoading, user, navigate]);
+
+		if (!isLoading && user) {
+			setIngredients(user[`${listType}List`]);
+		}
+	}, [isLoading, listType, navigate, user]);
 
 	return (
 		<>
@@ -100,9 +108,17 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 							: "Shopping List"}
 					</h2>
 
-					<Button onClick={() => setOpen(true)}>
-						Add New Ingredient <Plus size={20} weight="light" />
-					</Button>
+					<div>
+						<SortMenu
+							properties={["ingredient"]}
+							list={ingredients!}
+							setList={setSortedIngredients}
+						/>
+
+						<Button onClick={() => setOpen(true)}>
+							Add New Ingredient <Plus size={20} weight="light" />
+						</Button>
+					</div>
 
 					<NewIngredientForm
 						open={open}
@@ -112,8 +128,8 @@ const List = ({ listType }: { listType: "ingredient" | "shopping" }) => {
 				</RecipeContainerTitle>
 
 				<IngredientsContainer>
-					{user && user[`${listType}List`].length ? (
-						user[`${listType}List`].map((ingredient) => (
+					{sortedIngredients?.length ? (
+						sortedIngredients.map((ingredient) => (
 							<Ingredient
 								ingredientProps={ingredient}
 								handleAddIngredients={handleAddIngredients}
