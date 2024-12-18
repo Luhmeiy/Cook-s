@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { Popover } from "@mui/material";
 import { flexContainer } from "@/GlobalStyles";
 
 export const StyledHeader = styled.header`
@@ -48,23 +47,5 @@ export const UserArea = styled(Link)`
 
 	& p {
 		font-weight: 600;
-	}
-`;
-
-export const HeaderPopover = styled(Popover)`
-	& div {
-		${flexContainer({ $column: true, $gap: 0.5 })}
-		border-radius: 0;
-		margin-top: 0.25rem;
-		padding: 1rem;
-
-		& button {
-			${flexContainer({ $align: "center", $gap: 0.5 })}
-			padding: 0;
-
-			&:hover {
-				color: var(--primary);
-			}
-		}
 	}
 `;

@@ -1,23 +1,42 @@
-import { ReactNode } from "react";
-import { StyledRecipes } from "@/styles/Recipes.styled";
+import { ReactNode, useState } from "react";
+import { RecipeContainerTitle, StyledRecipes } from "@/styles/Recipes.styled";
 import { StyledRecipesContainer } from "./RecipesContainer.styled";
-import { Recipe } from "@/interfaces/Recipe";
 import RecipeItem from "../RecipeItem";
+import SortMenu from "../SortMenu";
+import { Recipe } from "@/interfaces/Recipe";
+
+const properties = ["name", "prepTime", "servings"];
 
 const RecipesContainer = ({
 	recipes,
 	children,
+	button,
 }: {
 	recipes: Recipe[];
 	children: ReactNode;
+	button?: ReactNode;
 }) => {
+	const [sortedRecipes, setSortedRecipes] = useState<Recipe[]>();
+
 	return (
 		<StyledRecipes>
-			{children}
+			<RecipeContainerTitle>
+				{children}
+
+				<div>
+					<SortMenu
+						properties={properties}
+						list={recipes}
+						setList={setSortedRecipes}
+					/>
+
+					{button}
+				</div>
+			</RecipeContainerTitle>
 
 			<StyledRecipesContainer>
-				{recipes?.length ? (
-					recipes.map((recipe) => (
+				{sortedRecipes?.length ? (
+					sortedRecipes.map((recipe) => (
 						<RecipeItem recipe={recipe} key={recipe._id} />
 					))
 				) : (

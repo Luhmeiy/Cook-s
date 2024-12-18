@@ -8,4 +8,8 @@ export const StyledRecipes = styled.div`
 
 export const RecipeContainerTitle = styled.div`
 	${flexContainer({ $align: "center", $justify: "space-between" })}
+
+	& > div {
+		${flexContainer({ $align: "center", $gap: 1 })}
+	}
 `;

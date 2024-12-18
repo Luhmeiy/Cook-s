@@ -2,9 +2,6 @@
 import { useSelector } from "react-redux";
 import { Plus } from "@phosphor-icons/react";
 
-// styles
-import { RecipeContainerTitle } from "@/styles/Recipes.styled";
-
 // components / Redux
 import Button from "@/components/Button";
 import RecipesContainer from "@/components/RecipesContainer";
@@ -19,15 +16,15 @@ const UserRecipes = () => {
 
 	const recipes = data?.recipes || [];
 
-	return (
-		<RecipesContainer recipes={recipes}>
-			<RecipeContainerTitle>
-				<h2>Recipes</h2>
+	const button = (
+		<Button to="/new-recipe">
+			Add New Recipe <Plus size={20} weight="light" />
+		</Button>
+	);
 
-				<Button to="/new-recipe">
-					Add New Recipe <Plus size={20} weight="light" />
-				</Button>
-			</RecipeContainerTitle>
+	return (
+		<RecipesContainer recipes={recipes} button={button}>
+			<h2>Recipes</h2>
 		</RecipesContainer>
 	);
 };

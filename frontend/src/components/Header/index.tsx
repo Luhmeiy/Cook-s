@@ -5,8 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { MagnifyingGlass, SignOut, UserCircle } from "@phosphor-icons/react";
 
 // styles
+import { StyledPopover } from "@/styles/Popover.styled";
 import {
-	HeaderPopover,
 	SearchBar,
 	SearchBarContainer,
 	StyledHeader,
@@ -83,7 +83,7 @@ const Header = () => {
 							My Lists
 						</UserButton>
 
-						<HeaderPopover
+						<StyledPopover
 							id={listId}
 							open={openList}
 							anchorEl={listEl}
@@ -110,7 +110,7 @@ const Header = () => {
 							>
 								Shopping List
 							</Link>
-						</HeaderPopover>
+						</StyledPopover>
 
 						<UserButton
 							aria-describedby={userId}
@@ -120,7 +120,7 @@ const Header = () => {
 							{user.username}
 						</UserButton>
 
-						<HeaderPopover
+						<StyledPopover
 							id={userId}
 							open={openUser}
 							anchorEl={userEl}
@@ -151,7 +151,7 @@ const Header = () => {
 							<button onClick={handleLogout}>
 								<SignOut size={20} weight="light" /> Logout
 							</button>
-						</HeaderPopover>
+						</StyledPopover>
 					</>
 				) : (
 					<UserArea to="/auth/login">

@@ -5,3 +5,7 @@ export type IngredientType = {
 	unit: string;
 	bought?: boolean;
 };
+
+export type IngredientTypeWithId = Omit<IngredientType, "_id"> & {
+	_id: string;
+};
