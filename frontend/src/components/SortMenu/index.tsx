@@ -1,14 +1,14 @@
 import { orderBy } from "lodash";
 import { Dispatch, useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { CaretDown, CaretUp } from "@phosphor-icons/react";
 import { StyledPopover } from "@/styles/Popover.styled";
+import { StyledProperty } from "./SortMenu.styled";
 import Button from "../Button";
 import { IngredientTypeWithId } from "@/interfaces/IngredientType";
 import { Recipe } from "@/interfaces/Recipe";
 
 type Direction = "asc" | "desc";
-
 const directions: Direction[] = ["asc", "desc"];
 
 const SortMenu = <T extends Recipe | IngredientTypeWithId>({
@@ -20,7 +20,7 @@ const SortMenu = <T extends Recipe | IngredientTypeWithId>({
 	list: T[];
 	setList: Dispatch<React.SetStateAction<T[] | undefined>>;
 }) => {
-	const [searchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	const property = searchParams.get("property") as string;
 	const order = searchParams.get("order") as Direction;
@@ -29,7 +29,23 @@ const SortMenu = <T extends Recipe | IngredientTypeWithId>({
 	const openList = Boolean(listEl);
 	const listId = openList ? "simple-popover" : undefined;
 
-	const location = window.location.href.split("?")[0];
+	const handleSortChange = (
+		property: string | undefined,
+		order: string | undefined
+	) => {
+		const currentParams = Object.fromEntries(searchParams.entries());
+
+		if (property !== undefined && order !== undefined) {
+			currentParams["property"] = property;
+			currentParams["order"] = order;
+		} else {
+			delete currentParams["property"];
+			delete currentParams["order"];
+		}
+
+		setSearchParams(currentParams);
+		setListEl(null);
+	};
 
 	const formatProperty = (property: string, order: Direction) => {
 		const capitalizedProperty =
@@ -73,15 +89,24 @@ const SortMenu = <T extends Recipe | IngredientTypeWithId>({
 					horizontal: "left",
 				}}
 			>
+				<StyledProperty
+					onClick={() => handleSortChange(undefined, undefined)}
+				>
+					Remove filters
+				</StyledProperty>
+
+				<hr />
+
 				{properties.map((property) =>
 					directions.map((direction) => (
-						<Link
-							to={`${location}?property=${property}&order=${direction}`}
-							onClick={() => setListEl(null)}
+						<StyledProperty
+							onClick={() =>
+								handleSortChange(property, direction)
+							}
 							key={property + direction}
 						>
 							{formatProperty(property, direction)}
-						</Link>
+						</StyledProperty>
 					))
 				)}
 			</StyledPopover>
