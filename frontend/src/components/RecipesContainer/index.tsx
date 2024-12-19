@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import { RecipeContainerTitle, StyledRecipes } from "@/styles/Recipes.styled";
 import { StyledRecipesContainer } from "./RecipesContainer.styled";
 import RecipeItem from "../RecipeItem";
+import FilterMenu from "../FilterMenu";
 import SortMenu from "../SortMenu";
 import { Recipe } from "@/interfaces/Recipe";
 
@@ -16,6 +17,7 @@ const RecipesContainer = ({
 	children: ReactNode;
 	button?: ReactNode;
 }) => {
+	const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>();
 	const [sortedRecipes, setSortedRecipes] = useState<Recipe[]>();
 
 	return (
@@ -24,9 +26,11 @@ const RecipesContainer = ({
 				{children}
 
 				<div>
+					<FilterMenu list={recipes} setList={setFilteredRecipes} />
+
 					<SortMenu
 						properties={properties}
-						list={recipes}
+						list={filteredRecipes!}
 						setList={setSortedRecipes}
 					/>
 
