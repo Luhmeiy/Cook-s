@@ -22,20 +22,27 @@ const Search = () => {
 
 	if (isLoadingCommunityData || isLoadingUserData) return <p>Loading...</p>;
 
-	const filterRecipes = (data: { recipes: Recipe[] } | undefined) => {
+	const filterRecipes = (
+		data: { recipes: Recipe[] } | undefined,
+		community?: boolean
+	) => {
 		return (
-			data?.recipes.filter(
-				({ name, category, ingredients }) =>
-					name.toLowerCase().includes(loweredSearch) ||
-					category.toLowerCase().includes(loweredSearch) ||
-					ingredients.some(({ ingredient }) =>
+			data?.recipes.filter((recipe) => {
+				if (
+					recipe.name.toLowerCase().includes(loweredSearch) ||
+					recipe.category.toLowerCase().includes(loweredSearch) ||
+					recipe.ingredients.some(({ ingredient }) =>
 						ingredient.toLowerCase().includes(loweredSearch)
 					)
-			) || []
+				) {
+					if (community && recipe.userId === userId) return;
+					return recipe;
+				}
+			}) || []
 		);
 	};
 
-	const communityRecipes = filterRecipes(communityData);
+	const communityRecipes = filterRecipes(communityData, true);
 	const userRecipes = filterRecipes(userData);
 
 	return (
@@ -46,9 +53,11 @@ const Search = () => {
 				<h3>Community Recipes</h3>
 			</RecipesContainer>
 
-			<RecipesContainer recipes={userRecipes}>
-				<h3>Your Recipes</h3>
-			</RecipesContainer>
+			{userId && (
+				<RecipesContainer recipes={userRecipes}>
+					<h3>Your Recipes</h3>
+				</RecipesContainer>
+			)}
 		</StyledSearch>
 	);
 };
