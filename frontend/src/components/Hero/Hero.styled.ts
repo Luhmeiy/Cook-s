@@ -1,9 +1,14 @@
 import styled from "styled-components";
-import { flexContainer } from "@/GlobalStyles";
+import { flexContainer, media } from "@/GlobalStyles";
 
 export const StyledHero = styled.div`
 	${flexContainer({ $flex: 1, $gap: 2 })}
 	height: 100%;
+
+	${media.sm`
+		align-items: center;		
+		flex-direction: column-reverse;
+	`}
 `;
 
 export const CallToAction = styled.div`
@@ -14,6 +19,11 @@ export const CallToAction = styled.div`
 		$gap: 1.5,
 		$justify: "center",
 	})}
+
+	${media.sm`
+		align-items: center;
+		gap: 1rem;
+	`}
 
 	& > div {
 		& p {

@@ -7,7 +7,7 @@ export const StyledHeader = styled.header`
 	padding-block: 1.25rem;
 
 	& > div {
-		${flexContainer({ $align: "center", $flex: 1, $gap: 1.5 })}
+		${flexContainer({ $align: "center", $flex: 1, $gap: 1 })}
 
 		& a {
 			font-weight: 600;

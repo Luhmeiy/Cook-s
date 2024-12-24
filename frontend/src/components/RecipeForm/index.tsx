@@ -116,51 +116,55 @@ const RecipeForm = ({
 				<h2>Recipe Information</h2>
 
 				<InformationContainer>
-					<InputContainer>
-						Title
-						<input
-							type="text"
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-							placeholder="Ex.: Apple Pie"
-							required
-						/>
-					</InputContainer>
+					<div>
+						<InputContainer>
+							Title
+							<input
+								type="text"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								placeholder="Ex.: Apple Pie"
+								required
+							/>
+						</InputContainer>
 
-					<InputContainer>
-						Preparation Time
-						<input
-							type="text"
-							value={prepTime}
-							onChange={(e) => setPrepTime(e.target.value)}
-							placeholder="Ex.: 2 hours"
-							required
-						/>
-					</InputContainer>
+						<InputContainer>
+							Preparation Time
+							<input
+								type="text"
+								value={prepTime}
+								onChange={(e) => setPrepTime(e.target.value)}
+								placeholder="Ex.: 2 hours"
+								required
+							/>
+						</InputContainer>
+					</div>
 
-					<InputContainer>
-						<div>
-							Servings <span>(Optional)</span>
-						</div>
-						<input
-							type="number"
-							min={1}
-							value={servings}
-							onChange={(e) => setServings(+e.target.value)}
-						/>
-					</InputContainer>
+					<div>
+						<InputContainer>
+							<div>
+								Servings <span>(Optional)</span>
+							</div>
+							<input
+								type="number"
+								min={1}
+								value={servings}
+								onChange={(e) => setServings(+e.target.value)}
+							/>
+						</InputContainer>
 
-					<InputContainer>
-						<div>
-							Category <span>(Optional)</span>
-						</div>
-						<input
-							type="text"
-							value={category}
-							onChange={(e) => setCategory(e.target.value)}
-							placeholder="Ex.: Dessert"
-						/>
-					</InputContainer>
+						<InputContainer>
+							<div>
+								Category <span>(Optional)</span>
+							</div>
+							<input
+								type="text"
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								placeholder="Ex.: Dessert"
+							/>
+						</InputContainer>
+					</div>
 				</InformationContainer>
 
 				<InformationContainer>

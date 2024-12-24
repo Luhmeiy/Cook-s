@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flexContainer } from "@/GlobalStyles";
+import { flexContainer, media } from "@/GlobalStyles";
 
 export const StyledRecipeForm = styled.form`
 	${flexContainer({ $column: true, $gap: 1.5 })}
@@ -10,6 +10,10 @@ export const StyledRecipeForm = styled.form`
 		&:nth-of-type(2) {
 			gap: 0.25rem;
 		}
+
+		&:nth-of-type(4) {
+			align-items: center;
+		}
 	}
 
 	& h2 {
@@ -19,6 +23,14 @@ export const StyledRecipeForm = styled.form`
 
 export const InformationContainer = styled.div`
 	${flexContainer({ $gap: 0.75 })}
+
+	${media.md`
+		flex-direction: column;	
+	`}
+
+	& > div {
+		${flexContainer({ $gap: 0.75 })}
+	}
 `;
 
 export const PublicContainer = styled.div`

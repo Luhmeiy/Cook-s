@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flexContainer } from "@/GlobalStyles";
+import { flexContainer, media } from "@/GlobalStyles";
 
 export const PasswordTitle = styled.div`
 	${flexContainer({
@@ -7,6 +7,12 @@ export const PasswordTitle = styled.div`
 		$column: true,
 	})}
 	margin-bottom: 1rem;
+
+	${media.xs`
+		& h2 {
+			line-height: 2.5rem;
+		}
+	`}
 
 	& p {
 		max-width: 20rem;

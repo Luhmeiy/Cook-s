@@ -8,6 +8,34 @@ interface FlexContainerProps {
 	$justify?: "space-between" | "center";
 }
 
+type MediaFunction = {
+	[Key in Breakpoints]: (
+		styles: TemplateStringsArray
+	) => ReturnType<typeof css>;
+};
+
+const breakpoints = {
+	xs: "480px",
+	sm: "576px",
+	md: "768px",
+	xl: "1200px",
+};
+
+type Breakpoints = keyof typeof breakpoints;
+
+export const media: MediaFunction = Object.keys(breakpoints).reduce(
+	(acc, label) => {
+		const key = label as Breakpoints;
+		acc[key] = (styles) => css`
+			@media (max-width: ${breakpoints[key]}) {
+				${styles}
+			}
+		`;
+		return acc;
+	},
+	{} as MediaFunction
+);
+
 export const flexContainer = ({
 	$align,
 	$column,
@@ -47,9 +75,9 @@ const GlobalStyles = createGlobalStyle`
         min-height: 100dvh;
         margin: 0 7.5rem;
 
-        @media (max-width: 1100px) {
-		    margin: 0 .75rem;
-	    }
+        ${media.xl`
+            margin: 0 .75rem;
+        `}
 
         & a {
             color: inherit;

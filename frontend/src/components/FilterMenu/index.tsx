@@ -88,14 +88,15 @@ const FilterMenu = ({
 	return (
 		<>
 			<Button
+				$variant="transparent"
 				aria-describedby={listId}
 				onClick={(e) => setListEl(e.currentTarget)}
 			>
 				Filter
 				{openList ? (
-					<CaretUp size={18} weight="fill" />
+					<CaretUp size={16} weight="fill" />
 				) : (
-					<CaretDown size={18} weight="fill" />
+					<CaretDown size={16} weight="fill" />
 				)}
 			</Button>
 

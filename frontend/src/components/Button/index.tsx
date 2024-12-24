@@ -5,7 +5,7 @@ interface ButtonProps {
 	children: React.ReactNode;
 	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 	to?: string;
-	$variant?: "alternate" | "gray" | "red";
+	$variant?: "alternate" | "gray" | "red" | "transparent";
 	[key: string]: unknown;
 }
 

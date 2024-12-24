@@ -2,12 +2,13 @@ import styled from "styled-components";
 import { flexContainer } from "@/GlobalStyles";
 
 export const StyledButton = styled.button<{
-	$variant?: "alternate" | "gray" | "red";
+	$variant?: "alternate" | "gray" | "red" | "transparent";
 }>`
 	${flexContainer({ $align: "center", $gap: 0.5, $justify: "center" })}
 
 	background-color: ${({ $variant }) => {
-		if ($variant === "alternate") return "transparent";
+		if ($variant === "alternate" || $variant === "transparent")
+			return "transparent";
 		else if ($variant === "gray") return "#C3C3C3";
 		else if ($variant === "red") return "var(--red)";
 		else return "var(--primary)";
@@ -16,6 +17,7 @@ export const StyledButton = styled.button<{
 	border: ${({ $variant }) =>
 		$variant === "alternate" && "2px solid var(--primary)"};
 	border-radius: 0.25rem;
+	gap: ${({ $variant }) => $variant === "transparent" && "0.25rem"};
 	padding: 0.75rem;
 
 	&:hover {

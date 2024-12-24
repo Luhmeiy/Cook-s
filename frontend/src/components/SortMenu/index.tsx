@@ -64,14 +64,15 @@ const SortMenu = <T extends Recipe | IngredientTypeWithId>({
 	return (
 		<>
 			<Button
+				$variant="transparent"
 				aria-describedby={listId}
 				onClick={(e) => setListEl(e.currentTarget)}
 			>
 				{property && order ? formatProperty(property, order) : "Sort"}
 				{openList ? (
-					<CaretUp size={18} weight="fill" />
+					<CaretUp size={16} weight="fill" />
 				) : (
-					<CaretDown size={18} weight="fill" />
+					<CaretDown size={16} weight="fill" />
 				)}
 			</Button>
 
@@ -92,7 +93,7 @@ const SortMenu = <T extends Recipe | IngredientTypeWithId>({
 				<StyledProperty
 					onClick={() => handleSortChange(undefined, undefined)}
 				>
-					Remove filters
+					Remove sorting
 				</StyledProperty>
 
 				<hr />

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flexContainer } from "@/GlobalStyles";
+import { flexContainer, media } from "@/GlobalStyles";
 
 export const StyledRecipes = styled.div`
 	${flexContainer({ $column: true, $gap: 1 })}
@@ -8,6 +8,11 @@ export const StyledRecipes = styled.div`
 
 export const RecipeContainerTitle = styled.div`
 	${flexContainer({ $align: "center", $justify: "space-between" })}
+
+	${media.sm`
+		align-items: start;
+		flex-direction: column;
+	`}
 
 	& > div {
 		${flexContainer({ $align: "center", $gap: 1 })}

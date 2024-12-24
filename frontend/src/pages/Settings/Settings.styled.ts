@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flexContainer } from "@/GlobalStyles";
+import { flexContainer, media } from "@/GlobalStyles";
 
 export const StyledSettings = styled.div`
 	${flexContainer({ $column: true, $flex: 2, $gap: 1 })}
@@ -17,13 +17,17 @@ export const StyledSettings = styled.div`
 export const UserPanel = styled.div`
 	${flexContainer({ $align: "start", $column: true, $gap: 0.5 })}
 	width: 12.5rem;
+
+	${media.sm`
+		width: 10.5rem
+	`}
 `;
 
 export const UserPanelButton = styled.button<{ $isActive: boolean }>`
 	background-color: var(--background);
 	border-radius: 0.25rem;
 	padding-block: 0.75rem;
-	padding-inline: 0.5rem 0.5rem;
+	padding-inline: 0.5rem;
 	text-align: left;
 	transition: 0.5s;
 

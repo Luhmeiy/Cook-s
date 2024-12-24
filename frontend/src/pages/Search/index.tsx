@@ -15,13 +15,6 @@ const Search = () => {
 
 	const userId = useSelector(selectCurrentUserId);
 
-	const { data: communityData, isLoading: isLoadingCommunityData } =
-		useGetPublicRecipesQuery(null);
-	const { data: userData, isLoading: isLoadingUserData } =
-		useGetUserRecipesQuery(userId!);
-
-	if (isLoadingCommunityData || isLoadingUserData) return <p>Loading...</p>;
-
 	const filterRecipes = (
 		data: { recipes: Recipe[] } | undefined,
 		community?: boolean
@@ -42,8 +35,21 @@ const Search = () => {
 		);
 	};
 
+	const { data: communityData, isLoading: isLoadingCommunityData } =
+		useGetPublicRecipesQuery(null);
+	const { data: userData, isLoading: isLoadingUserData } =
+		useGetUserRecipesQuery(userId!);
+
 	const communityRecipes = filterRecipes(communityData, true);
 	const userRecipes = filterRecipes(userData);
+
+	if (
+		isLoadingCommunityData ||
+		isLoadingUserData ||
+		!communityRecipes ||
+		!userRecipes
+	)
+		return <p>Loading...</p>;
 
 	return (
 		<StyledSearch>
