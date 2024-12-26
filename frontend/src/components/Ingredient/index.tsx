@@ -5,15 +5,9 @@ import { useLocation } from "react-router-dom";
 import { Asterisk, PencilSimple, Plus, X } from "@phosphor-icons/react";
 
 // styles
-import { InputContainer } from "@/styles/Form.styled";
-import {
-	IngredientForm,
-	IngredientTitle,
-	StyledIngredient,
-} from "./Ingredient.styled";
+import { IngredientTitle, StyledIngredient } from "./Ingredient.styled";
 
 // components / types / Redux
-import Button from "../Button";
 import ConfirmDeleteModal from "../ConfirmDeleteModal";
 import FloatingMessage from "../FloatingMessage";
 import { ErrorType } from "@/interfaces/ErrorType";
@@ -23,6 +17,7 @@ import {
 	useDeleteIngredientMutation,
 	useUpdateIngredientMutation,
 } from "@/features/lists/listsApiSlice";
+import NewIngredientForm from "../NewIngredientForm";
 
 interface IngredientProps {
 	ingredientProps: {
@@ -81,18 +76,6 @@ const Ingredient = ({
 		await deleteIngredient({ userId, ingredient: ingredient._id });
 	};
 
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		const { error } = await updateIngredient({
-			userId,
-			ingredient: ingredient._id,
-			updatedIngredient: ingredient,
-		});
-
-		if (!error) setIsEditing(false);
-	};
-
 	return (
 		<>
 			{isError && (
@@ -102,103 +85,53 @@ const Ingredient = ({
 				/>
 			)}
 
-			{isEditing ? (
-				<IngredientForm onSubmit={handleSubmit}>
-					<InputContainer>
-						Ingredient
+			<StyledIngredient>
+				<div>
+					{location.pathname === "/shopping" ? (
 						<input
-							type="text"
-							value={ingredient.ingredient}
-							onChange={(e) =>
-								setIngredient((prev) => ({
-									...prev,
-									ingredient: e.target.value,
-								}))
-							}
-							placeholder="Ex.: Apple"
-							required
+							type="checkbox"
+							checked={ingredient.bought}
+							onChange={handleCheckIngredient}
 						/>
-					</InputContainer>
+					) : (
+						<Asterisk weight="bold" />
+					)}
+					<IngredientTitle $bought={ingredient.bought}>
+						{ingredient.quantity} {ingredient.unit}{" "}
+						{ingredient.ingredient}
+					</IngredientTitle>
+				</div>
 
-					<InputContainer>
-						Quantity
-						<input
-							type="number"
-							value={ingredient.quantity}
-							onChange={(e) =>
-								setIngredient((prev) => ({
-									...prev,
-									quantity: +e.target.value,
-								}))
-							}
-							min={1}
-							required
-						/>
-					</InputContainer>
+				<div>
+					<PencilSimple
+						size={20}
+						onClick={() => setIsEditing(true)}
+					/>
 
-					<InputContainer>
-						Unit
-						<input
-							type="text"
-							value={ingredient.unit}
-							onChange={(e) =>
-								setIngredient((prev) => ({
-									...prev,
-									unit: e.target.value,
-								}))
-							}
-							placeholder="Ex.: Whole"
-							required
-						/>
-					</InputContainer>
+					<NewIngredientForm
+						open={isEditing}
+						setOpen={setIsEditing}
+						ingredientToEdit={ingredient}
+					/>
 
-					<Button type="submit">Save</Button>
+					<X size={20} onClick={() => setOpen(true)} />
 
-					<Button onClick={() => setIsEditing(false)}>Cancel</Button>
-				</IngredientForm>
-			) : (
-				<StyledIngredient>
-					<div>
-						{location.pathname === "/shopping" ? (
-							<input
-								type="checkbox"
-								checked={ingredient.bought}
-								onChange={handleCheckIngredient}
-							/>
-						) : (
-							<Asterisk weight="bold" />
-						)}
-						<IngredientTitle $bought={ingredient.bought}>
-							{ingredient.quantity} {ingredient.unit}{" "}
-							{ingredient.ingredient}
-						</IngredientTitle>
-					</div>
+					<ConfirmDeleteModal
+						title={ingredient.ingredient}
+						open={open}
+						setOpen={setOpen}
+						deleteFunction={handleDeleteIngredient}
+						isLoadingDelete={isLoadingDelete}
+					/>
 
-					<div>
-						<PencilSimple
+					{location.pathname === "/ingredients" && (
+						<Plus
 							size={20}
-							onClick={() => setIsEditing(true)}
+							onClick={() => handleAddIngredients(ingredient)}
 						/>
-
-						<X size={20} onClick={() => setOpen(true)} />
-
-						<ConfirmDeleteModal
-							title={ingredient.ingredient}
-							open={open}
-							setOpen={setOpen}
-							deleteFunction={handleDeleteIngredient}
-							isLoadingDelete={isLoadingDelete}
-						/>
-
-						{location.pathname === "/ingredients" && (
-							<Plus
-								size={20}
-								onClick={() => handleAddIngredients(ingredient)}
-							/>
-						)}
-					</div>
-				</StyledIngredient>
-			)}
+					)}
+				</div>
+			</StyledIngredient>
 		</>
 	);
 };

@@ -11,36 +11,67 @@ import { CloseButton, StyledModalForm } from "@/styles/Modal.styled";
 import Button from "../Button";
 import FloatingMessage from "../FloatingMessage";
 import { ErrorType } from "@/interfaces/ErrorType";
-import { usePostIngredientMutation } from "@/features/lists/listsApiSlice";
+import { IngredientType } from "@/interfaces/IngredientType";
+import {
+	usePostIngredientMutation,
+	useUpdateIngredientMutation,
+} from "@/features/lists/listsApiSlice";
 import { selectCurrentUserId } from "@/features/auth/authSlice";
 
 const NewIngredientForm = ({
 	open,
 	setOpen,
 	listType,
+	ingredientToEdit,
 }: {
 	open: boolean;
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
-	listType: string;
+	listType?: string;
+	ingredientToEdit?: IngredientType;
 }) => {
 	const userId = useSelector(selectCurrentUserId);
-	const [postIngredient, { error, isError, isLoading }] =
-		usePostIngredientMutation();
 
-	const [ingredient, setIngredient] = useState("");
-	const [quantity, setQuantity] = useState(0);
-	const [unit, setUnit] = useState("");
+	const [
+		postIngredient,
+		{ error: postError, isError: isPostError, isLoading },
+	] = usePostIngredientMutation();
+	const [updateIngredient, { error: updateError, isError: isUpdateError }] =
+		useUpdateIngredientMutation();
+
+	const isError = isPostError || isUpdateError;
+	const error = postError || updateError;
+
+	const [ingredient, setIngredient] = useState(
+		ingredientToEdit?.ingredient || ""
+	);
+	const [quantity, setQuantity] = useState(ingredientToEdit?.quantity || 0);
+	const [unit, setUnit] = useState(ingredientToEdit?.unit || "");
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const { error } = await postIngredient({
-			id: userId,
-			list: [{ ingredient, quantity, unit }],
-			listType,
-		});
+		const newIngredient = { ingredient, quantity, unit };
+		let submitError: ErrorType;
 
-		if (!error) {
+		if (ingredientToEdit) {
+			const { error } = await updateIngredient({
+				userId,
+				ingredient: ingredientToEdit._id,
+				updatedIngredient: newIngredient,
+			});
+
+			submitError = error as ErrorType;
+		} else {
+			const { error } = await postIngredient({
+				id: userId,
+				list: [newIngredient],
+				listType,
+			});
+
+			submitError = error as ErrorType;
+		}
+
+		if (!submitError) {
 			setIngredient("");
 			setQuantity(0);
 			setUnit("");

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { X } from "@phosphor-icons/react";
-import { flexContainer } from "@/GlobalStyles";
+import { flexContainer, media } from "@/GlobalStyles";
 
 export const StyledModalForm = styled.form`
 	${flexContainer({ $column: true, $gap: 0.5 })}
@@ -13,12 +13,24 @@ export const StyledModalForm = styled.form`
 	top: 50%;
 	transform: translate(-50%, -50%);
 
+	${media.md`
+		width: 75%;
+	`}
+
 	& > h3 {
 		margin-bottom: 0.5rem;
 	}
 
 	& > div {
 		${flexContainer({ $gap: 0.5 })}
+
+		${media.xs`
+			flex-direction: column;
+
+			& label {
+				align-items: start;
+			}
+		`}
 	}
 `;
 

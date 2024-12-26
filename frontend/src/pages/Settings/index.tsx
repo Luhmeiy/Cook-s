@@ -74,10 +74,12 @@ const Settings = () => {
 					deleteFunction={handleDeleteUser}
 					isLoadingDelete={isLoadingDeleteUser}
 				>
-					<PasswordInput
-						password={password}
-						setPassword={setPassword}
-					/>
+					<div>
+						<PasswordInput
+							password={password}
+							setPassword={setPassword}
+						/>
+					</div>
 				</ConfirmDeleteModal>
 			</div>
 		),
