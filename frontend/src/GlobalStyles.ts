@@ -14,7 +14,7 @@ type MediaFunction = {
 	) => ReturnType<typeof css>;
 };
 
-const breakpoints = {
+export const breakpoints = {
 	xs: "480px",
 	sm: "576px",
 	md: "768px",

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { flexContainer, media } from "@/GlobalStyles";
+import { breakpoints, flexContainer, media } from "@/GlobalStyles";
 
 export const StyledSettings = styled.div`
 	${flexContainer({ $column: true, $flex: 2, $gap: 1 })}
@@ -11,15 +11,20 @@ export const StyledSettings = styled.div`
 		background-color: var(--second-background);
 		border-radius: 0.25rem;
 		padding: 1.25rem;
+
+		${media.sm`
+			flex-direction: column;
+		`}
 	}
 `;
 
 export const UserPanel = styled.div`
 	${flexContainer({ $align: "start", $column: true, $gap: 0.5 })}
-	width: 12.5rem;
+	width: 11.5rem;
 
 	${media.sm`
-		width: 10.5rem
+		flex-direction: row;
+		width: 100%
 	`}
 `;
 
@@ -31,9 +36,25 @@ export const UserPanelButton = styled.button<{ $isActive: boolean }>`
 	text-align: left;
 	transition: 0.5s;
 
+	${media.sm`
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	`}
+
 	${({ $isActive }) =>
 		$isActive &&
-		"border-bottom-right-radius: 0; border-top-right-radius: 0; font-weight: 600; width: 100%;"}
+		`@media (min-width: ${breakpoints.sm}) {
+			flex-direction: column;
+			border-bottom-right-radius: 0;
+			border-top-right-radius: 0;
+			font-weight: 600;
+			width: 100%;
+		}
+
+		@media (max-width: ${breakpoints.sm}) {
+			font-weight: 600;
+		}
+	`}
 `;
 
 export const UserPanelContent = styled.div`
@@ -43,6 +64,10 @@ export const UserPanelContent = styled.div`
 	border-top-left-radius: 0;
 	padding-block: 0.75rem;
 	padding-inline: 1rem;
+
+	${media.xs`
+		border-top-right-radius: 0;
+	`}
 
 	& > div {
 		${flexContainer({ $column: true, $gap: 1 })}

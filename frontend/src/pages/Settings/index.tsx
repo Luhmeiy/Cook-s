@@ -19,12 +19,12 @@ import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import EditUserForm from "@/components/EditUserForm";
 import FloatingMessage from "@/components/FloatingMessage";
 import PasswordInput from "@/components/PasswordInput";
+import { ErrorType } from "@/interfaces/ErrorType";
 import {
 	selectAuthLoading,
 	selectCurrentUserId,
 } from "@/features/auth/authSlice";
 import { useDeleteUserMutation } from "@/features/users/usersApiSlice";
-import { ErrorType } from "@/interfaces/ErrorType";
 
 const Settings = () => {
 	const navigate = useNavigate();
@@ -45,6 +45,8 @@ const Settings = () => {
 
 		if (!error) navigate("/");
 	};
+
+	const buttonText = ["Edit User", "Change Password", "Delete User"];
 
 	const contentMap: { [key: number]: JSX.Element } = {
 		0: <EditUserForm />,
@@ -105,26 +107,15 @@ const Settings = () => {
 
 				<div>
 					<UserPanel>
-						<UserPanelButton
-							onClick={() => setStep(0)}
-							$isActive={step === 0}
-						>
-							Edit User Info
-						</UserPanelButton>
-
-						<UserPanelButton
-							onClick={() => setStep(1)}
-							$isActive={step === 1}
-						>
-							Change Password
-						</UserPanelButton>
-
-						<UserPanelButton
-							onClick={() => setStep(2)}
-							$isActive={step === 2}
-						>
-							Delete User
-						</UserPanelButton>
+						{buttonText.map((text, index) => (
+							<UserPanelButton
+								onClick={() => setStep(index)}
+								$isActive={step === index}
+								key={index}
+							>
+								{text}
+							</UserPanelButton>
+						))}
 					</UserPanel>
 
 					<UserPanelContent>{contentMap[step]}</UserPanelContent>
